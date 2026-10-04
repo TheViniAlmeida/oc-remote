@@ -31,6 +31,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.minios.ocremote.R
+import dev.minios.ocremote.ui.components.PresentationPreferencesHost
+import dev.minios.ocremote.ui.components.PresentationPreferenceKind
+import dev.minios.ocremote.ui.components.PresentationPreferenceRequest
 import dev.minios.ocremote.data.repository.LocalServerManager
 import dev.minios.ocremote.domain.model.SessionCategory
 import dev.minios.ocremote.ui.components.AppDialog
@@ -63,7 +66,10 @@ fun SettingsScreen(
     onNavigateToSync: () -> Unit = {},
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
+    var presentationRequest by remember { mutableStateOf<PresentationPreferenceRequest?>(null) }
+    PresentationPreferencesHost(presentationRequest, onDismiss = { presentationRequest = null })
     val currentLanguage by viewModel.appLanguage.collectAsState()
+    val appAccent by viewModel.appAccent.collectAsState()
     val currentTheme by viewModel.appTheme.collectAsState()
     val dynamicColor by viewModel.dynamicColor.collectAsState()
     val chatFontSize by viewModel.chatFontSize.collectAsState()
@@ -96,6 +102,7 @@ fun SettingsScreen(
     val hasSyncConflict = syncState.status == SyncStatus.CONFLICT
 
     var showLanguageDialog by remember { mutableStateOf(false) }
+    var showAppearanceDialog by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
     var showFontSizeDialog by remember { mutableStateOf(false) }
     var showMessageCountDialog by remember { mutableStateOf(false) }
@@ -265,6 +272,13 @@ fun SettingsScreen(
 
             // ======== Appearance ========
             SectionHeader(stringResource(R.string.settings_section_appearance))
+
+            ListItem(
+                headlineContent = { Text(stringResource(R.string.appearance_title)) },
+                supportingContent = { Text(dev.minios.ocremote.ui.components.appearanceAccentLabel(appAccent)) },
+                leadingContent = { Icon(Lucide.Palette, contentDescription = null) },
+                modifier = Modifier.clickable { showAppearanceDialog = true },
+            )
 
             // Theme
             ListItem(
@@ -621,7 +635,24 @@ fun SettingsScreen(
             )
         }
 
-        if (showLanguageDialog) {
+        if (showAppearanceDialog) {
+        dev.minios.ocremote.ui.components.AppearanceSettingsDialog(
+            title = stringResource(R.string.appearance_title),
+            value = dev.minios.ocremote.domain.model.AppearanceOverride(currentTheme, appAccent, dynamicColor, amoledDark),
+            inherited = dev.minios.ocremote.domain.model.ThemeAppearance(currentTheme, appAccent, dynamicColor, amoledDark),
+            allowInherit = false,
+            onSave = { value ->
+                value?.let {
+                    viewModel.setAppearance(dev.minios.ocremote.domain.model.ThemeAppearance(
+                        it.theme ?: "system", it.accent ?: "default", it.dynamicColor ?: false, it.amoledDark ?: false,
+                    ))
+                }
+            },
+            onDismiss = { showAppearanceDialog = false },
+        )
+    }
+
+    if (showLanguageDialog) {
             LanguagePickerDialog(
                 currentLanguage = currentLanguage,
                 onLanguageSelected = { languageCode ->

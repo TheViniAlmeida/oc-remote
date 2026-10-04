@@ -79,6 +79,8 @@ internal fun descendantSessionIds(sessions: List<Session>, rootSessionId: String
 data class ChatUiState(
     val serverSupportsSharing: Boolean = true,
     val sessionTitle: String = "",
+    val sessionProjectId: String = "",
+    val sessionDirectory: String = "",
     val sessionLoaded: Boolean = false,
     val parentSessionId: String? = null,
     val serverName: String = "",
@@ -568,6 +570,8 @@ class ChatViewModel @Inject constructor(
                 dev.minios.ocremote.data.api.ServerProtocol.V2,
             sessionTitle = session?.title ?: "Chat",
             sessionLoaded = session != null,
+            sessionProjectId = session?.projectId.orEmpty(),
+            sessionDirectory = session?.directory.orEmpty(),
             parentSessionId = session?.parentId,
             serverName = serverName,
             messages = chatMessages,

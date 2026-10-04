@@ -53,6 +53,9 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.activity.compose.BackHandler
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.minios.ocremote.R
+import dev.minios.ocremote.ui.components.PresentationPreferencesHost
+import dev.minios.ocremote.ui.components.PresentationPreferenceRequest
+import dev.minios.ocremote.ui.components.PresentationPreferenceKind
 import dev.minios.ocremote.data.api.FileNode
 import dev.minios.ocremote.domain.model.ProjectAppearance
 import dev.minios.ocremote.domain.model.MAX_PROJECT_TAGS
@@ -199,6 +202,8 @@ fun SessionListScreen(
     onConnectServer: () -> Unit = {},
     viewModel: SessionListViewModel = hiltViewModel()
 ) {
+    var presentationRequest by remember { mutableStateOf<PresentationPreferenceRequest?>(null) }
+    PresentationPreferencesHost(presentationRequest, onDismiss = { presentationRequest = null })
     val uiState by viewModel.uiState.collectAsState()
     val groupByProject by viewModel.groupSessionsByProject.collectAsState()
     val recentDirectoryCount by viewModel.recentDirectoryCount.collectAsState()
@@ -758,6 +763,11 @@ fun SessionListScreen(
     appearanceProject?.let { group ->
         ProjectAppearanceDialog(
             group = group,
+            onTheme = {
+                appearanceProject = null
+                presentationRequest = PresentationPreferenceRequest(PresentationPreferenceKind.PROJECT_APPEARANCE,
+                    serverId = viewModel.serverId, projectId = group.projectId, directory = group.directory)
+            },
             onDismiss = { appearanceProject = null },
             onSave = { appearance ->
                 viewModel.saveProjectAppearance(group, appearance)
@@ -904,6 +914,7 @@ private fun ProjectAppearanceDialog(
     group: ProjectSessionGroup,
     onDismiss: () -> Unit,
     onSave: (ProjectAppearance) -> Unit,
+    onTheme: () -> Unit,
 ) {
     var color by remember(group.projectId) { mutableStateOf(group.appearance.color) }
     var tagsText by remember(group.projectId) { mutableStateOf(group.appearance.tags.joinToString(", ")) }
@@ -948,6 +959,7 @@ private fun ProjectAppearanceDialog(
                 maxLines = 4,
             )
             ProjectTagPreview(appearance.tags)
+            TextButton(onClick = onTheme) { Text(stringResource(R.string.appearance_project_title)) }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                 AppSecondaryButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
                 Spacer(Modifier.width(8.dp))

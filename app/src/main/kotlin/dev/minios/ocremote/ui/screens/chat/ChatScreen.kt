@@ -1049,9 +1049,38 @@ fun ChatScreen(
     isServerConnected: Boolean = true,
     isServerConnecting: Boolean = false,
     onConnectServer: () -> Unit = {},
-    viewModel: ChatViewModel = hiltViewModel()
+    viewModel: ChatViewModel = hiltViewModel(),
+    presentationViewModel: PresentationPreferencesViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val appAppearance by presentationViewModel.appAppearance.collectAsState()
+    val projectAppearanceFlow = remember(viewModel.serverId, uiState.sessionProjectId, uiState.sessionDirectory) {
+        presentationViewModel.appearance.projectAppearance(viewModel.serverId, uiState.sessionProjectId, uiState.sessionDirectory)
+    }
+    val sessionAppearanceFlow = remember(viewModel.serverId, viewModel.sessionId) {
+        presentationViewModel.appearance.sessionAppearance(viewModel.serverId, viewModel.sessionId)
+    }
+    val projectAppearance by projectAppearanceFlow.collectAsState(initial = null)
+    val sessionAppearance by sessionAppearanceFlow.collectAsState(initial = null)
+    val appearance = resolveAppearance(appAppearance, projectAppearance, sessionAppearance)
+    val darkAppearance = when (appearance.theme) {
+        "light" -> false
+        "dark" -> true
+        else -> androidx.compose.foundation.isSystemInDarkTheme()
+    }
+    val automaticScrolling by presentationViewModel.autoScrollEnabled.collectAsState()
+    val serverTimelineFlow = remember(viewModel.serverId) { presentationViewModel.timeline.serverOverride(viewModel.serverId) }
+    val sessionTimelineFlow = remember(viewModel.serverId, viewModel.sessionId) {
+        presentationViewModel.timeline.sessionOverride(viewModel.serverId, viewModel.sessionId)
+    }
+    val serverTimeline by serverTimelineFlow.collectAsState(initial = null)
+    val sessionTimeline by sessionTimelineFlow.collectAsState(initial = null)
+    val timelinePreferences = (sessionTimeline ?: serverTimeline)?.normalized()
+    var presentationRequest by remember(viewModel.sessionId) { mutableStateOf<PresentationPreferenceRequest?>(null) }
+    fun showPresentationPreferences(kind: PresentationPreferenceKind) {
+        presentationRequest = PresentationPreferenceRequest(kind, viewModel.serverId, viewModel.sessionId,
+            uiState.sessionProjectId, uiState.sessionDirectory)
+    }
     val draftText by viewModel.draftText.collectAsState()
     val draftAttachmentUris by viewModel.draftAttachmentUris.collectAsState()
     var inputText by remember { mutableStateOf(TextFieldValue("")) }
@@ -1229,8 +1258,8 @@ fun ChatScreen(
     }
 
     // Force status bar black while terminal is visible.
-    val isDarkTheme = MaterialTheme.colorScheme.background.luminance() < 0.5f
-    DisposableEffect(isTerminalMode) {
+    val isDarkTheme = darkAppearance
+    DisposableEffect(isTerminalMode, isDarkTheme) {
         val activity = context as? android.app.Activity
         if (isTerminalMode && activity != null) {
             activity.window.statusBarColor = android.graphics.Color.BLACK
@@ -1650,6 +1679,8 @@ fun ChatScreen(
         }
     }
 
+    OpenCodeTheme(darkTheme = darkAppearance, dynamicColor = appearance.dynamicColor,
+        amoledDark = appearance.amoledDark, accent = appearance.accent, manageSystemBars = !isTerminalMode) {
     CompositionLocalProvider(
         LocalChatFontSize provides chatFontSize,
         LocalCodeWordWrap provides codeWordWrap,
@@ -1779,6 +1810,16 @@ fun ChatScreen(
                                     showSessionControlsDialog = true
                                 },
                             )
+                            listOf(
+                                PresentationPreferenceKind.SESSION_APPEARANCE to R.string.appearance_session_title,
+                                PresentationPreferenceKind.PROJECT_APPEARANCE to R.string.appearance_project_title,
+                            ).forEach { (kind, label) ->
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(label)) },
+                                    enabled = uiState.sessionLoaded && viewModel.serverId.isNotBlank(),
+                                    onClick = { showMenu = false; showPresentationPreferences(kind) },
+                                )
+                            }
                             DropdownMenuItem(
                                 text = { Text(stringResource(if (sessionControls.muted) R.string.session_unmute_menu else R.string.session_mute_menu)) },
                                 leadingIcon = { Icon(if (sessionControls.muted) Lucide.Bell else Lucide.BellOff, contentDescription = null) },
@@ -3281,7 +3322,9 @@ fun ChatScreen(
             }
         }
     }
+    PresentationPreferencesHost(presentationRequest, onDismiss = { presentationRequest = null }, viewModel = presentationViewModel)
     } // CompositionLocalProvider
+    } // OpenCodeTheme
 }
 
 @Composable

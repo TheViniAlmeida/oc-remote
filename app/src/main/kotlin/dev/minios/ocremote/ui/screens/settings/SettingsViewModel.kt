@@ -29,6 +29,16 @@ class SettingsViewModel @Inject constructor(
         initialValue = ""
     )
 
+    val appAccent = settingsRepository.appAccent.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "default")
+    val autoScrollEnabled = settingsRepository.autoScrollEnabled.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
+
+    fun setAppearance(appearance: dev.minios.ocremote.domain.model.ThemeAppearance) {
+        viewModelScope.launch { settingsRepository.setAppearance(appearance) }
+    }
+
+    fun setAppAccent(accent: String) { viewModelScope.launch { settingsRepository.setAppAccent(accent) } }
+    fun setAutoScrollEnabled(enabled: Boolean) { viewModelScope.launch { settingsRepository.setAutoScrollEnabled(enabled) } }
+
     val appTheme = settingsRepository.appTheme.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

@@ -178,6 +178,7 @@ class MainActivity : ComponentActivity() {
                 initial = SettingsRepository.DEFAULT_DYNAMIC_COLOR,
             )
             val amoledDark by settingsRepository.amoledDark.collectAsState(initial = false)
+            val appAccent by settingsRepository.appAccent.collectAsState(initial = "default")
             val connectedServerIds by serverConnectionStateRepository.connectedServerIds.collectAsState()
             val connectingServerIds by serverConnectionStateRepository.connectingServerIds.collectAsState()
             
@@ -189,7 +190,7 @@ class MainActivity : ComponentActivity() {
                 else -> systemDarkTheme
             }
             
-            OpenCodeTheme(darkTheme = darkTheme, dynamicColor = dynamicColor, amoledDark = amoledDark) {
+            OpenCodeTheme(darkTheme = darkTheme, dynamicColor = dynamicColor, amoledDark = amoledDark, accent = appAccent) {
                 
                 // Set status bar color based on theme
                 SideEffect {
