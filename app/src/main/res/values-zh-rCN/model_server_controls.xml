@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_duplicate">复制</string>
+    <string name="server_duplicate_title">复制服务器</string>
+    <string name="chat_all_models">所有模型</string>
+    <string name="chat_open_all_models">打开完整模型列表</string>
+</resources>

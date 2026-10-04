@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_duplicate">복제</string>
+    <string name="server_duplicate_title">서버 복제</string>
+    <string name="chat_all_models">모든 모델</string>
+    <string name="chat_open_all_models">전체 모델 목록 열기</string>
+</resources>

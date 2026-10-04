@@ -81,15 +81,17 @@ private fun deriveServerNameFromUrl(normalizedUrl: String): String {
 fun ServerDialog(
     server: ServerConfig?,
     onDismiss: () -> Unit,
-    onSave: (name: String, url: String, username: String, password: String, autoConnect: Boolean) -> Unit
+    onSave: (name: String, url: String, username: String, password: String, autoConnect: Boolean) -> Unit,
+    isDuplicateDraft: Boolean = false,
+    onDuplicate: ((ServerConfig) -> Unit)? = null,
 ) {
-    var name by remember { mutableStateOf(server?.name ?: "") }
-    var url by remember { mutableStateOf(server?.url ?: "http://") }
-    var username by remember { mutableStateOf(server?.username ?: "opencode") }
-    var password by remember { mutableStateOf(server?.password ?: "") }
-    var autoConnect by remember { mutableStateOf(server?.autoConnect ?: false) }
+    var name by remember(server?.id) { mutableStateOf(server?.name ?: "") }
+    var url by remember(server?.id) { mutableStateOf(server?.url ?: "http://") }
+    var username by remember(server?.id) { mutableStateOf(server?.username ?: "opencode") }
+    var password by remember(server?.id) { mutableStateOf(server?.password ?: "") }
+    var autoConnect by remember(server?.id) { mutableStateOf(server?.autoConnect ?: false) }
 
-    var urlError by remember { mutableStateOf<String?>(null) }
+    var urlError by remember(server?.id) { mutableStateOf<String?>(null) }
 
     val urlRequiredText = stringResource(R.string.server_url)
     val urlInvalidText = stringResource(R.string.server_invalid_url)
@@ -127,7 +129,11 @@ fun ServerDialog(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = if (server != null) stringResource(R.string.home_edit) else stringResource(R.string.server_add),
+                        text = when {
+                            isDuplicateDraft -> stringResource(R.string.server_duplicate_title)
+                            server != null -> stringResource(R.string.home_edit)
+                            else -> stringResource(R.string.server_add)
+                        },
                         style = MaterialTheme.typography.titleMedium
                     )
 
@@ -210,6 +216,22 @@ fun ServerDialog(
                                 colors = switchColors
                             )
                         }
+                    }
+                }
+
+                if (server != null && !isDuplicateDraft && onDuplicate != null) {
+                    TextButton(
+                        onClick = {
+                            onDuplicate(server.copy(
+                                name = name,
+                                url = url,
+                                username = username,
+                                password = password,
+                                autoConnect = autoConnect,
+                            ))
+                        },
+                    ) {
+                        Text(stringResource(R.string.server_duplicate))
                     }
                 }
 

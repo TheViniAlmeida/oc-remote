@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_duplicate">Duplikasikan</string>
+    <string name="server_duplicate_title">Duplikasikan server</string>
+    <string name="chat_all_models">Semua model</string>
+    <string name="chat_open_all_models">Buka daftar model lengkap</string>
+</resources>

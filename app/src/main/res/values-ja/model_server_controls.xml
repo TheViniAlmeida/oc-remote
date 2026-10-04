@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_duplicate">複製</string>
+    <string name="server_duplicate_title">サーバーを複製</string>
+    <string name="chat_all_models">すべてのモデル</string>
+    <string name="chat_open_all_models">モデル一覧をすべて表示</string>
+</resources>

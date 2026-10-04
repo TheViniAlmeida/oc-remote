@@ -25,6 +25,15 @@ private const val SERVERS_KEY = "servers"
 
 internal fun normalizeServerUrl(url: String): String = url.trim().trimEnd('/')
 
+internal fun duplicateServerDraft(source: ServerConfig): ServerConfig = ServerConfig(
+    id = UUID.randomUUID().toString(),
+    url = source.url,
+    username = source.username,
+    password = source.password,
+    name = source.name,
+    autoConnect = false,
+)
+
 internal fun isPortableSyncServerUrl(url: String): Boolean =
     normalizeServerUrl(url) != normalizeServerUrl(LocalServerManager.LOCAL_SERVER_URL)
 

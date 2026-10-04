@@ -146,6 +146,8 @@ private fun PulsingDotsIndicator(
 @Composable
 fun HomeScreen(
     addServerRequest: Int = 0,
+    duplicateServerRequest: ServerConfig? = null,
+    onDuplicateServerRequestHandled: () -> Unit = {},
     onNavigateToSessions: (serverUrl: String, username: String, password: String, serverName: String, serverId: String) -> Unit = { _, _, _, _, _ -> },
     onNavigateToCrossServerSessions: () -> Unit = {},
     onNavigateToServerSettings: (serverUrl: String, username: String, password: String, serverName: String, serverId: String) -> Unit = { _, _, _, _, _ -> },
@@ -181,6 +183,13 @@ fun HomeScreen(
 
     LaunchedEffect(addServerRequest) {
         if (addServerRequest > 0) viewModel.showAddServerDialog()
+    }
+
+    LaunchedEffect(duplicateServerRequest) {
+        duplicateServerRequest?.let {
+            viewModel.showDuplicateServerDialog(it)
+            onDuplicateServerRequestHandled()
+        }
     }
 
     // Track battery optimization status, re-check when app resumes
@@ -464,6 +473,7 @@ fun HomeScreen(
                                         )
                                     },
                                     onEdit = { viewModel.showEditServerDialog(server) },
+                                    onDuplicate = { viewModel.showDuplicateServerDialog(server) },
                                     onDelete = { viewModel.deleteServer(server.id) },
                                 )
                             }
@@ -476,8 +486,10 @@ fun HomeScreen(
         // Add/Edit Server Dialog
         if (uiState.showAddServerDialog) {
             ServerDialog(
-                server = uiState.editingServer,
+                server = uiState.editingServer ?: uiState.duplicatedServerDraft,
+                isDuplicateDraft = uiState.duplicatedServerDraft != null,
                 onDismiss = { viewModel.hideServerDialog() },
+                onDuplicate = viewModel::showDuplicateServerDialog,
                 onSave = { name, url, username, password, autoConnect ->
                     viewModel.saveServer(name, url, username, password, autoConnect)
                 }
@@ -989,6 +1001,7 @@ private fun ServerCard(
     onOpenSessions: () -> Unit,
     onServerSettings: () -> Unit,
     onEdit: () -> Unit,
+    onDuplicate: () -> Unit,
     onDelete: () -> Unit,
 ) {
     var showMenu by remember { mutableStateOf(false) }
@@ -1078,6 +1091,14 @@ private fun ServerCard(
                                 leadingIcon = {
                                     Icon(Lucide.Pencil, contentDescription = null)
                                 }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.server_duplicate)) },
+                                onClick = {
+                                    showMenu = false
+                                    onDuplicate()
+                                },
+                                leadingIcon = { Icon(Lucide.Copy, contentDescription = null) },
                             )
                             DropdownMenuItem(
                                 text = {

@@ -44,6 +44,7 @@ fun ServerSettingsScreen(
     isServerConnected: Boolean = true,
     isServerConnecting: Boolean = false,
     onConnectServer: () -> Unit = {},
+    onDuplicateServer: (() -> Unit)? = null,
 ) {
     val isAmoled = isAmoledTheme()
     Scaffold(
@@ -54,6 +55,13 @@ fun ServerSettingsScreen(
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(backIcon(), contentDescription = stringResource(R.string.back))
+                    }
+                },
+                actions = {
+                    onDuplicateServer?.let { duplicate ->
+                        IconButton(onClick = duplicate) {
+                            Icon(Lucide.Copy, contentDescription = stringResource(R.string.server_duplicate))
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

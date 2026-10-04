@@ -187,6 +187,7 @@ fun NavGraph(
     var pendingShareSessionId by remember { mutableStateOf<String?>(null) }
     var reopenSharePickerAfterConnect by remember { mutableStateOf(false) }
     var addServerRequest by remember { mutableIntStateOf(0) }
+    var duplicateServerRequest by remember { mutableStateOf<ServerConfig?>(null) }
     val sharePickerServers by serverRepository.servers.collectAsState(initial = emptyList())
     val sharePickerSessions by eventReducer.sessions.collectAsState()
     val sharePickerServerSessions by eventReducer.serverSessions.collectAsState()
@@ -411,6 +412,8 @@ fun NavGraph(
         composable(Screen.Home.route) {
             HomeScreen(
                 addServerRequest = addServerRequest,
+                duplicateServerRequest = duplicateServerRequest,
+                onDuplicateServerRequestHandled = { duplicateServerRequest = null },
                 onNavigateToSessions = { serverUrl, username, password, serverName, serverId ->
                     navController.navigate(
                         Screen.SessionList.createRoute(serverUrl, username, password, serverName, serverId)
@@ -498,6 +501,12 @@ fun NavGraph(
             val serverName = it.arguments?.getString("serverName").orEmpty()
             val serverId = it.arguments?.getString("serverId").orEmpty()
             ServerSettingsScreen(
+                onDuplicateServer = sharePickerServers.firstOrNull { server -> server.id == serverId }?.let { server ->
+                    {
+                        duplicateServerRequest = server
+                        navController.popBackStack(Screen.Home.route, false)
+                    }
+                },
                 isServerConnected = serverId in connectedServerIds,
                 isServerConnecting = serverId in connectingServerIds,
                 onConnectServer = {

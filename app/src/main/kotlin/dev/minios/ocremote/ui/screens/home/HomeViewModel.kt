@@ -19,6 +19,7 @@ import dev.minios.ocremote.data.api.ServerConnection
 import dev.minios.ocremote.data.api.ServerHealthHttpException
 import dev.minios.ocremote.data.repository.LocalServerManager
 import dev.minios.ocremote.data.repository.ServerRepository
+import dev.minios.ocremote.data.repository.duplicateServerDraft
 import dev.minios.ocremote.data.repository.normalizeServerUrl
 import dev.minios.ocremote.data.repository.SettingsRepository
 import dev.minios.ocremote.data.repository.DiagnosticLogRepository
@@ -64,6 +65,7 @@ data class HomeUiState(
     val connectionErrors: Map<String, String> = emptyMap(),
     val showAddServerDialog: Boolean = false,
     val editingServer: ServerConfig? = null,
+    val duplicatedServerDraft: ServerConfig? = null,
     val isLoading: Boolean = true,
     val termuxInstalled: Boolean = false,
     val localRuntimeStatus: LocalRuntimeStatus = LocalRuntimeStatus.Unavailable,
@@ -342,15 +344,25 @@ class HomeViewModel @Inject constructor(
     }
 
     fun showAddServerDialog() {
-        _uiState.update { it.copy(showAddServerDialog = true, editingServer = null) }
+        _uiState.update { it.copy(showAddServerDialog = true, editingServer = null, duplicatedServerDraft = null) }
     }
 
     fun showEditServerDialog(server: ServerConfig) {
-        _uiState.update { it.copy(showAddServerDialog = true, editingServer = server) }
+        _uiState.update { it.copy(showAddServerDialog = true, editingServer = server, duplicatedServerDraft = null) }
+    }
+
+    fun showDuplicateServerDialog(server: ServerConfig) {
+        _uiState.update {
+            it.copy(
+                showAddServerDialog = true,
+                editingServer = null,
+                duplicatedServerDraft = duplicateServerDraft(server),
+            )
+        }
     }
 
     fun hideServerDialog() {
-        _uiState.update { it.copy(showAddServerDialog = false, editingServer = null) }
+        _uiState.update { it.copy(showAddServerDialog = false, editingServer = null, duplicatedServerDraft = null) }
     }
 
     fun saveServer(

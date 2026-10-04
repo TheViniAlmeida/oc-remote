@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_duplicate">Duplizieren</string>
+    <string name="server_duplicate_title">Server duplizieren</string>
+    <string name="chat_all_models">Alle Modelle</string>
+    <string name="chat_open_all_models">Vollständige Modellliste öffnen</string>
+</resources>

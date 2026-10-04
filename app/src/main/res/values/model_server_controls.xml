@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="server_duplicate">Duplicate</string>
+    <string name="server_duplicate_title">Duplicate server</string>
+    <string name="chat_all_models">All models</string>
+    <string name="chat_open_all_models">Open complete model list</string>
+</resources>

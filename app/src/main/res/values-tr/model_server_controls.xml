@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_duplicate">Çoğalt</string>
+    <string name="server_duplicate_title">Sunucuyu çoğalt</string>
+    <string name="chat_all_models">Tüm modeller</string>
+    <string name="chat_open_all_models">Tam model listesini aç</string>
+</resources>
