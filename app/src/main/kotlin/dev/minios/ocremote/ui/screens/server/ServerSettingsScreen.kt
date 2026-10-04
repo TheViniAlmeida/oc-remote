@@ -22,7 +22,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import dev.minios.ocremote.data.api.AgentInfo
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,8 +48,13 @@ fun ServerSettingsScreen(
     isServerConnecting: Boolean = false,
     onConnectServer: () -> Unit = {},
     onDuplicateServer: (() -> Unit)? = null,
+    agents: List<AgentInfo> = emptyList(),
+    isLoadingAgents: Boolean = false,
+    agentsError: String? = null,
 ) {
     val isAmoled = isAmoledTheme()
+    var showAgents by remember { mutableStateOf(false) }
+    if (showAgents) ServerAgentsDialog(agents, isLoadingAgents, agentsError) { showAgents = false }
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
         topBar = {
@@ -74,7 +82,8 @@ fun ServerSettingsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface)
-                .padding(padding),
+                .padding(padding)
+                .verticalScroll(rememberScrollState()),
         ) {
             if (!isServerConnected) {
                 ServerConnectionBanner(connecting = isServerConnecting, onConnect = onConnectServer)
@@ -83,6 +92,19 @@ fun ServerSettingsScreen(
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
+            Card(
+                shape = AppCardShape,
+                modifier = Modifier.fillMaxWidth().clickable(enabled = isServerConnected) { showAgents = true },
+            ) {
+                Row(Modifier.fillMaxWidth().padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Lucide.Bot, contentDescription = null)
+                    Column(Modifier.weight(1f).padding(horizontal = 12.dp)) {
+                        Text(stringResource(R.string.agent_catalog_title), style = MaterialTheme.typography.titleSmall)
+                        Text(stringResource(R.string.agent_catalog_desc), style = MaterialTheme.typography.bodySmall)
+                    }
+                    Icon(forwardChevronIcon(), contentDescription = null)
+                }
+            }
             Card(
                 shape = AppCardShape,
                 colors = CardDefaults.cardColors(

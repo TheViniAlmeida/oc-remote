@@ -1,0 +1,13 @@
+<resources>
+    <string name="agent_picker_title">选择智能体</string>
+    <string name="agent_picker_search">搜索智能体</string>
+    <string name="agent_catalog_title">智能体和子智能体</string>
+    <string name="agent_catalog_desc">查看此服务器上可用的智能体</string>
+    <string name="agent_catalog_primary">主要智能体</string>
+    <string name="agent_catalog_subagents">子智能体</string>
+    <string name="agent_catalog_other">其他智能体模式</string>
+    <string name="agent_catalog_empty">没有可用的智能体</string>
+    <string name="agent_catalog_hidden">已隐藏</string>
+    <string name="agent_catalog_both">主要智能体和子智能体</string>
+    <string name="agent_catalog_error">无法加载智能体。请重新连接并重试。</string>
+</resources>

@@ -2,6 +2,9 @@ package dev.minios.ocremote.ui.screens.server
 
 import dev.minios.ocremote.logging.AppLogger as Log
 import dev.minios.ocremote.BuildConfig
+import dev.minios.ocremote.R
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -51,6 +54,9 @@ data class ServerSettingsUiState(
     val providers: List<ProviderToggle> = emptyList(),
     val modelOptions: List<ModelOption> = emptyList(),
     val agentOptions: List<String> = emptyList(),
+    val availableAgents: List<AgentInfo> = emptyList(),
+    val isLoadingAgents: Boolean = false,
+    val agentsError: String? = null,
     val selectedModel: String? = null,
     val selectedSmallModel: String? = null,
     val selectedDefaultAgent: String? = null,
@@ -101,6 +107,7 @@ data class ModelToggle(
 @HiltViewModel
 class ServerSettingsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    @ApplicationContext private val context: Context,
     private val api: OpenCodeApi,
     private val settingsRepository: SettingsRepository,
     private val diagnosticLogRepository: DiagnosticLogRepository,
@@ -152,6 +159,8 @@ class ServerSettingsViewModel @Inject constructor(
                         authMethodsLoadJob?.cancel()
                         configLoadJob?.cancel()
                         agentsLoadJob?.cancel()
+                        _agents.value = emptyList()
+                        _uiState.update { it.copy(availableAgents = emptyList(), isLoadingAgents = false, agentsError = null) }
                         _uiState.update { it.copy(isLoading = false, isSaving = false, error = null) }
                     }
                 }
@@ -219,12 +228,16 @@ class ServerSettingsViewModel @Inject constructor(
         if (!isServerConnected()) return
         agentsLoadJob?.cancel()
         agentsLoadJob = viewModelScope.launch {
+            _uiState.update { it.copy(isLoadingAgents = true, agentsError = null) }
             try {
                 _agents.value = api.listAgents(conn)
                 rebuildUi()
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
-                Log.e(TAG, "Failed to load agents", e)
+                _agents.value = emptyList()
+                _uiState.update { it.copy(availableAgents = emptyList(), agentsError = context.getString(R.string.agent_catalog_error)) }
+            } finally {
+                _uiState.update { it.copy(isLoadingAgents = false) }
             }
         }
     }
@@ -536,6 +549,7 @@ class ServerSettingsViewModel @Inject constructor(
                 providers = providerToggles,
                 modelOptions = modelOptions,
                 agentOptions = agentOptions,
+                availableAgents = _agents.value,
                 selectedModel = _config.value.model,
                 selectedSmallModel = _config.value.smallModel,
                 selectedDefaultAgent = _config.value.defaultAgent,

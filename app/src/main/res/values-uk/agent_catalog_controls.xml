@@ -1,0 +1,13 @@
+<resources>
+    <string name="agent_picker_title">Вибрати агента</string>
+    <string name="agent_picker_search">Пошук агентів</string>
+    <string name="agent_catalog_title">Агенти та підагенти</string>
+    <string name="agent_catalog_desc">Переглянути доступних агентів цього сервера</string>
+    <string name="agent_catalog_primary">Основні агенти</string>
+    <string name="agent_catalog_subagents">Підагенти</string>
+    <string name="agent_catalog_other">Інші режими агентів</string>
+    <string name="agent_catalog_empty">Немає доступних агентів</string>
+    <string name="agent_catalog_hidden">Прихований</string>
+    <string name="agent_catalog_both">Основний агент і підагент</string>
+    <string name="agent_catalog_error">Не вдалося завантажити агентів. Підключіться знову та повторіть спробу.</string>
+</resources>

@@ -1,0 +1,13 @@
+<resources>
+    <string name="agent_picker_title">에이전트 선택</string>
+    <string name="agent_picker_search">에이전트 검색</string>
+    <string name="agent_catalog_title">에이전트 및 하위 에이전트</string>
+    <string name="agent_catalog_desc">이 서버에서 사용할 수 있는 에이전트 보기</string>
+    <string name="agent_catalog_primary">기본 에이전트</string>
+    <string name="agent_catalog_subagents">하위 에이전트</string>
+    <string name="agent_catalog_other">기타 에이전트 모드</string>
+    <string name="agent_catalog_empty">사용 가능한 에이전트 없음</string>
+    <string name="agent_catalog_hidden">숨김</string>
+    <string name="agent_catalog_both">기본 및 하위 에이전트</string>
+    <string name="agent_catalog_error">에이전트를 불러올 수 없습니다. 다시 연결한 후 시도하세요.</string>
+</resources>

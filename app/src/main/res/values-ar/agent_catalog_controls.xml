@@ -1,0 +1,13 @@
+<resources>
+    <string name="agent_picker_title">اختيار وكيل</string>
+    <string name="agent_picker_search">البحث عن وكلاء</string>
+    <string name="agent_catalog_title">الوكلاء والوكلاء الفرعيون</string>
+    <string name="agent_catalog_desc">عرض الوكلاء المتاحين على هذا الخادم</string>
+    <string name="agent_catalog_primary">الوكلاء الأساسيون</string>
+    <string name="agent_catalog_subagents">الوكلاء الفرعيون</string>
+    <string name="agent_catalog_other">أوضاع الوكلاء الأخرى</string>
+    <string name="agent_catalog_empty">لا يوجد وكلاء متاحون</string>
+    <string name="agent_catalog_hidden">مخفي</string>
+    <string name="agent_catalog_both">وكيل أساسي وفرعي</string>
+    <string name="agent_catalog_error">تعذر تحميل الوكلاء. أعد الاتصال وحاول مجددًا.</string>
+</resources>

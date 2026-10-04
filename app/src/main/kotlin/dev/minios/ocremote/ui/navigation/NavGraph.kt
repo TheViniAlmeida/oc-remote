@@ -29,6 +29,7 @@ import dev.minios.ocremote.R
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavType
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -500,7 +501,12 @@ fun NavGraph(
             val password = it.arguments?.getString("password").orEmpty()
             val serverName = it.arguments?.getString("serverName").orEmpty()
             val serverId = it.arguments?.getString("serverId").orEmpty()
+            val serverSettingsViewModel: dev.minios.ocremote.ui.screens.server.ServerSettingsViewModel = hiltViewModel()
+            val serverSettingsState by serverSettingsViewModel.uiState.collectAsState()
             ServerSettingsScreen(
+                agents = serverSettingsState.availableAgents,
+                isLoadingAgents = serverSettingsState.isLoadingAgents,
+                agentsError = serverSettingsState.agentsError,
                 onDuplicateServer = sharePickerServers.firstOrNull { server -> server.id == serverId }?.let { server ->
                     {
                         duplicateServerRequest = server

@@ -1,0 +1,13 @@
+<resources>
+    <string name="agent_picker_title">Wybierz agenta</string>
+    <string name="agent_picker_search">Szukaj agentów</string>
+    <string name="agent_catalog_title">Agenci i podagenci</string>
+    <string name="agent_catalog_desc">Zobacz agentów dostępnych na tym serwerze</string>
+    <string name="agent_catalog_primary">Główni agenci</string>
+    <string name="agent_catalog_subagents">Podagenci</string>
+    <string name="agent_catalog_other">Inne tryby agentów</string>
+    <string name="agent_catalog_empty">Brak dostępnych agentów</string>
+    <string name="agent_catalog_hidden">Ukryty</string>
+    <string name="agent_catalog_both">Główny agent i podagent</string>
+    <string name="agent_catalog_error">Nie udało się załadować agentów. Połącz się ponownie i spróbuj jeszcze raz.</string>
+</resources>

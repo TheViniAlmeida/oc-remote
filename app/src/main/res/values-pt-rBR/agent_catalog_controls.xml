@@ -1,0 +1,13 @@
+<resources>
+    <string name="agent_picker_title">Selecionar agente</string>
+    <string name="agent_picker_search">Buscar agentes</string>
+    <string name="agent_catalog_title">Agentes e subagentes</string>
+    <string name="agent_catalog_desc">Veja os agentes disponíveis neste servidor</string>
+    <string name="agent_catalog_primary">Agentes principais</string>
+    <string name="agent_catalog_subagents">Subagentes</string>
+    <string name="agent_catalog_other">Outros modos de agente</string>
+    <string name="agent_catalog_empty">Nenhum agente disponível</string>
+    <string name="agent_catalog_hidden">Oculto</string>
+    <string name="agent_catalog_both">Agente principal e subagente</string>
+    <string name="agent_catalog_error">Não foi possível carregar agentes. Reconecte e tente novamente.</string>
+</resources>

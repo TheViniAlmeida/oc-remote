@@ -1064,6 +1064,7 @@ fun ChatScreen(
     }
     val listState = rememberLazyListState()
     var showModelPicker by remember { mutableStateOf(false) }
+    var showAgentPicker by remember { mutableStateOf(false) }
     var showFullModelCatalog by remember { mutableStateOf(false) }
     var showRenameDialog by remember { mutableStateOf(false) }
     var showSessionControlsDialog by remember { mutableStateOf(false) }
@@ -2140,6 +2141,7 @@ fun ChatScreen(
                 agents = uiState.agents,
                 selectedAgent = uiState.selectedAgent,
                 onAgentSelect = { viewModel.selectAgent(it) },
+                onAgentLongClick = { showAgentPicker = true },
                 variantNames = uiState.variantNames,
                 selectedVariant = uiState.selectedVariant,
                 onVariantSelect = { viewModel.selectVariant(it) },
@@ -3006,6 +3008,15 @@ fun ChatScreen(
                 }
             }
         }
+    }
+
+    if (showAgentPicker) {
+        AgentPickerDialog(
+            agents = uiState.agents,
+            selectedAgent = uiState.selectedAgent,
+            onSelect = { viewModel.selectAgent(it); showAgentPicker = false },
+            onDismiss = { showAgentPicker = false },
+        )
     }
 
     // Model picker dialog
@@ -7873,6 +7884,7 @@ private fun ChatInputBar(
     agents: List<AgentInfo> = emptyList(),
     selectedAgent: String = "build",
     onAgentSelect: (String) -> Unit = {},
+    onAgentLongClick: () -> Unit = {},
     variantNames: List<String> = emptyList(),
     selectedVariant: String? = null,
     onVariantSelect: (String?) -> Unit = {},
@@ -8168,18 +8180,23 @@ private fun ChatInputBar(
                     ) {
                         // Agent selector — single button, tap to cycle
                         // Fixed width: all agent names rendered invisible to reserve max width
-                        if (agents.size > 1) {
+                        if (agents.isNotEmpty()) {
                             val agentColor = agentColor(selectedAgent, agents)
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(6.dp))
                                     .background(agentColor.copy(alpha = 0.18f))
-                                    .clickable {
-                                        val currentIndex = agents.indexOfFirst { it.name == selectedAgent }
-                                        val nextIndex = (currentIndex + 1) % agents.size
-                                        onAgentSelect(agents[nextIndex].name)
-                                    }
+                                    .combinedClickable(
+                                        onClick = {
+                                            val currentIndex = agents.indexOfFirst { it.name == selectedAgent }
+                                            val nextIndex = (currentIndex + 1) % agents.size
+                                            onAgentSelect(agents[nextIndex].name)
+                                        },
+                                        onLongClick = onAgentLongClick,
+                                        onLongClickLabel = stringResource(R.string.agent_picker_title),
+                                        role = Role.Button,
+                                    )
                                     .padding(horizontal = 6.dp, vertical = 3.dp)
                             ) {
                                 // Invisible ghost texts for all agent names — fixes width to the widest
