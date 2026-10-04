@@ -1816,6 +1816,7 @@ fun ChatScreen(
                                 PresentationPreferenceKind.SESSION_APPEARANCE to R.string.appearance_session_title,
                                 PresentationPreferenceKind.PROJECT_APPEARANCE to R.string.appearance_project_title,
                                 PresentationPreferenceKind.SESSION_TIMELINE to R.string.timeline_title,
+                                PresentationPreferenceKind.SESSION_NOTIFICATIONS to R.string.notification_preferences_title,
                             ).forEach { (kind, label) ->
                                 DropdownMenuItem(
                                     text = { Text(stringResource(label)) },

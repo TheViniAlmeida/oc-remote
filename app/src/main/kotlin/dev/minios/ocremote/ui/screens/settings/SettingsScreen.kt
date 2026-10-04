@@ -74,7 +74,6 @@ fun SettingsScreen(
     val currentTheme by viewModel.appTheme.collectAsState()
     val dynamicColor by viewModel.dynamicColor.collectAsState()
     val chatFontSize by viewModel.chatFontSize.collectAsState()
-    val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
 
     val initialMessageCount by viewModel.initialMessageCount.collectAsState()
     val messageHistoryResponseLimitMb by viewModel.messageHistoryResponseLimitMb.collectAsState()
@@ -92,7 +91,6 @@ fun SettingsScreen(
     val reconnectMode by viewModel.reconnectMode.collectAsState()
     val backgroundWakeLock by viewModel.backgroundWakeLock.collectAsState()
     val keepScreenOn by viewModel.keepScreenOn.collectAsState()
-    val silentNotifications by viewModel.silentNotifications.collectAsState()
     val compressImageAttachments by viewModel.compressImageAttachments.collectAsState()
     val imageAttachmentMaxLongSide by viewModel.imageAttachmentMaxLongSide.collectAsState()
     val imageAttachmentWebpQuality by viewModel.imageAttachmentWebpQuality.collectAsState()
@@ -233,40 +231,13 @@ fun SettingsScreen(
 
             // ======== Notifications ========
             SectionHeader(stringResource(R.string.settings_section_notifications))
-
             ListItem(
-                headlineContent = { Text(stringResource(R.string.settings_notifications)) },
-                supportingContent = { Text(stringResource(R.string.settings_notifications_desc)) },
-                leadingContent = {
-                    Icon(Lucide.Bell, contentDescription = null)
+                headlineContent = { Text(stringResource(R.string.notification_preferences_title)) },
+                supportingContent = { Text(stringResource(R.string.notification_preferences_description)) },
+                leadingContent = { Icon(Lucide.Bell, contentDescription = null) },
+                modifier = Modifier.clickable {
+                    presentationRequest = PresentationPreferenceRequest(PresentationPreferenceKind.APP_NOTIFICATIONS)
                 },
-                trailingContent = {
-                    Switch(
-                        checked = notificationsEnabled,
-                        onCheckedChange = { viewModel.setNotificationsEnabled(it) },
-                        colors = switchColors
-                    )
-                },
-                modifier = Modifier.clickable { viewModel.setNotificationsEnabled(!notificationsEnabled) }
-            )
-
-            ListItem(
-                headlineContent = { Text(stringResource(R.string.settings_silent_notifications)) },
-                supportingContent = { Text(stringResource(R.string.settings_silent_notifications_desc)) },
-                leadingContent = {
-                    Icon(Lucide.VolumeX, contentDescription = null)
-                },
-                trailingContent = {
-                    Switch(
-                        checked = silentNotifications,
-                        onCheckedChange = { viewModel.setSilentNotifications(it) },
-                        enabled = notificationsEnabled,
-                        colors = switchColors
-                    )
-                },
-                modifier = Modifier.clickable(enabled = notificationsEnabled) {
-                    viewModel.setSilentNotifications(!silentNotifications)
-                }
             )
 
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.65f))

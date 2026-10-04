@@ -100,6 +100,7 @@ fun ServerSettingsScreen(
             ) {
             listOf(
                 PresentationPreferenceKind.SERVER_TIMELINE to R.string.timeline_title,
+                PresentationPreferenceKind.SERVER_NOTIFICATIONS to R.string.notification_preferences_title,
             ).forEach { (kind, label) ->
                 Card(shape = AppCardShape, modifier = Modifier.fillMaxWidth().clickable(enabled = serverId.isNotBlank()) {
                     presentationRequest = PresentationPreferenceRequest(kind, serverId)

@@ -14,6 +14,7 @@ import android.os.PowerManager
 import android.os.SystemClock
 import dev.minios.ocremote.logging.AppLogger as Log
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import dev.minios.ocremote.BuildConfig
 import dev.minios.ocremote.MainActivity
 import dev.minios.ocremote.R
@@ -26,6 +27,13 @@ import dev.minios.ocremote.data.repository.normalizeServerUrl
 import dev.minios.ocremote.data.repository.ServerConnectionStateRepository
 import dev.minios.ocremote.data.repository.SettingsRepository
 import dev.minios.ocremote.data.repository.SessionControlsRepository
+import dev.minios.ocremote.data.repository.NotificationPreferencesRepository
+import dev.minios.ocremote.data.repository.NotificationPreferenceSnapshot
+import dev.minios.ocremote.domain.model.NotificationCategory
+import dev.minios.ocremote.domain.model.NotificationRule
+import dev.minios.ocremote.domain.model.NotificationSound
+import dev.minios.ocremote.domain.model.legacyNotificationPreferences
+import dev.minios.ocremote.domain.model.notificationRequiresAttention
 import dev.minios.ocremote.domain.model.SessionControlKey
 import dev.minios.ocremote.domain.model.SessionControlFailure
 import dev.minios.ocremote.domain.model.SessionStatus
@@ -149,6 +157,9 @@ class OpenCodeConnectionService : Service() {
     lateinit var sessionControlsRepository: SessionControlsRepository
 
     @Inject
+    lateinit var notificationPreferencesRepository: NotificationPreferencesRepository
+
+    @Inject
     lateinit var serverRepository: ServerRepository
 
     @Inject
@@ -207,6 +218,9 @@ class OpenCodeConnectionService : Service() {
 
     private lateinit var notificationManager: NotificationManager
     private var foregroundStarted: Boolean = false
+    @Volatile private var notificationPreferences: NotificationPreferenceSnapshot? = null
+    @Volatile private var legacyTaskNotificationsEnabled = true
+    @Volatile private var legacyTaskNotificationsSilent = false
 
     /** Observable set of server IDs that are actually connected (SSE stream active). */
     private val _connectedServerIds = MutableStateFlow<Set<String>>(emptySet())
@@ -280,6 +294,22 @@ class OpenCodeConnectionService : Service() {
                 controlsLoaded = false
                 controlsReady.completeExceptionally(IllegalStateException("Session controls unavailable"))
                 Log.e(TAG, "Unable to load session notification preferences; session alerts suppressed")
+            }
+        }
+        serviceScope.launch {
+            try {
+                combine(notificationPreferencesRepository.all, settingsRepository.notificationsEnabled, settingsRepository.silentNotifications) { preferences, enabled, silent ->
+                    Triple(preferences, enabled, silent)
+                }.collect { (preferences, enabled, silent) ->
+                    legacyTaskNotificationsEnabled = enabled
+                    legacyTaskNotificationsSilent = silent
+                    notificationPreferences = preferences
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                notificationPreferences = null
+                Log.e(TAG, "Unable to load notification preferences; session alerts suppressed")
             }
         }
         observeSessionControls()
@@ -1011,7 +1041,6 @@ class OpenCodeConnectionService : Service() {
             is SseEvent.SessionIdle -> {
                 if (isChildSession(event.sessionId)) return
                 serviceScope.launch {
-                    if (!settingsRepository.notificationsEnabled.first()) return@launch
 
                     // Give reducer a brief moment to receive trailing message/part events.
                     delay(250)
@@ -1298,8 +1327,8 @@ class OpenCodeConnectionService : Service() {
 
         val pendingIntent = createSessionPendingIntent(server, sessionId, sessionId.hashCode())
 
-        val silent = settingsRepository.silentNotifications.first()
-        val channelId = if (silent) NOTIFICATION_CHANNEL_TASKS_SILENT_ID else NOTIFICATION_CHANNEL_TASKS_ID
+        val rule = notificationRule(server.id, sessionId, NotificationCategory.AGENT) ?: return
+        val channelId = ensurePreferenceNotificationChannel(this, NotificationCategory.AGENT, rule)
 
         val notifId = eventNotificationId(server.id, sessionId, 0)
         val builder = NotificationCompat.Builder(this, channelId)
@@ -1309,18 +1338,16 @@ class OpenCodeConnectionService : Service() {
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
-            .setPriority(if (silent) NotificationCompat.PRIORITY_LOW else NotificationCompat.PRIORITY_HIGH)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setGroup("server_${server.id}")
 
-        if (!silent) {
-            builder.setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setVibrate(longArrayOf(0, 500, 200, 500))
-        }
-
-        postEventNotification(server, sessionId, notifId, builder.build())
+        applyNotificationSound(builder, rule)
+        postEventNotification(server, sessionId, NotificationCategory.AGENT, notifId, builder.build())
     }
 
     private fun showPermissionNotification(server: ServerConfig, sessionId: String, permission: String) {
+        val rule = notificationRule(server.id, sessionId, NotificationCategory.PERMISSION) ?: return
+        val channelId = ensurePreferenceNotificationChannel(this, NotificationCategory.PERMISSION, rule)
         val (sessionTitle, directory) = getSessionInfo(sessionId)
         val displayTitle = sessionTitle ?: getString(R.string.notification_new_session)
         val projectName = getProjectName(directory)
@@ -1333,7 +1360,7 @@ class OpenCodeConnectionService : Service() {
         val notifId = eventNotificationId(server.id, sessionId, 1000)
         val pendingIntent = createSessionPendingIntent(server, sessionId, notifId)
 
-        val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_PERMISSIONS_ID)
+        val notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle(getString(R.string.notification_permission_required))
             .setContentText(body)
             .setSubText(server.displayName)
@@ -1341,15 +1368,16 @@ class OpenCodeConnectionService : Service() {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setDefaults(NotificationCompat.DEFAULT_ALL)
-            .setVibrate(longArrayOf(0, 300, 100, 300))
             .setGroup("server_${server.id}")
+            .also { applyNotificationSound(it, rule) }
             .build()
 
-        postEventNotification(server, sessionId, notifId, notification)
+        postEventNotification(server, sessionId, NotificationCategory.PERMISSION, notifId, notification)
     }
 
     private fun showQuestionNotification(server: ServerConfig, sessionId: String, questionText: String) {
+        val rule = notificationRule(server.id, sessionId, NotificationCategory.QUESTION) ?: return
+        val channelId = ensurePreferenceNotificationChannel(this, NotificationCategory.QUESTION, rule)
         val (sessionTitle, directory) = getSessionInfo(sessionId)
         val displayTitle = sessionTitle ?: getString(R.string.notification_new_session)
         val projectName = getProjectName(directory)
@@ -1362,7 +1390,7 @@ class OpenCodeConnectionService : Service() {
         val notifId = eventNotificationId(server.id, sessionId, 2000)
         val pendingIntent = createSessionPendingIntent(server, sessionId, notifId)
 
-        val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_PERMISSIONS_ID)
+        val notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle(getString(R.string.notification_question))
             .setContentText(body)
             .setSubText(server.displayName)
@@ -1370,15 +1398,16 @@ class OpenCodeConnectionService : Service() {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setDefaults(NotificationCompat.DEFAULT_ALL)
-            .setVibrate(longArrayOf(0, 300, 100, 300))
             .setGroup("server_${server.id}")
+            .also { applyNotificationSound(it, rule) }
             .build()
 
-        postEventNotification(server, sessionId, notifId, notification)
+        postEventNotification(server, sessionId, NotificationCategory.QUESTION, notifId, notification)
     }
 
     private fun showErrorNotification(server: ServerConfig, sessionId: String?, error: String) {
+        val rule = notificationRule(server.id, sessionId, NotificationCategory.ERROR) ?: return
+        val channelId = ensurePreferenceNotificationChannel(this, NotificationCategory.ERROR, rule)
         val body = if (sessionId != null) {
             val (sessionTitle, _) = getSessionInfo(sessionId)
             sessionTitle ?: error.ifBlank { getString(R.string.error_unknown) }
@@ -1389,7 +1418,7 @@ class OpenCodeConnectionService : Service() {
         val notifId = eventNotificationId(server.id, sessionId ?: "error", 3000)
         val pendingIntent = createSessionPendingIntent(server, sessionId, notifId)
 
-        val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_TASKS_ID)
+        val notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle(getString(R.string.notification_session_error))
             .setContentText(body)
             .setSubText(server.displayName)
@@ -1397,16 +1426,17 @@ class OpenCodeConnectionService : Service() {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setGroup("server_${server.id}")
+            .also { applyNotificationSound(it, rule) }
             .build()
 
-        postEventNotification(server, sessionId, notifId, notification)
+        postEventNotification(server, sessionId, NotificationCategory.ERROR, notifId, notification)
     }
 
     private fun postEventNotification(
         server: ServerConfig,
         sessionId: String?,
+        category: NotificationCategory,
         notificationId: Int,
         notification: Notification,
     ) {
@@ -1414,11 +1444,29 @@ class OpenCodeConnectionService : Service() {
             notificationManager.notify(notificationId, notification)
             showServerGroupSummary(server)
         }
-        if (sessionId == null) {
-            post()
-        } else {
-            if (controlsLoaded) SessionNotificationCoordinator.postUnlessActive(server.id, sessionId, post)
-        }
+        if (sessionId != null && !controlsLoaded) return
+        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) return
+        val rule = notificationRule(server.id, sessionId, category) ?: return
+        val process = ActivityManager.RunningAppProcessInfo()
+        ActivityManager.getMyMemoryState(process)
+        SessionNotificationCoordinator.postWithPreferences(
+            server.id, sessionId, rule,
+            process.importance <= ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND,
+            post,
+        )
+    }
+
+    private fun notificationRule(serverId: String, sessionId: String?, category: NotificationCategory): NotificationRule? =
+        notificationPreferences?.resolve(serverId, sessionId,
+            legacyNotificationPreferences(legacyTaskNotificationsEnabled, legacyTaskNotificationsSilent))?.rule(category)
+
+    private fun applyNotificationSound(builder: NotificationCompat.Builder, rule: NotificationRule) {
+        builder.setPriority(if (notificationRequiresAttention(rule)) NotificationCompat.PRIORITY_HIGH else NotificationCompat.PRIORITY_LOW)
+        var defaults = 0
+        if (rule.sound == NotificationSound.DEFAULT) defaults = defaults or NotificationCompat.DEFAULT_SOUND
+        if (rule.vibrate) defaults = defaults or NotificationCompat.DEFAULT_VIBRATE
+        builder.setDefaults(defaults)
+        if (!rule.vibrate) builder.setVibrate(longArrayOf(0))
     }
 
     /**

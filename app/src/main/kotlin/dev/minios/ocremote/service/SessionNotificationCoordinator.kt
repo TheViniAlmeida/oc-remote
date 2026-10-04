@@ -3,6 +3,8 @@ package dev.minios.ocremote.service
 import android.app.Notification
 import android.app.NotificationManager
 import android.content.Context
+import dev.minios.ocremote.domain.model.NotificationRule
+import dev.minios.ocremote.domain.model.shouldDeliverNotification
 
 private const val TASK_COMPLETE_OFFSET = 0
 private const val PERMISSION_OFFSET = 1000
@@ -73,6 +75,14 @@ internal object SessionNotificationCoordinator {
     @Synchronized
     fun postUnlessActive(serverId: String, sessionId: String, post: () -> Unit): Boolean {
         if (!shouldPostSessionNotification(activeSession, serverId, sessionId, mutedSessions)) return false
+        post()
+        return true
+    }
+
+    @Synchronized
+    fun postWithPreferences(serverId: String, sessionId: String?, rule: NotificationRule, appForeground: Boolean, post: () -> Unit): Boolean {
+        val identity = sessionId?.let { serverId to it }
+        if (!shouldDeliverNotification(rule, identity != null && identity in mutedSessions, identity != null && identity == activeSession, appForeground)) return false
         post()
         return true
     }
