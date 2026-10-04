@@ -283,10 +283,11 @@ class OpenCodeApi @Inject constructor(
         return response.status.isSuccess()
     }
 
-    suspend fun getSessionDiff(conn: ServerConnection, sessionId: String): List<FileDiff> {
+    suspend fun getSessionDiff(conn: ServerConnection, sessionId: String, directory: String? = null): List<FileDiff> {
         if (isV2(conn)) return v2.diffs(conn, sessionId)
         return httpClient.get("${conn.baseUrl}/session/$sessionId/diff") {
             conn.authHeader?.let { header("Authorization", it) }
+            directory?.let { header("x-opencode-directory", it) }
         }.body()
     }
 

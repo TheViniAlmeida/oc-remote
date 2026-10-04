@@ -1583,37 +1583,27 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    /** Undo the last user message in the session, restoring its text to the input field. */
-    fun undoMessage(onResult: (Boolean) -> Unit) {
+    private val _sessionDiff = MutableStateFlow(SessionDiffState())
+    val sessionDiff: StateFlow<SessionDiffState> = _sessionDiff
+    private var sessionDiffJob: Job? = null
+
+    fun loadSessionDiff() {
+        sessionDiffJob?.cancel()
         if (!isServerConnected()) {
-            onResult(false)
+            _sessionDiff.value = SessionDiffState(error = appContext.getString(R.string.session_diff_failed))
             return
         }
-        viewModelScope.launch {
+        sessionDiffJob = viewModelScope.launch {
+            _sessionDiff.value = SessionDiffState(isLoading = true)
             try {
-                // Find the last user message (before any existing revert point)
-                val messages = uiState.value.messages
-                val lastUser = messages.lastOrNull { it.isUser }
-                if (lastUser == null) {
-                    onResult(false)
-                    return@launch
-                }
-                val revertedSession = api.revertSession(conn, sessionId, lastUser.message.id)
-                eventReducer.upsertSession(serverId, revertedSession)
-                pendingPromptRepository.remove(lastUser.message.id)
-                _pendingPrompts.value = _pendingPrompts.value.filterNot { it.messageId == lastUser.message.id }
-                if (BuildConfig.DEBUG) Log.d(TAG, "Reverted session $sessionId to message ${lastUser.message.id}")
-                // Restore the user message text to the input field
-                restoreRevertedDraft(extractRevertedDraft(lastUser))
-                onResult(true)
+                _sessionDiff.value = SessionDiffState(files = api.getSessionDiff(conn, sessionId, sessionDirectory))
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to revert session", e)
-                onResult(false)
+                e.rethrowCancellation()
+                _sessionDiff.value = SessionDiffState(error = appContext.getString(R.string.session_diff_failed))
             }
         }
     }
 
-    /** Revert to a specific user message by ID, optionally restoring its text to the input field. */
     /** The native endpoint exports the entire history, independent of the on-screen page limit. */
     private suspend fun createNativeExport(): java.io.File {
         val native = java.io.File.createTempFile("session-export-", ".json", appContext.cacheDir)

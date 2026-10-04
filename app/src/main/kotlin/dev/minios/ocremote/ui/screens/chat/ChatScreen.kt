@@ -1073,6 +1073,7 @@ fun ChatScreen(
     var showModelPicker by remember { mutableStateOf(false) }
     var showAgentPicker by remember { mutableStateOf(false) }
     var showSessionExportDialog by remember { mutableStateOf(false) }
+    var showSessionDiffDialog by remember { mutableStateOf(false) }
     var showFullModelCatalog by remember { mutableStateOf(false) }
     var showRenameDialog by remember { mutableStateOf(false) }
     var showSessionControlsDialog by remember { mutableStateOf(false) }
@@ -1961,6 +1962,16 @@ fun ChatScreen(
                                     }
                                 )
                             }
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.session_diff_title)) },
+                                leadingIcon = { Icon(Lucide.GitCompare, contentDescription = null) },
+                                enabled = uiState.sessionLoaded && isServerConnected,
+                                onClick = {
+                                    showMenu = false
+                                    showSessionDiffDialog = true
+                                    viewModel.loadSessionDiff()
+                                },
+                            )
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.menu_export_session)) },
                                 enabled = uiState.sessionLoaded && isServerConnected,
@@ -3015,6 +3026,10 @@ fun ChatScreen(
         }
     }
 
+    if (showSessionDiffDialog) {
+        val diff by viewModel.sessionDiff.collectAsState()
+        SessionDiffDialog(diff, onRetry = viewModel::loadSessionDiff, onDismiss = { showSessionDiffDialog = false })
+    }
     if (showSessionExportDialog) {
         SessionExportDialog(
             onCopy = { format ->
