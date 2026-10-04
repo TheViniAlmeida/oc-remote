@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="project_appearance_edit">프로젝트 색상 및 태그</string>
+    <string name="project_color_default">기본값</string>
+    <string name="project_tags">태그</string>
+    <string name="project_tags_hint">쉼표로 구분하세요. 최대 %1$d개 태그, 각 %2$d자까지 가능합니다.</string>
+    <string name="project_picker_up">한 단계 위로</string>
+    <string name="project_picker_use_folder">이 폴더 사용</string>
+    <string name="project_color_red">빨강</string>
+    <string name="project_color_orange">주황</string>
+    <string name="project_color_amber">호박색</string>
+    <string name="project_color_green">초록</string>
+    <string name="project_color_teal">청록</string>
+    <string name="project_color_blue">파랑</string>
+    <string name="project_color_violet">보라</string>
+    <string name="project_color_pink">분홍</string>
+</resources>

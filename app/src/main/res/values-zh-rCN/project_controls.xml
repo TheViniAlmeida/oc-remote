@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="project_appearance_edit">项目颜色和标签</string>
+    <string name="project_color_default">默认</string>
+    <string name="project_tags">标签</string>
+    <string name="project_tags_hint">用逗号分隔。最多 %1$d 个标签，每个最多 %2$d 个字符。</string>
+    <string name="project_picker_up">上一级</string>
+    <string name="project_picker_use_folder">使用此文件夹</string>
+    <string name="project_color_red">红色</string>
+    <string name="project_color_orange">橙色</string>
+    <string name="project_color_amber">琥珀色</string>
+    <string name="project_color_green">绿色</string>
+    <string name="project_color_teal">青绿色</string>
+    <string name="project_color_blue">蓝色</string>
+    <string name="project_color_violet">紫色</string>
+    <string name="project_color_pink">粉色</string>
+</resources>

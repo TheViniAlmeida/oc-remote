@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="project_appearance_edit">Warna dan tag proyek</string>
+    <string name="project_color_default">Bawaan</string>
+    <string name="project_tags">Tag</string>
+    <string name="project_tags_hint">Pisahkan dengan koma. Maksimal %1$d tag, masing-masing %2$d karakter.</string>
+    <string name="project_picker_up">Naik satu tingkat</string>
+    <string name="project_picker_use_folder">Gunakan folder ini</string>
+    <string name="project_color_red">Merah</string>
+    <string name="project_color_orange">Oranye</string>
+    <string name="project_color_amber">Kuning ambar</string>
+    <string name="project_color_green">Hijau</string>
+    <string name="project_color_teal">Toska</string>
+    <string name="project_color_blue">Biru</string>
+    <string name="project_color_violet">Ungu</string>
+    <string name="project_color_pink">Merah muda</string>
+</resources>

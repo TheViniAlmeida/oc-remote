@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="project_appearance_edit">Кольори та теги проєкту</string>
+    <string name="project_color_default">За замовчуванням</string>
+    <string name="project_tags">Теги</string>
+    <string name="project_tags_hint">Розділяйте комами. До %1$d тегів, по %2$d символів у кожному.</string>
+    <string name="project_picker_up">На рівень вище</string>
+    <string name="project_picker_use_folder">Використати цю папку</string>
+    <string name="project_color_red">Червоний</string>
+    <string name="project_color_orange">Помаранчевий</string>
+    <string name="project_color_amber">Бурштиновий</string>
+    <string name="project_color_green">Зелений</string>
+    <string name="project_color_teal">Бірюзовий</string>
+    <string name="project_color_blue">Синій</string>
+    <string name="project_color_violet">Фіолетовий</string>
+    <string name="project_color_pink">Рожевий</string>
+</resources>

@@ -11,9 +11,13 @@ import dev.minios.ocremote.data.api.OpenCodeApi
 import dev.minios.ocremote.data.api.ServerConnection
 import dev.minios.ocremote.data.repository.EventReducer
 import dev.minios.ocremote.data.repository.DirectoryScope
+import dev.minios.ocremote.data.repository.ProjectAppearanceRepository
 import dev.minios.ocremote.data.repository.SettingsRepository
 import dev.minios.ocremote.data.repository.ServerConnectionStateRepository
 import dev.minios.ocremote.domain.model.Project
+import dev.minios.ocremote.domain.model.ProjectAppearance
+import dev.minios.ocremote.domain.model.normalizeProjectDirectory
+import dev.minios.ocremote.domain.model.projectAppearanceId
 import dev.minios.ocremote.domain.model.Session
 import dev.minios.ocremote.domain.model.SessionStatus
 import dev.minios.ocremote.domain.model.SessionCategory
@@ -60,7 +64,8 @@ data class ProjectSessionGroup(
     val sessions: List<SessionItem>,
     val branch: String? = null,
     /** Per-session tilde-path labels (sessionId -> tildePath) for flat display. */
-    val sessionDirLabels: Map<String, String> = emptyMap()
+    val sessionDirLabels: Map<String, String> = emptyMap(),
+    val appearance: ProjectAppearance = ProjectAppearance(),
 )
 
 internal fun buildProjectSessionGroups(
@@ -69,8 +74,9 @@ internal fun buildProjectSessionGroups(
     homeDir: String?,
     branches: Map<DirectoryScope, String?>,
     serverId: String,
+    appearances: Map<String, ProjectAppearance> = emptyMap(),
 ): List<ProjectSessionGroup> {
-    fun normalized(path: String) = path.trimEnd('/').ifEmpty { "/" }
+    fun normalized(path: String) = normalizeProjectDirectory(path)
     fun displayPath(path: String): String {
         val dir = normalized(path)
         return if (!homeDir.isNullOrBlank() && (dir == homeDir || dir.startsWith("$homeDir/"))) {
@@ -84,8 +90,10 @@ internal fun buildProjectSessionGroups(
         val directory = normalized(session.directory)
         return projects
             .filter { project ->
-                val root = normalized(project.worktree.ifBlank { project.path })
-                directory == root || directory.startsWith("$root/")
+                val projectPath = project.worktree.ifBlank { project.path }
+                if (projectPath.isBlank()) return@filter false
+                val root = normalized(projectPath)
+                directory == root || directory.startsWith(if (root == "/") "/" else "$root/")
             }
             .maxByOrNull { normalized(it.worktree.ifBlank { it.path }).length }
     }
@@ -108,13 +116,14 @@ internal fun buildProjectSessionGroups(
                 scope.serverId == serverId && normalized(scope.directory) == directory
             }?.value
             ProjectSessionGroup(
-                projectId = project?.id ?: key,
+                projectId = project?.id?.takeIf(String::isNotBlank) ?: key,
                 projectName = project?.displayName
                     ?: directory.substringAfterLast('/').ifEmpty { "/" },
                 directory = directory,
                 sessions = sorted,
                 branch = branch,
                 sessionDirLabels = sorted.associate { it.session.id to displayPath(it.session.directory) },
+                appearance = appearances[projectAppearanceId(project?.id.orEmpty(), directory)] ?: ProjectAppearance(),
             )
         }
         .sortedWith(compareByDescending<ProjectSessionGroup> { group ->
@@ -152,10 +161,10 @@ internal fun parseDirectoryPathQuery(query: String, homeDirectory: String): Dire
         else -> return null
     }
     if (expanded == "/") return DirectoryPathQuery("/", "")
-    if (expanded.endsWith('/')) return DirectoryPathQuery(expanded.trimEnd('/').ifEmpty { "/" }, "")
+    if (expanded.endsWith('/')) return DirectoryPathQuery(normalizeProjectDirectory(expanded), "")
     val parent = expanded.substringBeforeLast('/', missingDelimiterValue = "")
         .ifEmpty { "/" }
-    return DirectoryPathQuery(parent, expanded.substringAfterLast('/'))
+    return DirectoryPathQuery(normalizeProjectDirectory(parent), expanded.substringAfterLast('/'))
 }
 
 @HiltViewModel
@@ -165,6 +174,7 @@ class SessionListViewModel @Inject constructor(
     private val api: OpenCodeApi,
     private val settingsRepository: SettingsRepository,
     private val connectionStateRepository: ServerConnectionStateRepository,
+    private val projectAppearanceRepository: ProjectAppearanceRepository,
 ) : ViewModel() {
 
     val serverUrl: String = savedStateHandle.get<String>("serverUrl").orEmpty()
@@ -206,6 +216,8 @@ class SessionListViewModel @Inject constructor(
             emptyMap(),
         )
 
+    private val projectAppearances = projectAppearanceRepository.appearances(serverId)
+
     private val _error = MutableStateFlow<String?>(null)
     private val _isLoading = MutableStateFlow(true)
     private val _projects = MutableStateFlow<List<Project>>(emptyList())
@@ -231,6 +243,7 @@ class SessionListViewModel @Inject constructor(
             favoriteSessionIds,
             sessionCategories,
             categoryAssignments,
+            projectAppearances,
         )
     ) { values ->
         val allSessions = values[0] as List<Session>
@@ -245,6 +258,7 @@ class SessionListViewModel @Inject constructor(
         val favoriteIds = values[9] as List<String>
         val categories = values[10] as List<SessionCategory>
         val assignments = values[11] as Map<String, String>
+        val appearances = values[12] as Map<String, ProjectAppearance>
         val favoriteOrder = favoriteIds.withIndex().associate { (index, id) -> id to index }
         val categoriesById = categories.associateBy { it.id }
 
@@ -262,7 +276,7 @@ class SessionListViewModel @Inject constructor(
                 )
             }
 
-        val groups = buildProjectSessionGroups(sessions, projects, homeDir, branches, serverId)
+        val groups = buildProjectSessionGroups(sessions, projects, homeDir, branches, serverId, appearances)
 
         val visibleSessionIds = sessions.map { it.session.id }.toSet()
         val validSelectedIds = selectedIds.intersect(visibleSessionIds)
@@ -315,6 +329,17 @@ class SessionListViewModel @Inject constructor(
 
     fun setGroupSessionsByProject(enabled: Boolean) {
         viewModelScope.launch { settingsRepository.setGroupSessionsByProject(enabled) }
+    }
+
+    fun saveProjectAppearance(group: ProjectSessionGroup, appearance: ProjectAppearance) {
+        viewModelScope.launch {
+            try {
+                projectAppearanceRepository.save(serverId, group.projectId, group.directory, appearance)
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                _error.value = e.message ?: "Failed to save project appearance"
+            }
+        }
     }
 
     fun toggleFavorite(sessionId: String) {
@@ -593,7 +618,7 @@ class SessionListViewModel @Inject constructor(
             if (pathQuery.segment.isEmpty()) {
                 return (listOf(pathQuery.parent) + parentNodes.map { node ->
                     node.absolute ?: joinDirectory(pathQuery.parent, node.name)
-                }).distinct()
+                }).map(::normalizeProjectDirectory).distinct()
             }
 
             val matches = parentNodes.filter { node ->
@@ -605,9 +630,9 @@ class SessionListViewModel @Inject constructor(
                 val children = listDirectories(exactPath).map { node ->
                     node.absolute ?: joinDirectory(exactPath, node.name)
                 }
-                return (listOf(exactPath) + children).distinct()
+                return (listOf(exactPath) + children).map(::normalizeProjectDirectory).distinct()
             }
-            return matches.map { it.absolute ?: joinDirectory(pathQuery.parent, it.name) }.distinct()
+            return matches.map { normalizeProjectDirectory(it.absolute ?: joinDirectory(pathQuery.parent, it.name)) }.distinct()
         }
 
         return try {
@@ -616,6 +641,7 @@ class SessionListViewModel @Inject constructor(
                     if (result.startsWith('/')) result.trimEnd('/')
                     else joinDirectory(directory, result)
                 }
+                .map(::normalizeProjectDirectory)
                 .distinct()
         } catch (e: Exception) {
             if (e is CancellationException) throw e

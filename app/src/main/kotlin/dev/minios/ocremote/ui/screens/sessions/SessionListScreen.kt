@@ -54,7 +54,12 @@ import androidx.activity.compose.BackHandler
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.minios.ocremote.R
 import dev.minios.ocremote.data.api.FileNode
-import dev.minios.ocremote.domain.model.Project
+import dev.minios.ocremote.domain.model.ProjectAppearance
+import dev.minios.ocremote.domain.model.MAX_PROJECT_TAGS
+import dev.minios.ocremote.domain.model.MAX_PROJECT_TAG_LENGTH
+import dev.minios.ocremote.domain.model.normalizeProjectDirectory
+import dev.minios.ocremote.domain.model.parentProjectDirectory
+import dev.minios.ocremote.domain.model.projectDirectoryName
 import dev.minios.ocremote.domain.model.SessionStatus
 import dev.minios.ocremote.domain.model.SessionCategory
 import kotlinx.coroutines.flow.launchIn
@@ -79,6 +84,7 @@ import dev.minios.ocremote.ui.components.appPopupContainerColor
 import dev.minios.ocremote.ui.components.isAmoledTheme
 import dev.minios.ocremote.ui.components.AppLoadingEdge
 import dev.minios.ocremote.ui.components.ServerConnectionBanner
+import dev.minios.ocremote.ui.components.SessionCategoryColorKeys
 import dev.minios.ocremote.ui.components.sessionCategoryColor
 import dev.minios.ocremote.ui.components.sessionCategoryIcon
 import dev.minios.ocremote.ui.screens.settings.SessionCategoriesDialog
@@ -108,11 +114,11 @@ internal fun recentSessionDirectories(
     sessions: List<SessionItem>,
     limit: Int = 20,
 ): List<RecentSessionDirectory> = sessions
-    .groupBy { it.session.directory.trimEnd('/') }
+    .groupBy { normalizeProjectDirectory(it.session.directory) }
     .map { (directory, items) ->
         RecentSessionDirectory(
-            directory = items.first().session.directory,
-            name = directory.substringAfterLast('/').ifEmpty { directory },
+            directory = directory,
+            name = projectDirectoryName(directory),
             count = items.size,
             lastUsed = items.maxOf { it.session.time.updated },
         )
@@ -218,6 +224,8 @@ fun SessionListScreen(
     var showDeleteSelectedDialog by remember { mutableStateOf(false) }
 
     // Project picker dialog state
+    var appearanceProject by remember { mutableStateOf<ProjectSessionGroup?>(null) }
+    var showProjectAppearanceChooser by remember { mutableStateOf(false) }
     var showOpenProject by remember { mutableStateOf(false) }
     var showQuickNewSession by remember { mutableStateOf(false) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
@@ -233,6 +241,7 @@ fun SessionListScreen(
             uiState.sessionGroups.mapNotNull { group ->
                 val projectMatches = group.projectName.contains(query, ignoreCase = true) ||
                     group.directory.contains(query, ignoreCase = true) ||
+                    group.appearance.tags.any { it.contains(query, ignoreCase = true) } ||
                     group.branch?.contains(query, ignoreCase = true) == true
                 val sessions = if (projectMatches) group.sessions else group.sessions.filter { item ->
                     item.session.title?.contains(query, ignoreCase = true) == true ||
@@ -317,6 +326,12 @@ fun SessionListScreen(
                         }
                     },
                     actions = {
+                        IconButton(
+                            onClick = { showProjectAppearanceChooser = true },
+                            enabled = uiState.sessionGroups.isNotEmpty(),
+                        ) {
+                            Icon(Lucide.Palette, contentDescription = stringResource(R.string.project_appearance_edit))
+                        }
                         IconButton(onClick = { viewModel.setGroupSessionsByProject(!groupByProject) }) {
                              Icon(
                                  imageVector = if (groupByProject) Lucide.List else Lucide.Folder,
@@ -561,6 +576,8 @@ fun SessionListScreen(
                                     },
                                     onNewSession = { viewModel.createNewSession(group.directory) },
                                     newSessionEnabled = isServerConnected,
+                                    appearance = group.appearance,
+                                    onEditAppearance = { appearanceProject = group },
                                 )
                             }
                                 if (expanded) items(group.sessions, key = { it.session.id }) { item ->
@@ -630,11 +647,35 @@ fun SessionListScreen(
         )
     }
 
+    if (showProjectAppearanceChooser) {
+        AppDialog(onDismissRequest = { showProjectAppearanceChooser = false }, modifier = Modifier.fillMaxWidth()) {
+            Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(stringResource(R.string.project_appearance_edit), style = MaterialTheme.typography.titleLarge)
+                LazyColumn(Modifier.heightIn(max = 420.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(uiState.sessionGroups, key = { it.projectId }) { group ->
+                        Column(
+                            Modifier.fillMaxWidth().clickable {
+                                showProjectAppearanceChooser = false
+                                appearanceProject = group
+                            }.padding(vertical = 8.dp),
+                        ) {
+                            Text(group.projectName, style = MaterialTheme.typography.titleSmall)
+                            Text(group.directory, style = MaterialTheme.typography.bodySmall)
+                            ProjectTagPreview(group.appearance.tags)
+                        }
+                    }
+                }
+                AppSecondaryButton(onClick = { showProjectAppearanceChooser = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        }
+    }
+
     // Open Project directory browser dialog
     if (showOpenProject) {
         OpenProjectDialog(
             viewModel = viewModel,
-            projects = uiState.projects,
             onSelect = { directory ->
                 showOpenProject = false
                 viewModel.createNewSession(directory = directory)
@@ -714,6 +755,17 @@ fun SessionListScreen(
         }
     }
 
+    appearanceProject?.let { group ->
+        ProjectAppearanceDialog(
+            group = group,
+            onDismiss = { appearanceProject = null },
+            onSave = { appearance ->
+                viewModel.saveProjectAppearance(group, appearance)
+                appearanceProject = null
+            },
+        )
+    }
+
     // Delete confirmation dialog
     if (showDeleteDialog) {
         AppDialog(onDismissRequest = { showDeleteDialog = false }, modifier = Modifier.fillMaxWidth()) {
@@ -758,6 +810,8 @@ private fun ProjectHeader(
     onToggle: () -> Unit,
     onNewSession: () -> Unit,
     newSessionEnabled: Boolean,
+    appearance: ProjectAppearance,
+    onEditAppearance: () -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -772,10 +826,13 @@ private fun ProjectHeader(
             Lucide.Folder,
             contentDescription = null,
             modifier = Modifier.size(16.dp),
-            tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
+            tint = appearance.color?.let(::sessionCategoryColor) ?: MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
         )
         Column(modifier = Modifier.weight(1f)) {
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                appearance.color?.let { key ->
+                    Box(Modifier.size(8.dp).clip(CircleShape).background(sessionCategoryColor(key)))
+                }
                 Text(
                     text = name,
                     style = MaterialTheme.typography.titleSmall,
@@ -803,6 +860,10 @@ private fun ProjectHeader(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
+            ProjectTagPreview(appearance.tags)
+        }
+        IconButton(onClick = onEditAppearance) {
+            Icon(Lucide.Settings, contentDescription = stringResource(R.string.project_appearance_edit))
         }
         IconButton(onClick = onNewSession, enabled = newSessionEnabled) {
             Icon(Lucide.Plus, contentDescription = stringResource(R.string.sessions_new_in_project))
@@ -816,6 +877,86 @@ private fun ProjectHeader(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun ProjectTagPreview(tags: List<String>) {
+    if (tags.isEmpty()) return
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = Modifier.padding(top = 4.dp),
+    ) {
+        tags.forEach { tag ->
+            Surface(shape = RoundedCornerShape(5.dp), color = MaterialTheme.colorScheme.surfaceVariant) {
+                Text(
+                    tag,
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun ProjectAppearanceDialog(
+    group: ProjectSessionGroup,
+    onDismiss: () -> Unit,
+    onSave: (ProjectAppearance) -> Unit,
+) {
+    var color by remember(group.projectId) { mutableStateOf(group.appearance.color) }
+    var tagsText by remember(group.projectId) { mutableStateOf(group.appearance.tags.joinToString(", ")) }
+    val appearance = ProjectAppearance(color, tagsText.split(',')).normalized()
+    val colorLabels = listOf(
+        R.string.project_color_red, R.string.project_color_orange, R.string.project_color_amber,
+        R.string.project_color_green, R.string.project_color_teal, R.string.project_color_blue,
+        R.string.project_color_violet, R.string.project_color_pink,
+    )
+    AppDialog(onDismissRequest = onDismiss, modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier.padding(24.dp).verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Text(stringResource(R.string.project_appearance_edit), style = MaterialTheme.typography.titleMedium)
+            Text(group.projectName, style = MaterialTheme.typography.titleSmall)
+            Text(group.directory, style = MaterialTheme.typography.bodySmall)
+            Text(stringResource(R.string.settings_category_color), style = MaterialTheme.typography.labelLarge)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                FilterChip(
+                    selected = color == null,
+                    onClick = { color = null },
+                    label = { Text(stringResource(R.string.project_color_default)) },
+                )
+                SessionCategoryColorKeys.forEachIndexed { index, key ->
+                    FilterChip(
+                        selected = color == key,
+                        onClick = { color = key },
+                        label = { Text(stringResource(colorLabels[index])) },
+                        leadingIcon = {
+                            Box(Modifier.size(12.dp).clip(CircleShape).background(sessionCategoryColor(key)))
+                        },
+                    )
+                }
+            }
+            OutlinedTextField(
+                value = tagsText,
+                onValueChange = { tagsText = it.take(600) },
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text(stringResource(R.string.project_tags)) },
+                supportingText = { Text(stringResource(R.string.project_tags_hint, MAX_PROJECT_TAGS, MAX_PROJECT_TAG_LENGTH)) },
+                maxLines = 4,
+            )
+            ProjectTagPreview(appearance.tags)
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                AppSecondaryButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
+                Spacer(Modifier.width(8.dp))
+                AppPrimaryButton(onClick = { onSave(appearance) }) { Text(stringResource(R.string.server_save)) }
+            }
+        }
+    }
+}
+
 /**
  * Directory browser dialog for opening a project.
  * Shows: known projects at top, then browsable server filesystem.
@@ -824,7 +965,6 @@ private fun ProjectHeader(
 @Composable
 private fun OpenProjectDialog(
     viewModel: SessionListViewModel,
-    projects: List<Project>,
     onSelect: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -848,40 +988,29 @@ private fun OpenProjectDialog(
     // Load home directory and initial listing
     LaunchedEffect(Unit) {
         val home = viewModel.getHomeDirectory()
-        homeDir = home
-        currentDir = home
+        homeDir = normalizeProjectDirectory(home)
+        currentDir = homeDir
+    }
+
+    // One cancellable loader owns the list, avoiding stale search or directory responses.
+    LaunchedEffect(currentDir, searchQuery) {
+        val directory = currentDir ?: return@LaunchedEffect
         isLoading = true
-        directories = viewModel.listDirectories(home)
-        isLoading = false
-    }
-
-    // Re-list when currentDir changes
-    LaunchedEffect(currentDir) {
-        val dir = currentDir ?: return@LaunchedEffect
-        if (searchQuery.isBlank()) {
-            isLoading = true
-            directories = viewModel.listDirectories(dir)
-            isLoading = false
-        }
-    }
-
-    // Search debounce
-    LaunchedEffect(searchQuery) {
         if (searchQuery.isBlank()) {
             searchResults = emptyList()
-            // Re-list current dir
-            currentDir?.let {
-                isLoading = true
-                directories = viewModel.listDirectories(it)
-                isLoading = false
-            }
-            return@LaunchedEffect
+            directories = viewModel.listDirectories(directory)
+                .distinctBy { normalizeProjectDirectory(it.absolute ?: "$directory/${it.name}") }
+        } else {
+            kotlinx.coroutines.delay(300)
+            searchResults = viewModel.searchDirectories(searchQuery, homeDir ?: "/")
+                .map(::normalizeProjectDirectory).distinct()
         }
-        kotlinx.coroutines.delay(300)
-        isLoading = true
-        val baseDir = homeDir ?: "/"
-        searchResults = viewModel.searchDirectories(searchQuery, baseDir)
         isLoading = false
+    }
+
+    fun navigateTo(path: String) {
+        searchQuery = ""
+        currentDir = normalizeProjectDirectory(path)
     }
 
     // Focus the search field
@@ -897,7 +1026,7 @@ private fun OpenProjectDialog(
     }
 
     Dialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { if (!showCreateFolderDialog) onDismiss() },
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Surface(
@@ -994,41 +1123,23 @@ private fun OpenProjectDialog(
                     }
                 }
 
-                // Breadcrumb / current path (when not searching)
-                if (!isSearching && currentDir != null) {
-                    val canGoUp = currentDir != "/" && currentDir != homeDir
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                                    .heightIn(min = 48.dp)
-                                    .padding(horizontal = 20.dp, vertical = 4.dp)
-                            .then(
-                                if (canGoUp) Modifier
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .clickable {
-                                        // Navigate up
-                                        val parent = currentDir!!.trimEnd('/').substringBeforeLast('/')
-                                        currentDir = parent.ifEmpty { "/" }
-                                    } else Modifier
-                            ),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                currentDir?.let { directory ->
+                    Text(
+                        text = directory,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 8.dp),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    AppSecondaryButton(
+                        onClick = { parentProjectDirectory(directory)?.let(::navigateTo) },
+                        enabled = parentProjectDirectory(directory) != null,
+                        modifier = Modifier.padding(horizontal = 16.dp),
                     ) {
-                        if (canGoUp) {
-                            Icon(
-                                backIcon(),
-                                contentDescription = stringResource(R.string.back),
-                                modifier = Modifier.size(14.dp),
-                                tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
-                            )
-                        }
-                        Text(
-                            text = tildeReplace(currentDir ?: "/"),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
+                        Icon(backIcon(), contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(R.string.project_picker_up))
                     }
                 }
 
@@ -1037,7 +1148,7 @@ private fun OpenProjectDialog(
                     color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
                 )
 
-                Box(modifier = Modifier.fillMaxSize()) {
+                Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
                     // Content
                     when {
                         isLoading -> {
@@ -1064,18 +1175,14 @@ private fun OpenProjectDialog(
                             } else {
                                 LazyColumn(
                                     modifier = Modifier.fillMaxSize(),
-                                    contentPadding = PaddingValues(vertical = 4.dp)
+                                    contentPadding = PaddingValues(top = 4.dp, bottom = 88.dp)
                                 ) {
                                     items(searchResults) { path ->
                                         val absolutePath = path.trimEnd('/').ifEmpty { "/" }
                                         DirectoryRow(
-                                            displayPath = tildeReplace(absolutePath) + "/",
-                                            onClick = { onSelect(absolutePath) },
-                                            onNavigate = {
-                                                // Navigate into this directory for further browsing
-                                                searchQuery = ""
-                                                currentDir = absolutePath
-                                            }
+                                            displayPath = projectDirectoryName(absolutePath),
+                                            onClick = { navigateTo(absolutePath) },
+                                            onNavigate = { navigateTo(absolutePath) },
                                         )
                                     }
                                 }
@@ -1083,9 +1190,7 @@ private fun OpenProjectDialog(
                         }
                         else -> {
                             // Directory listing
-                            val showKnownProjects = currentDir == homeDir && projects.isNotEmpty()
-
-                            if (directories.isEmpty() && !showKnownProjects) {
+                            if (directories.isEmpty()) {
                                 Box(
                                     modifier = Modifier.fillMaxSize(),
                                     contentAlignment = Alignment.Center
@@ -1099,17 +1204,14 @@ private fun OpenProjectDialog(
                             } else {
                                 LazyColumn(
                                     modifier = Modifier.fillMaxSize(),
-                                    contentPadding = PaddingValues(vertical = 4.dp)
+                                    contentPadding = PaddingValues(top = 4.dp, bottom = 88.dp)
                                 ) {
                                     items(directories, key = { it.name }) { node ->
                                         val absPath = node.absolute ?: "${currentDir?.trimEnd('/')}/${node.name}"
                                         DirectoryRow(
-                                            displayPath = tildeReplace(absPath) + "/",
-                                            onNavigate = {
-                                                // Navigate into this directory
-                                                currentDir = absPath
-                                            },
-                                            onClick = { onSelect(absPath) }
+                                            displayPath = projectDirectoryName(absPath),
+                                            onNavigate = { navigateTo(absPath) },
+                                            onClick = { navigateTo(absPath) },
                                         )
                                     }
                                 }
@@ -1144,6 +1246,14 @@ private fun OpenProjectDialog(
                     ) {
                         Icon(Lucide.FolderPlus, contentDescription = stringResource(R.string.sessions_create_folder))
                     }
+                }
+                HorizontalDivider()
+                AppPrimaryButton(
+                    onClick = { currentDir?.let(onSelect) },
+                    enabled = currentDir != null && !isLoading && !isCreatingFolder,
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                ) {
+                    Text(stringResource(R.string.project_picker_use_folder))
                 }
             }
         }
@@ -1376,13 +1486,6 @@ private fun NewSessionQuickDialog(
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.Medium,
                                     color = MaterialTheme.colorScheme.onSurface,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                Text(
-                                    text = entry.directory.trimEnd('/'),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )

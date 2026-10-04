@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="project_appearance_edit">Proje renkleri ve etiketleri</string>
+    <string name="project_color_default">Varsayılan</string>
+    <string name="project_tags">Etiketler</string>
+    <string name="project_tags_hint">Virgülle ayırın. Her biri %2$d karakterden oluşan en fazla %1$d etiket.</string>
+    <string name="project_picker_up">Bir üst düzey</string>
+    <string name="project_picker_use_folder">Bu klasörü kullan</string>
+    <string name="project_color_red">Kırmızı</string>
+    <string name="project_color_orange">Turuncu</string>
+    <string name="project_color_amber">Kehribar</string>
+    <string name="project_color_green">Yeşil</string>
+    <string name="project_color_teal">Turkuaz</string>
+    <string name="project_color_blue">Mavi</string>
+    <string name="project_color_violet">Mor</string>
+    <string name="project_color_pink">Pembe</string>
+</resources>

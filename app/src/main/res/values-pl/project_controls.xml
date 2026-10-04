@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="project_appearance_edit">Kolory i tagi projektu</string>
+    <string name="project_color_default">Domyślny</string>
+    <string name="project_tags">Tagi</string>
+    <string name="project_tags_hint">Oddziel przecinkami. Maksymalnie %1$d tagów, po %2$d znaków każdy.</string>
+    <string name="project_picker_up">Poziom wyżej</string>
+    <string name="project_picker_use_folder">Użyj tego folderu</string>
+    <string name="project_color_red">Czerwony</string>
+    <string name="project_color_orange">Pomarańczowy</string>
+    <string name="project_color_amber">Bursztynowy</string>
+    <string name="project_color_green">Zielony</string>
+    <string name="project_color_teal">Turkusowy</string>
+    <string name="project_color_blue">Niebieski</string>
+    <string name="project_color_violet">Fioletowy</string>
+    <string name="project_color_pink">Różowy</string>
+</resources>

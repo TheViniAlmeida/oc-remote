@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="project_appearance_edit">プロジェクトの色とタグ</string>
+    <string name="project_color_default">デフォルト</string>
+    <string name="project_tags">タグ</string>
+    <string name="project_tags_hint">カンマで区切って入力します。最大 %1$d 個、各 %2$d 文字まで。</string>
+    <string name="project_picker_up">一つ上の階層へ</string>
+    <string name="project_picker_use_folder">このフォルダーを使用</string>
+    <string name="project_color_red">赤</string>
+    <string name="project_color_orange">オレンジ</string>
+    <string name="project_color_amber">アンバー</string>
+    <string name="project_color_green">緑</string>
+    <string name="project_color_teal">青緑</string>
+    <string name="project_color_blue">青</string>
+    <string name="project_color_violet">紫</string>
+    <string name="project_color_pink">ピンク</string>
+</resources>

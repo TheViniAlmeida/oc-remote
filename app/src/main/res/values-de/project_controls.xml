@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="project_appearance_edit">Projektfarben und Tags</string>
+    <string name="project_color_default">Standard</string>
+    <string name="project_tags">Tags</string>
+    <string name="project_tags_hint">Durch Kommas trennen. Bis zu %1$d Tags mit jeweils %2$d Zeichen.</string>
+    <string name="project_picker_up">Eine Ebene nach oben</string>
+    <string name="project_picker_use_folder">Diesen Ordner verwenden</string>
+    <string name="project_color_red">Rot</string>
+    <string name="project_color_orange">Orange</string>
+    <string name="project_color_amber">Bernstein</string>
+    <string name="project_color_green">Grün</string>
+    <string name="project_color_teal">Türkis</string>
+    <string name="project_color_blue">Blau</string>
+    <string name="project_color_violet">Violett</string>
+    <string name="project_color_pink">Rosa</string>
+</resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="project_appearance_edit">ألوان المشروع ووسومه</string>
+    <string name="project_color_default">الافتراضي</string>
+    <string name="project_tags">الوسوم</string>
+    <string name="project_tags_hint">افصل بفواصل. حتى %1$d وسمًا، كل منها %2$d حرفًا.</string>
+    <string name="project_picker_up">المستوى الأعلى</string>
+    <string name="project_picker_use_folder">استخدام هذا المجلد</string>
+    <string name="project_color_red">أحمر</string>
+    <string name="project_color_orange">برتقالي</string>
+    <string name="project_color_amber">كهرماني</string>
+    <string name="project_color_green">أخضر</string>
+    <string name="project_color_teal">فيروزي</string>
+    <string name="project_color_blue">أزرق</string>
+    <string name="project_color_violet">بنفسجي</string>
+    <string name="project_color_pink">وردي</string>
+</resources>

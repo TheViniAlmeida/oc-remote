@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="project_appearance_edit">Colores y etiquetas del proyecto</string>
+    <string name="project_color_default">Predeterminado</string>
+    <string name="project_tags">Etiquetas</string>
+    <string name="project_tags_hint">Separa con comas. Hasta %1$d etiquetas de %2$d caracteres cada una.</string>
+    <string name="project_picker_up">Subir un nivel</string>
+    <string name="project_picker_use_folder">Usar esta carpeta</string>
+    <string name="project_color_red">Rojo</string>
+    <string name="project_color_orange">Naranja</string>
+    <string name="project_color_amber">Ámbar</string>
+    <string name="project_color_green">Verde</string>
+    <string name="project_color_teal">Turquesa</string>
+    <string name="project_color_blue">Azul</string>
+    <string name="project_color_violet">Violeta</string>
+    <string name="project_color_pink">Rosa</string>
+</resources>
