@@ -67,6 +67,9 @@ Android client for [OpenCode](https://github.com/anomalyco/opencode) servers wit
 ### Session Management  
 - **Multi-session** — switch between sessions, view history
 - **Project browser** — search sessions, optionally group them by project, and start chats from 5–50 configurable recent directories
+- **Project appearance** — assign a color and tags to each project from the project toolbar or group header; preferences are scoped to the server on this device
+- **Explicit directory selection** — browse folder names, see the full current path, go one level up, and confirm with Use this folder
+- **Session controls** — independently enable automatic permission approval, automatic compaction at 70–95% of model context (85% by default), or mute alerts; all options start disabled and are scoped to this session and server on this device
 - **Session organization** — favorite and reorder important sessions across servers, filter Favorites with reusable custom categories and 32 icon choices, and keep offline favorites visible until their server reconnects
 - **Session actions** — create, reload, fork, compact, run a code review, share/unshare, rename, and delete via explicit menus
 - **Terminal mode shortcut** — open the current session in terminal mode from the chat top bar
@@ -79,6 +82,7 @@ Android client for [OpenCode](https://github.com/anomalyco/opencode) servers wit
 
 ### Model & Agent Selection
 - **Model picker** — search providers and models, follow server ordering, select model variants, and manage model visibility without leaving chat
+- **Complete model list** — long-press the model switcher to search and scroll all models, including hidden ones; selecting a hidden model makes it visible
 - **Agent selector** — tap to cycle through agents; each agent colored with its TUI theme color (blue, purple, green…)
 - **Reliable agent mode persistence** — explicit Plan/Build choice is preserved correctly between UI state and sent commands
 - **Provider icons** — 74 vector icons for AI providers shown in model picker and next to assistant responses
@@ -117,6 +121,7 @@ Android client for [OpenCode](https://github.com/anomalyco/opencode) servers wit
 
 ### Connection
 - **Multi-server** — connect to multiple OpenCode servers simultaneously and long-press remote server cards to reorder them
+- **Duplicate server** — copy a server from its menu or settings, review the form, and save a separate disconnected server with auto-connect disabled
 - **Local runtime via Termux** — set up and run OpenCode directly on-device from the Home screen (setup/start/stop/sessions)
 - **Local runtime launch options** — configure LAN binding (`0.0.0.0`), optional server username/password auth, background launch mode, auto-start (background-only), startup timeout, and proxy/`NO_PROXY` from the app
 - **Provider OAuth flow** — browser OAuth, headless fallback handling, and provider-state refresh on resume
