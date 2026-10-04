@@ -1615,7 +1615,7 @@ fun ChatScreen(
 
     // Whether auto-scroll should follow new content.
     // Disabled when user manually scrolls up; re-enabled when user scrolls back to bottom.
-    var autoScrollEnabled by remember { mutableStateOf(true) }
+    var autoScrollEnabled by remember { mutableStateOf(false) }
 
     // True when the very bottom of the list is visible (accounting for offset within tall items)
     val isAtBottom by remember {
@@ -1632,8 +1632,8 @@ fun ChatScreen(
     }
 
     // When user touches the list, disable auto-scroll; re-enable when they reach the bottom
-    LaunchedEffect(listState.isScrollInProgress, isAtBottom) {
-        if (listState.isScrollInProgress) {
+    LaunchedEffect(listState.isScrollInProgress, isAtBottom, automaticScrolling) {
+        if (automaticScrolling != true || listState.isScrollInProgress) {
             // User is actively dragging/flinging — disable auto-scroll
             autoScrollEnabled = false
         } else if (isAtBottom) {
@@ -1663,16 +1663,16 @@ fun ChatScreen(
     val pendingInteractions = uiState.pendingInteractions
     val pendingCount = pendingInteractions.size
     val isBusy = isWorkingSessionStatus(uiState.sessionStatus)
-    LaunchedEffect(messageCount, lastPartCount, lastContentLength, pendingCount, isBusy) {
-        if (messageCount > 0 && autoScrollEnabled) {
+    LaunchedEffect(messageCount, lastPartCount, lastContentLength, pendingCount, isBusy, automaticScrolling) {
+        if (messageCount > 0 && automaticScrolling == true && autoScrollEnabled) {
             val lastIndex = listState.layoutInfo.totalItemsCount.coerceAtLeast(1) - 1
             listState.scrollToItem(lastIndex)
         }
     }
 
     // Also auto-scroll when first loading
-    LaunchedEffect(uiState.isLoading) {
-        if (!uiState.isLoading && messageCount > 0) {
+    LaunchedEffect(uiState.isLoading, automaticScrolling) {
+        if (automaticScrolling == true && !uiState.isLoading && messageCount > 0) {
             val lastIndex = listState.layoutInfo.totalItemsCount.coerceAtLeast(1) - 1
             listState.scrollToItem(lastIndex)
             autoScrollEnabled = true
@@ -3046,7 +3046,7 @@ fun ChatScreen(
                                 coroutineScope.launch {
                                     val lastIndex = listState.layoutInfo.totalItemsCount.coerceAtLeast(1) - 1
                                     listState.scrollToItem(lastIndex)
-                                    autoScrollEnabled = true
+                                    autoScrollEnabled = automaticScrolling == true
                                 }
                             },
                             modifier = Modifier

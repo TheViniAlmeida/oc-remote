@@ -70,6 +70,7 @@ fun SettingsScreen(
     PresentationPreferencesHost(presentationRequest, onDismiss = { presentationRequest = null })
     val currentLanguage by viewModel.appLanguage.collectAsState()
     val appAccent by viewModel.appAccent.collectAsState()
+    val autoScrollEnabled by viewModel.autoScrollEnabled.collectAsState()
     val currentTheme by viewModel.appTheme.collectAsState()
     val dynamicColor by viewModel.dynamicColor.collectAsState()
     val chatFontSize by viewModel.chatFontSize.collectAsState()
@@ -337,6 +338,13 @@ fun SettingsScreen(
 
             // ======== Chat Display ========
             SectionHeader(stringResource(R.string.settings_section_chat_display))
+
+            ListItem(
+                headlineContent = { Text(stringResource(R.string.appearance_auto_scroll)) },
+                supportingContent = { Text(stringResource(R.string.appearance_auto_scroll_desc)) },
+                trailingContent = { Switch(checked = autoScrollEnabled, onCheckedChange = viewModel::setAutoScrollEnabled, colors = switchColors) },
+                modifier = Modifier.clickable { viewModel.setAutoScrollEnabled(!autoScrollEnabled) },
+            )
 
             // Font size
             ListItem(
