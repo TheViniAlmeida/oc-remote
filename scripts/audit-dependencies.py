@@ -57,12 +57,47 @@ def check_dependency(item):
     return row
 
 
+def check_toolchain():
+    result = {"sdk_source": "https://dl.google.com/android/repository/repository2-3.xml",
+              "gradle_source": "https://services.gradle.org/versions/current"}
+    try:
+        with urllib.request.urlopen(result["sdk_source"], timeout=15) as response:
+            root = ET.fromstring(response.read(20 * 1024 * 1024))
+        for element in root.iter():
+            element.tag = element.tag.split("}")[-1]
+        packages = []
+        for package in root.findall("remotePackage"):
+            channel = package.find("channelRef")
+            if channel is not None and channel.get("ref") != "channel-0":
+                continue
+            revision = package.find("revision")
+            if revision is None or int(revision.findtext("preview", "0")) != 0:
+                continue
+            version = ".".join(revision.findtext(part, "0") for part in ("major", "minor", "micro"))
+            packages.append((package.get("path", ""), version))
+        # Android minor API levels are published as android-37.0, android-37.1, etc.
+        platforms = [match.group(1) for path, _ in packages
+                     if (match := re.fullmatch(r"platforms;android-(\d+(?:\.\d+)?)", path))]
+        result["latest_platform"] = max(platforms, key=version_key)
+        result["build_tools"] = max((version for path, version in packages if path.startswith("build-tools;")), key=version_key)
+        result["platform_tools"] = next(version for path, version in packages if path == "platform-tools")
+    except Exception as error:
+        result["sdk_not_verified"] = type(error).__name__
+    try:
+        with urllib.request.urlopen(result["gradle_source"], timeout=15) as response:
+            result["gradle_stable"] = json.load(response)["version"]
+    except Exception as error:
+        result["gradle_not_verified"] = type(error).__name__
+    return result
+
+
 def main():
     with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
         rows = list(executor.map(check_dependency, sorted(declared_dependencies().items())))
-    json.dump({"dependencies": rows, "build_changed": False, "packages_installed": False}, sys.stdout, indent=2)
+    toolchain = check_toolchain()
+    json.dump({"dependencies": rows, "toolchain": toolchain, "build_changed": False, "packages_installed": False}, sys.stdout, indent=2)
     print()
-    return 1 if any(row["status"] == "not_verified" for row in rows) else 0
+    return 1 if any(row["status"] == "not_verified" for row in rows) or any(key.endswith("not_verified") for key in toolchain) else 0
 
 
 if __name__ == "__main__":

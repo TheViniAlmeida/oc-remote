@@ -6,7 +6,7 @@ Read-only audit of declared versions against Google Maven, Maven Central, the An
 
 | Component | Project / build environment | Available stable release | Evidence |
 | --- | --- | --- | --- |
-| Android compile / target SDK | 34 / 34 | API 36 in the queried stable-channel feed | [Android SDK metadata](https://dl.google.com/android/repository/repository2-3.xml) |
+| Android compile / target SDK | 34 / 34 | API 37.2 in the queried stable-channel feed | [Android SDK metadata](https://dl.google.com/android/repository/repository2-3.xml) |
 | SDK Build Tools | 34.0.0 | 37.0.0 | [SDK metadata](https://dl.google.com/android/repository/repository2-3.xml) |
 | SDK Platform Tools | Local ADB already installed | 37.0.1 | [Release notes](https://developer.android.com/tools/releases/platform-tools) |
 | Gradle wrapper | 8.6 | 9.8.0 | [Gradle release metadata](https://services.gradle.org/versions/current) |
@@ -69,4 +69,4 @@ Compose libraries without explicit versions inherit the Compose BOM. Kotlin Andr
 
 The audit checked 37 explicit artifacts; 34 have a newer stable version; 0 metadata lookups were unverified. Available releases were not installed or compatibility-tested. The feature build uses the existing pinned dependencies.
 
-Reproduce the artifact inventory with `python3 scripts/audit-dependencies.py`. This command only prints public metadata as JSON. SDK and Gradle sources are linked above.
+Reproduce the artifact inventory with `python3 scripts/audit-dependencies.py`. This command only prints public metadata as JSON. SDK and Gradle are also checked by the script; their sources are linked above.
