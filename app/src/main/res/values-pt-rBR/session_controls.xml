@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_controls_title">Controles da sessão</string>
+    <string name="session_controls_scope">Aplica-se apenas a esta sessão neste servidor e neste aparelho. Novas sessões e sessões de subagentes têm suas próprias configurações.</string>
+    <string name="session_controls_auto_approve">Aceitar permissões automaticamente</string>
+    <string name="session_controls_auto_approve_description">Autoriza cada pedido de permissão desta sessão sem perguntar, incluindo comandos e acesso a arquivos. Cada pedido é aprovado uma vez; perguntas ainda precisam de resposta.</string>
+    <string name="session_controls_auto_compact">Compactar contexto automaticamente</string>
+    <string name="session_controls_auto_compact_description">Após uma resposta concluída, resume o contexto anterior quando o modelo atinge o limite escolhido. Detalhes podem se perder. Exige um limite de contexto conhecido para o modelo.</string>
+    <string name="session_controls_threshold">Compactar em %1$d%% do contexto do modelo</string>
+    <string name="session_controls_mute">Silenciar esta sessão</string>
+    <string name="session_controls_mute_description">Remove os alertas atuais e suprime notificações de conclusão, permissão, pergunta e erro desta sessão. A notificação do serviço de conexão continua visível.</string>
+    <string name="session_controls_cancel">Cancelar</string>
+    <string name="session_controls_save">Salvar</string>
+    <string name="session_controls_save_failed">Não foi possível salvar os controles da sessão. Tente novamente.</string>
+    <string name="session_controls_permission_failed">A aprovação automática da permissão falhou. Revise o pedido pendente e responda manualmente.</string>
+    <string name="session_controls_compaction_failed">A compactação automática falhou. Revise o uso de contexto e compacte manualmente se necessário.</string>
+</resources>

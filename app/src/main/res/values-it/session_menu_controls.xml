@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_options_menu">Impostazioni della sessione</string>
+    <string name="session_mute_menu">Silenzia sessione</string>
+    <string name="session_unmute_menu">Riattiva le notifiche della sessione</string>
+</resources>

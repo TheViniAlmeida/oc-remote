@@ -320,11 +320,13 @@ class OpenCodeApi @Inject constructor(
         conn: ServerConnection,
         sessionId: String,
         providerId: String,
-        modelId: String
+        modelId: String,
+        directory: String? = null,
     ): Boolean {
         if (isV2(conn)) return v2.action(conn, sessionId, "compact")
         val response = httpClient.post("${conn.baseUrl}/session/$sessionId/summarize") {
             conn.authHeader?.let { header("Authorization", it) }
+            directory?.let { header("x-opencode-directory", it) }
             contentType(ContentType.Application.Json)
             setBody(mapOf("providerID" to providerId, "modelID" to modelId))
         }

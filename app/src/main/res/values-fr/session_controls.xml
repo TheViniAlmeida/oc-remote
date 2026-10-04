@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_controls_title">Réglages de la session</string>
+    <string name="session_controls_scope">S’applique uniquement à cette session sur ce serveur et cet appareil. Les nouvelles sessions et celles des sous-agents conservent leurs propres réglages.</string>
+    <string name="session_controls_auto_approve">Approuver automatiquement les autorisations</string>
+    <string name="session_controls_auto_approve_description">Approuve toutes les demandes d’autorisation de cette session sans confirmation, y compris les commandes et l’accès aux fichiers. Chaque demande est approuvée une seule fois ; les questions nécessitent toujours une réponse.</string>
+    <string name="session_controls_auto_compact">Compacter automatiquement le contexte</string>
+    <string name="session_controls_auto_compact_description">Après une réponse terminée, résume le contexte précédent lorsque le modèle atteint le seuil. Certains détails peuvent être perdus. Nécessite une limite de contexte connue pour le modèle.</string>
+    <string name="session_controls_threshold">Compacter à %1$d%% du contexte du modèle</string>
+    <string name="session_controls_mute">Mettre cette session en sourdine</string>
+    <string name="session_controls_mute_description">Supprime les alertes actuelles et désactive les notifications de fin, d’autorisation, de question et d’erreur pour cette session. La notification du service de connexion reste visible.</string>
+    <string name="session_controls_cancel">Annuler</string>
+    <string name="session_controls_save">Enregistrer</string>
+    <string name="session_controls_save_failed">Impossible d’enregistrer les réglages de la session. Veuillez réessayer.</string>
+    <string name="session_controls_permission_failed">L’approbation automatique a échoué. Vérifiez la demande en attente et répondez manuellement.</string>
+    <string name="session_controls_compaction_failed">Le compactage automatique a échoué. Vérifiez l’utilisation du contexte et compactez manuellement si nécessaire.</string>
+</resources>

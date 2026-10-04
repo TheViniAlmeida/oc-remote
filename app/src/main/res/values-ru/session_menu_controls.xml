@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_options_menu">Настройки сеанса</string>
+    <string name="session_mute_menu">Отключить уведомления сеанса</string>
+    <string name="session_unmute_menu">Включить уведомления сеанса</string>
+</resources>

@@ -1066,6 +1066,7 @@ fun ChatScreen(
     var showModelPicker by remember { mutableStateOf(false) }
     var showFullModelCatalog by remember { mutableStateOf(false) }
     var showRenameDialog by remember { mutableStateOf(false) }
+    var showSessionControlsDialog by remember { mutableStateOf(false) }
     var showMenu by remember { mutableStateOf(false) }
     var showAttachmentOptions by remember { mutableStateOf(false) }
     var showSubagentContextDetails by remember { mutableStateOf(false) }
@@ -1104,6 +1105,7 @@ fun ChatScreen(
     val hapticDurationMillis by viewModel.hapticDurationMillis.collectAsState()
     val hapticAmplitude by viewModel.hapticAmplitude.collectAsState()
     val keepScreenOn by viewModel.keepScreenOn.collectAsState()
+    val sessionControls by viewModel.sessionControls.collectAsState()
     val compressImageAttachments by viewModel.compressImageAttachments.collectAsState()
     val imageAttachmentMaxLongSide by viewModel.imageAttachmentMaxLongSide.collectAsState()
     val imageAttachmentWebpQuality by viewModel.imageAttachmentWebpQuality.collectAsState()
@@ -1758,6 +1760,24 @@ fun ChatScreen(
                             modifier = Modifier.appPopupBorder(),
                             containerColor = appPopupContainerColor(),
                         ) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.session_options_menu)) },
+                                leadingIcon = { Icon(Lucide.Settings, contentDescription = null) },
+                                enabled = uiState.sessionLoaded,
+                                onClick = {
+                                    showMenu = false
+                                    showSessionControlsDialog = true
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(if (sessionControls.muted) R.string.session_unmute_menu else R.string.session_mute_menu)) },
+                                leadingIcon = { Icon(if (sessionControls.muted) Lucide.Bell else Lucide.BellOff, contentDescription = null) },
+                                enabled = uiState.sessionLoaded,
+                                onClick = {
+                                    showMenu = false
+                                    viewModel.setSessionControls(sessionControls.copy(muted = !sessionControls.muted))
+                                },
+                            )
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.chat_attach)) },
                                 leadingIcon = { Icon(Lucide.Paperclip, contentDescription = null) },
@@ -3128,6 +3148,14 @@ fun ChatScreen(
             usage = uiState.contextUsage,
             contextWindow = uiState.contextWindow,
             onDismiss = { showSubagentContextDetails = false },
+        )
+    }
+
+    if (showSessionControlsDialog) {
+        SessionControlsDialog(
+            controls = sessionControls,
+            onChange = viewModel::setSessionControls,
+            onDismiss = { showSessionControlsDialog = false },
         )
     }
 

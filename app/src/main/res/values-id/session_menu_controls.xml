@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_options_menu">Pengaturan sesi</string>
+    <string name="session_mute_menu">Bisukan sesi</string>
+    <string name="session_unmute_menu">Aktifkan notifikasi sesi</string>
+</resources>

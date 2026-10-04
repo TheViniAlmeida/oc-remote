@@ -1,0 +1,5 @@
+<resources>
+    <string name="session_options_menu">Session settings</string>
+    <string name="session_mute_menu">Mute session</string>
+    <string name="session_unmute_menu">Unmute session</string>
+</resources>

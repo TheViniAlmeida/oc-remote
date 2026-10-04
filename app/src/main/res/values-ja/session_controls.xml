@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_controls_title">セッションの制御</string>
+    <string name="session_controls_scope">この端末上の、このサーバーの、このセッションにのみ適用されます。新しいセッションとサブエージェントのセッションは、それぞれ独自の設定を維持します。</string>
+    <string name="session_controls_auto_approve">権限を自動承認</string>
+    <string name="session_controls_auto_approve_description">コマンドやファイルへのアクセスを含む、このセッションのすべての権限リクエストを確認なしで承認します。各リクエストは一度だけ承認されます。質問には引き続き回答が必要です。</string>
+    <string name="session_controls_auto_compact">コンテキストを自動圧縮</string>
+    <string name="session_controls_auto_compact_description">応答の完了後、モデルがしきい値に達すると、それまでのコンテキストを要約します。一部の詳細が失われる可能性があります。モデルのコンテキスト上限が判明している必要があります。</string>
+    <string name="session_controls_threshold">モデルのコンテキストが %1$d%% に達したら圧縮</string>
+    <string name="session_controls_mute">このセッションをミュート</string>
+    <string name="session_controls_mute_description">現在のアラートを削除し、このセッションの完了、権限、質問、エラーの通知を抑制します。接続サービスの通知は引き続き表示されます。</string>
+    <string name="session_controls_cancel">キャンセル</string>
+    <string name="session_controls_save">保存</string>
+    <string name="session_controls_save_failed">セッションの設定を保存できませんでした。もう一度お試しください。</string>
+    <string name="session_controls_permission_failed">権限の自動承認に失敗しました。保留中のリクエストを確認し、手動で回答してください。</string>
+    <string name="session_controls_compaction_failed">自動圧縮に失敗しました。コンテキストの使用量を確認し、必要に応じて手動で圧縮してください。</string>
+</resources>

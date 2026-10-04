@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_controls_title">Kontrol sesi</string>
+    <string name="session_controls_scope">Hanya berlaku untuk sesi ini pada server dan perangkat ini. Sesi baru dan sesi subagen tetap menggunakan pengaturannya sendiri.</string>
+    <string name="session_controls_auto_approve">Setujui izin secara otomatis</string>
+    <string name="session_controls_auto_approve_description">Menyetujui setiap permintaan izin dalam sesi ini tanpa bertanya, termasuk perintah dan akses file. Setiap permintaan disetujui satu kali; pertanyaan tetap memerlukan jawaban.</string>
+    <string name="session_controls_auto_compact">Padatkan konteks secara otomatis</string>
+    <string name="session_controls_auto_compact_description">Setelah respons selesai, merangkum konteks sebelumnya saat model mencapai ambang batas. Detail dapat hilang. Memerlukan batas konteks model yang diketahui.</string>
+    <string name="session_controls_threshold">Padatkan pada %1$d%% konteks model</string>
+    <string name="session_controls_mute">Bisukan sesi ini</string>
+    <string name="session_controls_mute_description">Menghapus peringatan saat ini dan menonaktifkan notifikasi penyelesaian, izin, pertanyaan, dan kesalahan untuk sesi ini. Notifikasi layanan koneksi tetap terlihat.</string>
+    <string name="session_controls_cancel">Batal</string>
+    <string name="session_controls_save">Simpan</string>
+    <string name="session_controls_save_failed">Tidak dapat menyimpan kontrol sesi. Coba lagi.</string>
+    <string name="session_controls_permission_failed">Persetujuan izin otomatis gagal. Tinjau permintaan yang tertunda dan tanggapi secara manual.</string>
+    <string name="session_controls_compaction_failed">Pemadatan otomatis gagal. Tinjau penggunaan konteks dan padatkan secara manual jika diperlukan.</string>
+</resources>

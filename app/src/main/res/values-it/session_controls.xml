@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_controls_title">Controlli della sessione</string>
+    <string name="session_controls_scope">Si applica solo a questa sessione su questo server e dispositivo. Le nuove sessioni e quelle dei sottoagenti mantengono le proprie impostazioni.</string>
+    <string name="session_controls_auto_approve">Approva automaticamente le autorizzazioni</string>
+    <string name="session_controls_auto_approve_description">Approva tutte le richieste di autorizzazione di questa sessione senza chiedere, inclusi comandi e accesso ai file. Ogni richiesta viene approvata una sola volta; le domande richiedono comunque una risposta.</string>
+    <string name="session_controls_auto_compact">Compatta automaticamente il contesto</string>
+    <string name="session_controls_auto_compact_description">Dopo una risposta completata, riassume il contesto precedente quando il modello raggiunge la soglia. Alcuni dettagli potrebbero andare persi. Richiede un limite di contesto noto del modello.</string>
+    <string name="session_controls_threshold">Compatta al %1$d%% del contesto del modello</string>
+    <string name="session_controls_mute">Silenzia questa sessione</string>
+    <string name="session_controls_mute_description">Rimuove gli avvisi attuali e disattiva le notifiche di completamento, autorizzazione, domanda ed errore per questa sessione. La notifica del servizio di connessione resta visibile.</string>
+    <string name="session_controls_cancel">Annulla</string>
+    <string name="session_controls_save">Salva</string>
+    <string name="session_controls_save_failed">Impossibile salvare i controlli della sessione. Riprova.</string>
+    <string name="session_controls_permission_failed">Approvazione automatica delle autorizzazioni non riuscita. Controlla la richiesta in sospeso e rispondi manualmente.</string>
+    <string name="session_controls_compaction_failed">Compattazione automatica non riuscita. Controlla l’utilizzo del contesto e compattalo manualmente se necessario.</string>
+</resources>

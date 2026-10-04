@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_controls_title">Session controls</string>
+    <string name="session_controls_scope">Applies only to this session on this server, on this device. New sessions and subagent sessions keep their own settings.</string>
+    <string name="session_controls_auto_approve">Automatically approve permissions</string>
+    <string name="session_controls_auto_approve_description">Allows every permission request in this session without asking, including commands and file access. Each request is approved once; questions still require an answer.</string>
+    <string name="session_controls_auto_compact">Automatically compact context</string>
+    <string name="session_controls_auto_compact_description">After a completed response, summarizes earlier context when the model reaches the threshold. Details may be lost. Requires a known model context limit.</string>
+    <string name="session_controls_threshold">Compact at %1$d%% of model context</string>
+    <string name="session_controls_mute">Mute this session</string>
+    <string name="session_controls_mute_description">Removes current alerts and suppresses completion, permission, question and error notifications for this session. The connection service notification remains visible.</string>
+    <string name="session_controls_cancel">Cancel</string>
+    <string name="session_controls_save">Save</string>
+    <string name="session_controls_save_failed">Could not save session controls. Please try again.</string>
+    <string name="session_controls_permission_failed">Automatic permission approval failed. Review the pending request and respond manually.</string>
+    <string name="session_controls_compaction_failed">Automatic compaction failed. Review context usage and compact manually if needed.</string>
+</resources>

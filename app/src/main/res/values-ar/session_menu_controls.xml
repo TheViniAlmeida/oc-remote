@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_options_menu">إعدادات الجلسة</string>
+    <string name="session_mute_menu">كتم الجلسة</string>
+    <string name="session_unmute_menu">تفعيل إشعارات الجلسة</string>
+</resources>

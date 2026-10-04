@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_options_menu">Ustawienia sesji</string>
+    <string name="session_mute_menu">Wycisz sesję</string>
+    <string name="session_unmute_menu">Włącz powiadomienia sesji</string>
+</resources>

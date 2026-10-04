@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_options_menu">세션 설정</string>
+    <string name="session_mute_menu">세션 알림 끄기</string>
+    <string name="session_unmute_menu">세션 알림 켜기</string>
+</resources>

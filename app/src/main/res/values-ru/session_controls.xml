@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_controls_title">Управление сеансом</string>
+    <string name="session_controls_scope">Применяется только к этому сеансу на этом сервере и устройстве. Новые сеансы и сеансы подагентов сохраняют собственные настройки.</string>
+    <string name="session_controls_auto_approve">Автоматически одобрять разрешения</string>
+    <string name="session_controls_auto_approve_description">Одобряет все запросы разрешений в этом сеансе без подтверждения, включая команды и доступ к файлам. Каждый запрос одобряется один раз; на вопросы по-прежнему нужно отвечать.</string>
+    <string name="session_controls_auto_compact">Автоматически сжимать контекст</string>
+    <string name="session_controls_auto_compact_description">После завершения ответа обобщает предыдущий контекст, когда модель достигает порога. Некоторые детали могут быть потеряны. Требуется известный предел контекста модели.</string>
+    <string name="session_controls_threshold">Сжимать при %1$d%% контекста модели</string>
+    <string name="session_controls_mute">Отключить уведомления этого сеанса</string>
+    <string name="session_controls_mute_description">Удаляет текущие оповещения и отключает уведомления о завершении, разрешениях, вопросах и ошибках для этого сеанса. Уведомление службы подключения остаётся видимым.</string>
+    <string name="session_controls_cancel">Отмена</string>
+    <string name="session_controls_save">Сохранить</string>
+    <string name="session_controls_save_failed">Не удалось сохранить настройки сеанса. Попробуйте ещё раз.</string>
+    <string name="session_controls_permission_failed">Не удалось автоматически одобрить разрешение. Проверьте ожидающий запрос и ответьте вручную.</string>
+    <string name="session_controls_compaction_failed">Не удалось автоматически сжать контекст. Проверьте использование контекста и при необходимости сожмите его вручную.</string>
+</resources>

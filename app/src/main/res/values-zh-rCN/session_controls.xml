@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_controls_title">会话控制</string>
+    <string name="session_controls_scope">仅适用于此设备上此服务器中的当前会话。新会话和子代理会话保留各自的设置。</string>
+    <string name="session_controls_auto_approve">自动批准权限</string>
+    <string name="session_controls_auto_approve_description">无需询问即可批准此会话中的所有权限请求，包括命令和文件访问。每个请求仅批准一次；问题仍需回答。</string>
+    <string name="session_controls_auto_compact">自动压缩上下文</string>
+    <string name="session_controls_auto_compact_description">在回复完成后，当模型达到阈值时，总结之前的上下文。部分细节可能丢失。需要已知的模型上下文上限。</string>
+    <string name="session_controls_threshold">在模型上下文达到 %1$d%% 时压缩</string>
+    <string name="session_controls_mute">静音此会话</string>
+    <string name="session_controls_mute_description">移除当前提醒，并关闭此会话的完成、权限、问题和错误通知。连接服务通知仍然显示。</string>
+    <string name="session_controls_cancel">取消</string>
+    <string name="session_controls_save">保存</string>
+    <string name="session_controls_save_failed">无法保存会话控制设置。请重试。</string>
+    <string name="session_controls_permission_failed">自动权限批准失败。请检查待处理的请求并手动回复。</string>
+    <string name="session_controls_compaction_failed">自动压缩失败。请检查上下文使用情况，并在需要时手动压缩。</string>
+</resources>

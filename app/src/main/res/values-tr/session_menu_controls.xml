@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_options_menu">Oturum ayarları</string>
+    <string name="session_mute_menu">Oturumu sessize al</string>
+    <string name="session_unmute_menu">Oturum bildirimlerini aç</string>
+</resources>

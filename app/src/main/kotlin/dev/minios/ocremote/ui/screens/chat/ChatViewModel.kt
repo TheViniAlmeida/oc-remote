@@ -26,6 +26,8 @@ import dev.minios.ocremote.data.repository.PromptDeliveryState
 import dev.minios.ocremote.data.repository.PendingPromptRepository
 import dev.minios.ocremote.data.repository.SettingsRepository
 import dev.minios.ocremote.data.repository.ServerConnectionStateRepository
+import dev.minios.ocremote.data.repository.SessionControlsRepository
+import dev.minios.ocremote.service.SessionNotificationCoordinator
 import dev.minios.ocremote.domain.model.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -240,6 +242,7 @@ class ChatViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val pendingPromptRepository: PendingPromptRepository,
     private val connectionStateRepository: ServerConnectionStateRepository,
+    private val sessionControlsRepository: SessionControlsRepository,
     @ApplicationContext private val appContext: Context,
 ) : ViewModel() {
 
@@ -252,6 +255,24 @@ class ChatViewModel @Inject constructor(
     val serverName: String = savedStateHandle.get<String>("serverName").orEmpty()
     val serverId: String = savedStateHandle.get<String>("serverId").orEmpty()
     val sessionId: String = savedStateHandle.get<String>("sessionId").orEmpty()
+
+    val sessionControls: StateFlow<SessionControls> = sessionControlsRepository.controls(serverId, sessionId)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, SessionControls())
+
+    fun setSessionControls(controls: SessionControls) {
+        viewModelScope.launch {
+            try {
+                sessionControlsRepository.set(serverId, sessionId, controls)
+                val muted = sessionControlsRepository.all.first().filterValues { it.muted }
+                    .keys.mapTo(mutableSetOf()) { it.serverId to it.sessionId }
+                SessionNotificationCoordinator.updateMutedSessions(appContext, muted)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                _error.value = appContext.getString(R.string.session_controls_save_failed)
+            }
+        }
+    }
 
     fun selectModelFromFullCatalog(providerId: String, modelId: String) {
         viewModelScope.launch {
@@ -583,6 +604,15 @@ class ChatViewModel @Inject constructor(
     )
 
     init {
+        viewModelScope.launch {
+            sessionControlsRepository.failures.map { it[SessionControlKey(serverId, sessionId)] }
+                .distinctUntilChanged().collect { failure ->
+                    if (failure != null) _error.value = appContext.getString(
+                        if (failure == SessionControlFailure.PERMISSION) R.string.session_controls_permission_failed
+                        else R.string.session_controls_compaction_failed,
+                    )
+                }
+        }
         _pendingPrompts.value = pendingPromptRepository.getForSession(sessionId)
         viewModelScope.launch {
             eventReducer.messages.collect { messagesBySession ->
@@ -1474,7 +1504,7 @@ class ChatViewModel @Inject constructor(
                     onResult(false)
                     return@launch
                 }
-                api.summarizeSession(conn, sessionId, providerId, modelId)
+                api.summarizeSession(conn, sessionId, providerId, modelId, sessionDirectory)
                 if (BuildConfig.DEBUG) Log.d(TAG, "Compacted session $sessionId")
                 onResult(true)
             } catch (e: Exception) {

@@ -1,0 +1,5 @@
+<resources>
+    <string name="session_options_menu">Configurações da sessão</string>
+    <string name="session_mute_menu">Silenciar sessão</string>
+    <string name="session_unmute_menu">Ativar notificações da sessão</string>
+</resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_controls_title">Sterowanie sesją</string>
+    <string name="session_controls_scope">Dotyczy tylko tej sesji na tym serwerze i urządzeniu. Nowe sesje i sesje podagentów zachowują własne ustawienia.</string>
+    <string name="session_controls_auto_approve">Automatycznie zatwierdzaj uprawnienia</string>
+    <string name="session_controls_auto_approve_description">Zatwierdza wszystkie prośby o uprawnienia w tej sesji bez pytania, w tym polecenia i dostęp do plików. Każda prośba jest zatwierdzana jednorazowo; pytania nadal wymagają odpowiedzi.</string>
+    <string name="session_controls_auto_compact">Automatycznie kompresuj kontekst</string>
+    <string name="session_controls_auto_compact_description">Po zakończeniu odpowiedzi podsumowuje wcześniejszy kontekst, gdy model osiągnie próg. Niektóre szczegóły mogą zostać utracone. Wymagany jest znany limit kontekstu modelu.</string>
+    <string name="session_controls_threshold">Kompresuj przy %1$d%% kontekstu modelu</string>
+    <string name="session_controls_mute">Wycisz tę sesję</string>
+    <string name="session_controls_mute_description">Usuwa bieżące alerty i wyłącza powiadomienia o zakończeniu, uprawnieniach, pytaniach i błędach dla tej sesji. Powiadomienie usługi połączenia pozostaje widoczne.</string>
+    <string name="session_controls_cancel">Anuluj</string>
+    <string name="session_controls_save">Zapisz</string>
+    <string name="session_controls_save_failed">Nie udało się zapisać ustawień sesji. Spróbuj ponownie.</string>
+    <string name="session_controls_permission_failed">Automatyczne zatwierdzenie uprawnień nie powiodło się. Sprawdź oczekującą prośbę i odpowiedz ręcznie.</string>
+    <string name="session_controls_compaction_failed">Automatyczna kompresja nie powiodła się. Sprawdź wykorzystanie kontekstu i w razie potrzeby skompresuj go ręcznie.</string>
+</resources>

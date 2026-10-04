@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_options_menu">会话设置</string>
+    <string name="session_mute_menu">静音会话</string>
+    <string name="session_unmute_menu">开启会话通知</string>
+</resources>

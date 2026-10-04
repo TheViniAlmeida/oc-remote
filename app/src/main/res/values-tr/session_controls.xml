@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_controls_title">Oturum denetimleri</string>
+    <string name="session_controls_scope">Yalnızca bu sunucudaki ve bu cihazdaki bu oturum için geçerlidir. Yeni oturumlar ve alt ajan oturumları kendi ayarlarını korur.</string>
+    <string name="session_controls_auto_approve">İzinleri otomatik onayla</string>
+    <string name="session_controls_auto_approve_description">Komutlar ve dosya erişimi dahil bu oturumdaki tüm izin isteklerini sormadan onaylar. Her istek yalnızca bir kez onaylanır; sorular yine yanıt gerektirir.</string>
+    <string name="session_controls_auto_compact">Bağlamı otomatik sıkıştır</string>
+    <string name="session_controls_auto_compact_description">Tamamlanan bir yanıttan sonra model eşik değerine ulaştığında önceki bağlamı özetler. Ayrıntılar kaybolabilir. Modelin bağlam sınırının bilinmesi gerekir.</string>
+    <string name="session_controls_threshold">Model bağlamının %1$d%% düzeyinde sıkıştır</string>
+    <string name="session_controls_mute">Bu oturumu sessize al</string>
+    <string name="session_controls_mute_description">Mevcut uyarıları kaldırır ve bu oturumun tamamlanma, izin, soru ve hata bildirimlerini engeller. Bağlantı hizmetinin bildirimi görünür kalır.</string>
+    <string name="session_controls_cancel">İptal</string>
+    <string name="session_controls_save">Kaydet</string>
+    <string name="session_controls_save_failed">Oturum denetimleri kaydedilemedi. Lütfen tekrar deneyin.</string>
+    <string name="session_controls_permission_failed">Otomatik izin onayı başarısız oldu. Bekleyen isteği inceleyin ve elle yanıtlayın.</string>
+    <string name="session_controls_compaction_failed">Otomatik sıkıştırma başarısız oldu. Bağlam kullanımını inceleyin ve gerekirse elle sıkıştırın.</string>
+</resources>

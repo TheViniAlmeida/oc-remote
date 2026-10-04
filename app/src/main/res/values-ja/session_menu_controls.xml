@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_options_menu">セッション設定</string>
+    <string name="session_mute_menu">セッションをミュート</string>
+    <string name="session_unmute_menu">セッションの通知を有効にする</string>
+</resources>

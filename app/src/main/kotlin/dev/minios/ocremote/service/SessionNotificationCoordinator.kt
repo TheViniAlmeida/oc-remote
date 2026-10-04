@@ -23,14 +23,33 @@ internal fun shouldPostSessionNotification(
     activeSession: Pair<String, String>?,
     serverId: String,
     sessionId: String,
-): Boolean = activeSession != serverId to sessionId
+    mutedSessions: Set<Pair<String, String>> = emptySet(),
+): Boolean = activeSession != (serverId to sessionId) && (serverId to sessionId) !in mutedSessions
 
 internal object SessionNotificationCoordinator {
     private var activeSession: Pair<String, String>? = null
+    private var mutedSessions: Set<Pair<String, String>> = emptySet()
+
+    @Synchronized
+    fun updateMutedSessions(context: Context, sessions: Set<Pair<String, String>>) {
+        updateMutedSessions(sessions) { serverId, sessionId -> clearSession(context, serverId, sessionId) }
+    }
+
+    @Synchronized
+    internal fun updateMutedSessions(sessions: Set<Pair<String, String>>, clear: (String, String) -> Unit) {
+        val newlyMuted = sessions - mutedSessions
+        mutedSessions = sessions
+        newlyMuted.forEach { (serverId, sessionId) -> clear(serverId, sessionId) }
+    }
 
     @Synchronized
     fun activate(context: Context, serverId: String, sessionId: String) {
         activeSession = serverId to sessionId
+        clearSession(context, serverId, sessionId)
+    }
+
+    @Synchronized
+    fun clearSession(context: Context, serverId: String, sessionId: String) {
         val notificationManager = context.getSystemService(NotificationManager::class.java)
         sessionEventNotificationIds(serverId, sessionId).forEach(notificationManager::cancel)
 
@@ -53,7 +72,7 @@ internal object SessionNotificationCoordinator {
 
     @Synchronized
     fun postUnlessActive(serverId: String, sessionId: String, post: () -> Unit): Boolean {
-        if (!shouldPostSessionNotification(activeSession, serverId, sessionId)) return false
+        if (!shouldPostSessionNotification(activeSession, serverId, sessionId, mutedSessions)) return false
         post()
         return true
     }

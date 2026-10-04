@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_options_menu">Sitzungseinstellungen</string>
+    <string name="session_mute_menu">Sitzung stummschalten</string>
+    <string name="session_unmute_menu">Stummschaltung aufheben</string>
+</resources>

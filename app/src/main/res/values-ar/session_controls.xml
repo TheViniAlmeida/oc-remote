@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_controls_title">عناصر التحكم في الجلسة</string>
+    <string name="session_controls_scope">ينطبق فقط على هذه الجلسة على هذا الخادم وهذا الجهاز. تحتفظ الجلسات الجديدة وجلسات الوكلاء الفرعيين بإعداداتها الخاصة.</string>
+    <string name="session_controls_auto_approve">الموافقة التلقائية على الأذونات</string>
+    <string name="session_controls_auto_approve_description">يوافق على كل طلب إذن في هذه الجلسة دون سؤال، بما في ذلك الأوامر والوصول إلى الملفات. تتم الموافقة على كل طلب مرة واحدة؛ وتظل الأسئلة بحاجة إلى إجابة.</string>
+    <string name="session_controls_auto_compact">ضغط السياق تلقائيًا</string>
+    <string name="session_controls_auto_compact_description">بعد اكتمال الرد، يلخص السياق السابق عندما يصل النموذج إلى الحد المحدد. قد تُفقد بعض التفاصيل. يتطلب معرفة الحد الأقصى لسياق النموذج.</string>
+    <string name="session_controls_threshold">الضغط عند %1$d%% من سياق النموذج</string>
+    <string name="session_controls_mute">كتم هذه الجلسة</string>
+    <string name="session_controls_mute_description">يزيل التنبيهات الحالية ويوقف إشعارات الاكتمال والأذونات والأسئلة والأخطاء لهذه الجلسة. يظل إشعار خدمة الاتصال ظاهرًا.</string>
+    <string name="session_controls_cancel">إلغاء</string>
+    <string name="session_controls_save">حفظ</string>
+    <string name="session_controls_save_failed">تعذر حفظ عناصر التحكم في الجلسة. يُرجى المحاولة مجددًا.</string>
+    <string name="session_controls_permission_failed">فشلت الموافقة التلقائية على الإذن. راجع الطلب المعلق وأجب يدويًا.</string>
+    <string name="session_controls_compaction_failed">فشل ضغط السياق التلقائي. راجع استخدام السياق واضغطه يدويًا عند الحاجة.</string>
+</resources>

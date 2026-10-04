@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_controls_title">Sitzungseinstellungen</string>
+    <string name="session_controls_scope">Gilt nur für diese Sitzung auf diesem Server und diesem Gerät. Neue Sitzungen und Unteragentensitzungen behalten ihre eigenen Einstellungen.</string>
+    <string name="session_controls_auto_approve">Berechtigungen automatisch genehmigen</string>
+    <string name="session_controls_auto_approve_description">Genehmigt alle Berechtigungsanfragen in dieser Sitzung ohne Rückfrage, einschließlich Befehlen und Dateizugriffen. Jede Anfrage wird einmal genehmigt; Fragen müssen weiterhin beantwortet werden.</string>
+    <string name="session_controls_auto_compact">Kontext automatisch komprimieren</string>
+    <string name="session_controls_auto_compact_description">Fasst nach einer abgeschlossenen Antwort früheren Kontext zusammen, wenn das Modell den Schwellenwert erreicht. Dabei können Details verloren gehen. Die Kontextgrenze des Modells muss bekannt sein.</string>
+    <string name="session_controls_threshold">Bei %1$d%% des Modellkontexts komprimieren</string>
+    <string name="session_controls_mute">Diese Sitzung stummschalten</string>
+    <string name="session_controls_mute_description">Entfernt aktuelle Hinweise und unterdrückt Benachrichtigungen zu Abschlüssen, Berechtigungen, Fragen und Fehlern für diese Sitzung. Die Benachrichtigung des Verbindungsdienstes bleibt sichtbar.</string>
+    <string name="session_controls_cancel">Abbrechen</string>
+    <string name="session_controls_save">Speichern</string>
+    <string name="session_controls_save_failed">Sitzungseinstellungen konnten nicht gespeichert werden. Bitte erneut versuchen.</string>
+    <string name="session_controls_permission_failed">Die automatische Genehmigung ist fehlgeschlagen. Prüfe die ausstehende Anfrage und antworte manuell.</string>
+    <string name="session_controls_compaction_failed">Die automatische Kontextkomprimierung ist fehlgeschlagen. Prüfe die Kontextnutzung und komprimiere bei Bedarf manuell.</string>
+</resources>

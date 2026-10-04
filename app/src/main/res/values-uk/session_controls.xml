@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_controls_title">Керування сеансом</string>
+    <string name="session_controls_scope">Застосовується лише до цього сеансу на цьому сервері та пристрої. Нові сеанси й сеанси підлеглих агентів зберігають власні налаштування.</string>
+    <string name="session_controls_auto_approve">Автоматично схвалювати дозволи</string>
+    <string name="session_controls_auto_approve_description">Схвалює всі запити дозволів у цьому сеансі без підтвердження, зокрема команди й доступ до файлів. Кожен запит схвалюється один раз; на запитання все одно потрібно відповідати.</string>
+    <string name="session_controls_auto_compact">Автоматично стискати контекст</string>
+    <string name="session_controls_auto_compact_description">Після завершення відповіді узагальнює попередній контекст, коли модель досягає порога. Деякі деталі можуть бути втрачені. Потрібна відома межа контексту моделі.</string>
+    <string name="session_controls_threshold">Стискати за %1$d%% контексту моделі</string>
+    <string name="session_controls_mute">Вимкнути сповіщення цього сеансу</string>
+    <string name="session_controls_mute_description">Видаляє поточні оповіщення та вимикає сповіщення про завершення, дозволи, запитання й помилки для цього сеансу. Сповіщення служби підключення залишається видимим.</string>
+    <string name="session_controls_cancel">Скасувати</string>
+    <string name="session_controls_save">Зберегти</string>
+    <string name="session_controls_save_failed">Не вдалося зберегти налаштування сеансу. Спробуйте ще раз.</string>
+    <string name="session_controls_permission_failed">Не вдалося автоматично схвалити дозвіл. Перевірте запит, що очікує відповіді, і дайте відповідь вручну.</string>
+    <string name="session_controls_compaction_failed">Не вдалося автоматично стиснути контекст. Перевірте використання контексту та за потреби стисніть його вручну.</string>
+</resources>

@@ -25,6 +25,15 @@ import dev.minios.ocremote.data.repository.ServerRepository
 import dev.minios.ocremote.data.repository.normalizeServerUrl
 import dev.minios.ocremote.data.repository.ServerConnectionStateRepository
 import dev.minios.ocremote.data.repository.SettingsRepository
+import dev.minios.ocremote.data.repository.SessionControlsRepository
+import dev.minios.ocremote.domain.model.SessionControlKey
+import dev.minios.ocremote.domain.model.SessionControlFailure
+import dev.minios.ocremote.domain.model.SessionStatus
+import dev.minios.ocremote.domain.model.PendingInteraction
+import dev.minios.ocremote.domain.model.AutomaticPermissionAttempts
+import dev.minios.ocremote.domain.model.SessionHistoryReadiness
+import dev.minios.ocremote.domain.model.automaticCompactionCandidate
+import dev.minios.ocremote.domain.model.ownsSessionUnambiguously
 import dev.minios.ocremote.domain.model.Message
 import dev.minios.ocremote.domain.model.Part
 import dev.minios.ocremote.domain.model.ServerConfig
@@ -38,6 +47,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.map
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
@@ -134,6 +146,9 @@ class OpenCodeConnectionService : Service() {
     lateinit var settingsRepository: SettingsRepository
 
     @Inject
+    lateinit var sessionControlsRepository: SessionControlsRepository
+
+    @Inject
     lateinit var serverRepository: ServerRepository
 
     @Inject
@@ -144,6 +159,15 @@ class OpenCodeConnectionService : Service() {
 
     /** All active/pending server connections keyed by serverId. */
     private val connections = ConcurrentHashMap<String, ServerConnectionState>()
+    private val reconciledConnectionJobs = ConcurrentHashMap<String, Job>()
+    private val controlRevision = MutableStateFlow(0L)
+    private val automaticPermissionAttempts = AutomaticPermissionAttempts()
+    private val compactionHistoryReadiness = SessionHistoryReadiness()
+    private val permissionSourceJobs = ConcurrentHashMap<Pair<SessionControlKey, String>, Job>()
+    private val contextLimitsByServer = mutableMapOf<String, Pair<Long, Map<Pair<String, String>, Int>>>()
+    @Volatile
+    private var controlsLoaded = false
+    private val controlsReady = CompletableDeferred<Unit>()
 
     private var autoConnectJob: Job? = null
     @Volatile
@@ -240,6 +264,153 @@ class OpenCodeConnectionService : Service() {
         serviceScope.launch {
             connectingServerIds.collect(serverConnectionStateRepository::updateConnectingServerIds)
         }
+        serviceScope.launch {
+            try {
+                sessionControlsRepository.all.collect { controls ->
+                    SessionNotificationCoordinator.updateMutedSessions(
+                        this@OpenCodeConnectionService,
+                        controls.filterValues { it.muted }.keys.mapTo(mutableSetOf()) { it.serverId to it.sessionId },
+                    )
+                    controlsLoaded = true
+                    controlsReady.complete(Unit)
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                controlsLoaded = false
+                controlsReady.completeExceptionally(IllegalStateException("Session controls unavailable"))
+                Log.e(TAG, "Unable to load session notification preferences; session alerts suppressed")
+            }
+        }
+        observeSessionControls()
+    }
+
+    /** One worker supplies backpressure; repeated SSE/REST snapshots never start parallel actions. */
+    @OptIn(FlowPreview::class)
+    private fun observeSessionControls() {
+        serviceScope.launch {
+            combine(
+                sessionControlsRepository.all.map { Unit },
+                eventReducer.pendingInteractions.map { Unit },
+                eventReducer.messages.map { Unit },
+                eventReducer.sessionStatuses.map { Unit },
+                eventReducer.serverSessions.map { Unit },
+                controlRevision.map { Unit },
+            ) { Unit }.debounce(250).collect {
+                try {
+                    applySessionControls()
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: Exception) {
+                    Log.e(TAG, "Unable to read local session controls; automatic actions skipped")
+                }
+            }
+        }
+    }
+
+    private fun readyConnection(key: SessionControlKey): ServerConnectionState? = connections[key.serverId]
+        ?.takeIf { it.isConnected && reconciledConnectionJobs[key.serverId] === it.sseJob }
+        ?.takeIf { ownsSessionUnambiguously(eventReducer.serverSessions.value, key) }
+
+    private suspend fun applySessionControls() {
+        val configured = sessionControlsRepository.all.first()
+        for ((key, controls) in configured) {
+            val state = connections[key.serverId]?.takeIf { it.isConnected }
+                ?.takeIf { ownsSessionUnambiguously(eventReducer.serverSessions.value, key) } ?: continue
+            if (controls.autoApprovePermissions) {
+                val requests = eventReducer.pendingInteractions.value.filterIsInstance<PendingInteraction.Permission>()
+                    .filter { it.sessionId == key.sessionId }
+                for (pending in requests) {
+                    val requestWasReceivedOnCurrentStream = permissionSourceJobs[key to pending.id] === state.sseJob
+                    if (!requestWasReceivedOnCurrentStream && readyConnection(key)?.sseJob !== state.sseJob) continue
+                    if (connections[key.serverId]?.takeIf { it.isConnected }?.sseJob !== state.sseJob ||
+                        !sessionControlsRepository.controls(key.serverId, key.sessionId).first().autoApprovePermissions) break
+                    if (eventReducer.pendingInteractions.value.none { it is PendingInteraction.Permission &&
+                            it.sessionId == key.sessionId && it.id == pending.id }) continue
+                    try {
+                        val directory = eventReducer.sessions.value.firstOrNull { it.id == key.sessionId }?.directory
+                        val success = automaticPermissionAttempts.replyIfEnabled(
+                            key, pending.id,
+                            sessionControlsRepository.controls(key.serverId, key.sessionId).first(),
+                            eventReducer.serverSessions.value,
+                        ) { requestId, reply -> api.replyToPermission(state.conn, requestId, reply, directory = directory) }
+                            ?: continue
+                        if (!success) {
+                            reportControlFailure(state.config, key, SessionControlFailure.PERMISSION)
+                            continue
+                        }
+                        eventReducer.processEvent(SseEvent.PermissionReplied(key.sessionId, pending.id), key.serverId)
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (_: Exception) {
+                        reportControlFailure(state.config, key, SessionControlFailure.PERMISSION)
+                    }
+                }
+            }
+            if (!controls.autoCompact || readyConnection(key)?.sseJob !== state.sseJob ||
+                !compactionHistoryReadiness.isReady(key, state.sseJob) ||
+                eventReducer.sessionStatuses.value[key.sessionId] !is SessionStatus.Idle ||
+                eventReducer.pendingInteractions.value.any { it.sessionId == key.sessionId }) continue
+            try {
+                val messages = eventReducer.messages.value[key.sessionId].orEmpty()
+                val latest = messages.maxByOrNull { it.time.created } as? Message.Assistant ?: continue
+                if (latest.time.completed == null || latest.error != null || latest.summary == true) continue
+                val providerId = latest.providerId?.takeIf { it.isNotBlank() } ?: continue
+                val modelId = latest.modelId?.takeIf { it.isNotBlank() } ?: continue
+                val now = SystemClock.elapsedRealtime()
+                val cached = contextLimitsByServer[key.serverId]
+                val limits = if (cached != null && now - cached.first < 5 * 60_000L) cached.second else {
+                    // Retain only public model IDs/limits; provider credentials/options never enter this cache.
+                    try {
+                        api.getProviders(state.conn).providers.flatMap { provider ->
+                            provider.models.map { (id, model) -> (provider.id to id) to (model.limit?.context ?: 0) }
+                        }.toMap().also { contextLimitsByServer[key.serverId] = now to it }
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Exception) {
+                        contextLimitsByServer[key.serverId] = now to emptyMap()
+                        throw e
+                    }
+                }
+                val freshControls = sessionControlsRepository.controls(key.serverId, key.sessionId).first()
+                val candidate = automaticCompactionCandidate(
+                    freshControls,
+                    eventReducer.sessionStatuses.value[key.sessionId],
+                    eventReducer.messages.value[key.sessionId].orEmpty(),
+                    limits[providerId to modelId] ?: 0,
+                    latest.id.takeIf { sessionControlsRepository.hasCompactionAttempt(key, latest.id) },
+                ) ?: continue
+                if (readyConnection(key)?.sseJob !== state.sseJob || candidate.id != latest.id ||
+                    !compactionHistoryReadiness.isReady(key, state.sseJob, candidate.id) ||
+                    eventReducer.pendingInteractions.value.any { it.sessionId == key.sessionId }) continue
+                // Persist before dispatch, so a restart or failed response cannot cause a compaction loop.
+                sessionControlsRepository.markCompactionAttempt(key, candidate.id)
+                if (readyConnection(key)?.sseJob !== state.sseJob ||
+                    !compactionHistoryReadiness.isReady(key, state.sseJob, candidate.id) ||
+                    !sessionControlsRepository.controls(key.serverId, key.sessionId).first().autoCompact ||
+                    eventReducer.sessionStatuses.value[key.sessionId] !is SessionStatus.Idle ||
+                    eventReducer.pendingInteractions.value.any { it.sessionId == key.sessionId } ||
+                    eventReducer.messages.value[key.sessionId].orEmpty().maxByOrNull { it.time.created }?.id != candidate.id) continue
+                val directory = eventReducer.sessions.value.firstOrNull { it.id == key.sessionId }?.directory
+                if (!api.summarizeSession(state.conn, key.sessionId, candidate.providerId!!, candidate.modelId!!, directory)) {
+                    reportControlFailure(state.config, key, SessionControlFailure.COMPACTION)
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                reportControlFailure(state.config, key, SessionControlFailure.COMPACTION)
+            }
+        }
+    }
+
+    private fun reportControlFailure(server: ServerConfig, key: SessionControlKey, failure: SessionControlFailure) {
+        sessionControlsRepository.reportFailure(key, failure)
+        val message = getString(
+            if (failure == SessionControlFailure.PERMISSION) R.string.session_controls_permission_failed
+            else R.string.session_controls_compaction_failed,
+        )
+        Log.e(TAG, message)
+        showErrorNotification(server, key.sessionId, message)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -349,6 +520,7 @@ class OpenCodeConnectionService : Service() {
             return
         }
         replaced?.sseJob?.cancel()
+        compactionHistoryReadiness.invalidateServer(server.id)
 
         if (BuildConfig.DEBUG) Log.d(TAG, "Connecting to configured server")
 
@@ -368,6 +540,7 @@ class OpenCodeConnectionService : Service() {
 
         explicitlyDisconnectedServerIds.add(serverId)
         val state = connections.remove(serverId) ?: return
+        compactionHistoryReadiness.invalidateServer(serverId)
         state.sseJob.cancel()
         reconciliationJobs.remove(serverId)?.cancel()
 
@@ -406,6 +579,7 @@ class OpenCodeConnectionService : Service() {
         reconciliationJobs.values.forEach { it.cancel() }
         reconciliationJobs.clear()
         val serverIds = connections.keys.toList()
+        serverIds.forEach(compactionHistoryReadiness::invalidateServer)
         connections.clear()
 
         _connectedServerIds.value = emptySet()
@@ -503,6 +677,7 @@ class OpenCodeConnectionService : Service() {
                     continue
                 }
                 state.sseJob.cancel()
+                compactionHistoryReadiness.invalidateServer(state.config.id)
                 reconciliationJobs.remove(state.config.id)?.cancel()
                 _connectedServerIds.update { it - state.config.id }
                 _connectingServerIds.update { it + state.config.id }
@@ -521,6 +696,15 @@ class OpenCodeConnectionService : Service() {
     ): Job {
         return serviceScope.launch(start = CoroutineStart.LAZY) {
             val currentJob = coroutineContext[Job]!!
+            try {
+                // Suspend this IO coroutine until persisted mute consent is applied. Main stays responsive.
+                controlsReady.await()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                cleanupTerminatedConnection(server.id, currentJob)
+                return@launch
+            }
             var attempt = 0
             var failureStartedAt: Long? = SystemClock.elapsedRealtime()
             var preloaded = !preload
@@ -573,6 +757,7 @@ class OpenCodeConnectionService : Service() {
                         onOpen = {
                             if (connections[server.id]?.sseJob === currentJob) {
                                 updateServerConnected(server.id, true, currentJob)
+                                startReconciliation(server, conn)
                                 attempt = 0
                                 failureStartedAt = null
                             }
@@ -591,7 +776,7 @@ class OpenCodeConnectionService : Service() {
                                 attempt = 0
                                 failureStartedAt = null
                             }
-                            processEvent(server, event, scoped.directory, scoped.workspaceId)
+                            processEvent(server, event, scoped.directory, scoped.workspaceId, currentJob)
                             if (event is SseEvent.ServerConnected) {
                                 startReconciliation(server, conn)
                             }
@@ -640,6 +825,8 @@ class OpenCodeConnectionService : Service() {
     }
 
     private suspend fun reconcileServerState(server: ServerConfig, conn: ServerConnection) {
+        val connectionJob = connections[server.id]?.sseJob ?: return
+        val controls = sessionControlsRepository.all.first()
         val directories = try {
             api.listProjects(conn).map { it.worktree }.ifEmpty { listOf(null) }
         } catch (e: CancellationException) {
@@ -658,16 +845,23 @@ class OpenCodeConnectionService : Service() {
                 val localSessions = eventReducer.sessions.value.associateBy { it.id }
                 val sessions = api.listSessions(conn, directory)
                 val changedSessions = sessionsNeedingMessageReconciliation(localSessions, sessions)
+                val compactionSessions = sessions.filter { controls[SessionControlKey(server.id, it.id)]?.autoCompact == true }
                 eventReducer.setSessions(server.id, sessions)
-                changedSessions.forEach { session ->
+                (changedSessions + compactionSessions).distinctBy { it.id }.forEach { session ->
+                    val key = SessionControlKey(server.id, session.id)
                     try {
                         eventReducer.mergeMessages(
                             session.id,
                             api.listMessages(conn, session.id, limit = 50, directory = directory),
                         )
+                        currentCoroutineContext().ensureActive()
+                        if (connections[server.id]?.takeIf { it.isConnected }?.sseJob === connectionJob) {
+                            compactionHistoryReadiness.markSnapshot(key, connectionJob)
+                        }
                     } catch (e: CancellationException) {
                         throw e
                     } catch (e: Exception) {
+                        compactionHistoryReadiness.invalidateSession(key, connectionJob)
                         Log.w(TAG, "[${server.displayName}] Message reconciliation failed for ${session.id}", e)
                     }
                 }
@@ -718,6 +912,10 @@ class OpenCodeConnectionService : Service() {
         }
         if (complete) {
             eventReducer.replacePendingRequests(server.id, permissions, questions, revision)
+            if (connections[server.id]?.sseJob === connectionJob) {
+                reconciledConnectionJobs[server.id] = connectionJob
+                controlRevision.update { it + 1 }
+            }
         }
     }
 
@@ -725,6 +923,7 @@ class OpenCodeConnectionService : Service() {
     private fun cleanupTerminatedConnection(serverId: String, job: Job) {
         val state = connections[serverId] ?: return
         if (state.sseJob !== job || !connections.remove(serverId, state)) return
+        compactionHistoryReadiness.invalidateServer(serverId)
         reconciliationJobs.remove(serverId)?.cancel()
 
         _connectedServerIds.update { it - serverId }
@@ -743,6 +942,7 @@ class OpenCodeConnectionService : Service() {
     }
 
     private fun updateServerConnected(serverId: String, connected: Boolean, expectedJob: Job) {
+        if (!connected) reconciledConnectionJobs.remove(serverId, expectedJob)
         var changed = false
         connections.computeIfPresent(serverId) { _, state ->
             if (state.sseJob !== expectedJob) return@computeIfPresent state
@@ -758,6 +958,8 @@ class OpenCodeConnectionService : Service() {
             _connectingServerIds.update { it - serverId }
             _connectedServerIds.update { it + serverId }
         } else {
+            compactionHistoryReadiness.invalidateServer(serverId)
+            reconciliationJobs.remove(serverId)?.cancel()
             _connectedServerIds.update { it - serverId }
             _connectingServerIds.update { it + serverId }
         }
@@ -786,8 +988,24 @@ class OpenCodeConnectionService : Service() {
         return session?.parentId != null
     }
 
-    private fun processEvent(server: ServerConfig, event: SseEvent, directory: String?, workspaceId: String?) {
+    private fun processEvent(server: ServerConfig, event: SseEvent, directory: String?, workspaceId: String?, sourceJob: Job) {
         eventReducer.processEvent(event, server.id, directory, workspaceId)
+        if (event is SseEvent.PermissionAsked) {
+            if (connections[server.id]?.sseJob === sourceJob) {
+                permissionSourceJobs[SessionControlKey(server.id, event.sessionId) to event.id] = sourceJob
+            }
+        }
+        val completed = when (event) {
+            is SseEvent.MessageUpdated -> (event.info as? Message.Assistant)?.takeIf { it.time.completed != null }
+                ?.let { it.sessionId to it.id }
+            is SseEvent.NextStepEnded -> event.sessionId to event.assistantMessageId
+            else -> null
+        }
+        if (completed != null && connections[server.id]?.takeIf { it.isConnected }?.sseJob === sourceJob) {
+            compactionHistoryReadiness.markCompletedMessage(
+                SessionControlKey(server.id, completed.first), sourceJob, completed.second,
+            )
+        }
 
         when (event) {
             is SseEvent.SessionIdle -> {
@@ -1199,7 +1417,7 @@ class OpenCodeConnectionService : Service() {
         if (sessionId == null) {
             post()
         } else {
-            SessionNotificationCoordinator.postUnlessActive(server.id, sessionId, post)
+            if (controlsLoaded) SessionNotificationCoordinator.postUnlessActive(server.id, sessionId, post)
         }
     }
 
