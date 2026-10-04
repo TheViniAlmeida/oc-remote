@@ -1,0 +1,3 @@
+<resources>
+    <string name="presentation_save_failed">No se pudieron guardar las preferencias. Inténtalo de nuevo.</string>
+</resources>

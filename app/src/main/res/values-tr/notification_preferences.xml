@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="notification_preferences_title">Bildirimler</string>
+    <string name="notification_preferences_description">Bildirim gönderecek oturum olaylarını, sesi ve bildirim zamanını seçin. Oturumu sessize alma her zaman önceliklidir.</string>
+    <string name="notification_preferences_inherit">Üst düzey ayarları kullan</string>
+    <string name="notification_preferences_agent">Ajan görevinin tamamlanması</string>
+    <string name="notification_preferences_permissions">İzinler</string>
+    <string name="notification_preferences_questions">Dikkat gerektiren sorular</string>
+    <string name="notification_preferences_errors">Hatalar</string>
+    <string name="notification_preferences_enabled">Sistem bildirimi</string>
+    <string name="notification_preferences_sound">Ses</string>
+    <string name="notification_preferences_default_sound">Cihaz varsayılanı</string>
+    <string name="notification_preferences_silent">Sessiz</string>
+    <string name="notification_preferences_vibrate">Titreşim</string>
+    <string name="notification_preferences_no_vibration">Titreşim yok</string>
+    <string name="notification_preferences_when">Bildirim zamanı</string>
+    <string name="notification_preferences_always">Her zaman</string>
+    <string name="notification_preferences_outside_session">Etkin oturum dışındayken</string>
+    <string name="notification_preferences_background">Yalnızca arka planda</string>
+    <string name="notification_preferences_device_sound">Android ayarlarından ses seç</string>
+    <string name="notification_preferences_system_note">Android bildirim izni ve kanal ayarları da geçerlidir. Aynı kategori, ses ve titreşim seçimine sahip yapılandırmalar cihaz seslerini paylaşır.</string>
+    <string name="notification_preferences_cancel">İptal</string>
+    <string name="notification_preferences_save">Kaydet</string>
+</resources>

@@ -1,0 +1,29 @@
+<resources>
+  <string name="appearance_title">Тема и цвета приложения</string>
+  <string name="appearance_theme">Тема</string>
+  <string name="appearance_accent">Цвет акцента</string>
+  <string name="appearance_default_color">По умолчанию</string>
+  <string name="appearance_system">Как в системе</string>
+  <string name="appearance_light">Светлая</string>
+  <string name="appearance_dark">Тёмная</string>
+  <string name="appearance_inherit">Наследовать</string>
+  <string name="appearance_inherit_desc">Незаданные параметры наследуются от проекта или приложения. Изменения сохраняются на этом устройстве.</string>
+  <string name="appearance_palette_priority">Выбранный цвет акцента имеет приоритет над динамическими цветами. AMOLED сохраняет чёрные поверхности в тёмном режиме.</string>
+  <string name="appearance_dynamic">Динамические цвета</string>
+  <string name="appearance_amoled">Тёмный режим AMOLED</string>
+  <string name="appearance_reset">Восстановить наследование</string>
+  <string name="appearance_cancel">Отмена</string>
+  <string name="appearance_save">Применить</string>
+  <string name="appearance_auto_scroll">Автоматическая прокрутка</string>
+  <string name="appearance_auto_scroll_desc">Показывать новые сообщения, пока вы находитесь в конце беседы.</string>
+  <string name="appearance_project_title">Тема и цвета проекта</string>
+  <string name="appearance_session_title">Тема и цвета сеанса</string>
+  <string name="appearance_red">Красный</string>
+  <string name="appearance_orange">Оранжевый</string>
+  <string name="appearance_amber">Янтарный</string>
+  <string name="appearance_green">Зелёный</string>
+  <string name="appearance_teal">Бирюзовый</string>
+  <string name="appearance_blue">Синий</string>
+  <string name="appearance_violet">Фиолетовый</string>
+  <string name="appearance_pink">Розовый</string>
+</resources>

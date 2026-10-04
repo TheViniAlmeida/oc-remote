@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="notification_preferences_title">Сповіщення</string>
+    <string name="notification_preferences_description">Виберіть події сеансу для сповіщень, їхній звук і час сповіщень. Вимкнення сповіщень сеансу завжди має пріоритет.</string>
+    <string name="notification_preferences_inherit">Використовувати успадковані налаштування</string>
+    <string name="notification_preferences_agent">Завершення роботи агента</string>
+    <string name="notification_preferences_permissions">Дозволи</string>
+    <string name="notification_preferences_questions">Запитання, що потребують уваги</string>
+    <string name="notification_preferences_errors">Помилки</string>
+    <string name="notification_preferences_enabled">Системне сповіщення</string>
+    <string name="notification_preferences_sound">Звук</string>
+    <string name="notification_preferences_default_sound">За замовчуванням на пристрої</string>
+    <string name="notification_preferences_silent">Без звуку</string>
+    <string name="notification_preferences_vibrate">Вібрація</string>
+    <string name="notification_preferences_no_vibration">Без вібрації</string>
+    <string name="notification_preferences_when">Коли сповіщати</string>
+    <string name="notification_preferences_always">Завжди</string>
+    <string name="notification_preferences_outside_session">Поза активним сеансом</string>
+    <string name="notification_preferences_background">Лише у фоні</string>
+    <string name="notification_preferences_device_sound">Вибрати звук у налаштуваннях Android</string>
+    <string name="notification_preferences_system_note">Також діють дозвіл на сповіщення та налаштування каналів Android. Звуки пристрою спільні для налаштувань з однаковою категорією, звуком і вібрацією.</string>
+    <string name="notification_preferences_cancel">Скасувати</string>
+    <string name="notification_preferences_save">Зберегти</string>
+</resources>

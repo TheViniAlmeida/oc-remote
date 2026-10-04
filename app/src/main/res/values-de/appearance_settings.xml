@@ -1,0 +1,29 @@
+<resources>
+  <string name="appearance_title">App-Design und Farben</string>
+  <string name="appearance_theme">Design</string>
+  <string name="appearance_accent">Akzentfarbe</string>
+  <string name="appearance_default_color">Standard</string>
+  <string name="appearance_system">Systemeinstellung</string>
+  <string name="appearance_light">Hell</string>
+  <string name="appearance_dark">Dunkel</string>
+  <string name="appearance_inherit">Übernehmen</string>
+  <string name="appearance_inherit_desc">Nicht festgelegte Optionen werden vom Projekt oder der App übernommen. Änderungen bleiben auf diesem Gerät.</string>
+  <string name="appearance_palette_priority">Eine ausgewählte Akzentfarbe hat Vorrang vor dynamischen Farben. AMOLED behält im dunklen Modus schwarze Oberflächen bei.</string>
+  <string name="appearance_dynamic">Dynamische Farben</string>
+  <string name="appearance_amoled">AMOLED-Dunkelmodus</string>
+  <string name="appearance_reset">Übernahme wiederherstellen</string>
+  <string name="appearance_cancel">Abbrechen</string>
+  <string name="appearance_save">Anwenden</string>
+  <string name="appearance_auto_scroll">Automatisches Scrollen</string>
+  <string name="appearance_auto_scroll_desc">Neue Nachrichten verfolgen, solange du dich am Ende des Gesprächs befindest.</string>
+  <string name="appearance_project_title">Projekt-Design und Farben</string>
+  <string name="appearance_session_title">Sitzungsdesign und Farben</string>
+  <string name="appearance_red">Rot</string>
+  <string name="appearance_orange">Orange</string>
+  <string name="appearance_amber">Bernstein</string>
+  <string name="appearance_green">Grün</string>
+  <string name="appearance_teal">Türkis</string>
+  <string name="appearance_blue">Blau</string>
+  <string name="appearance_violet">Violett</string>
+  <string name="appearance_pink">Rosa</string>
+</resources>

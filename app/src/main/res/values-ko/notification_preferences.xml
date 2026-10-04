@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="notification_preferences_title">알림</string>
+    <string name="notification_preferences_description">알림을 받을 세션 이벤트, 소리 및 시점을 선택하세요. 세션 알림 끄기가 항상 우선합니다.</string>
+    <string name="notification_preferences_inherit">상위 설정 사용</string>
+    <string name="notification_preferences_agent">에이전트 작업 완료</string>
+    <string name="notification_preferences_permissions">권한</string>
+    <string name="notification_preferences_questions">확인이 필요한 질문</string>
+    <string name="notification_preferences_errors">오류</string>
+    <string name="notification_preferences_enabled">시스템 알림</string>
+    <string name="notification_preferences_sound">소리</string>
+    <string name="notification_preferences_default_sound">기기 기본값</string>
+    <string name="notification_preferences_silent">무음</string>
+    <string name="notification_preferences_vibrate">진동</string>
+    <string name="notification_preferences_no_vibration">진동 없음</string>
+    <string name="notification_preferences_when">알림 시점</string>
+    <string name="notification_preferences_always">항상</string>
+    <string name="notification_preferences_outside_session">활성 세션이 아닐 때</string>
+    <string name="notification_preferences_background">백그라운드에서만</string>
+    <string name="notification_preferences_device_sound">Android 설정에서 소리 선택</string>
+    <string name="notification_preferences_system_note">Android 알림 권한 및 채널 설정도 적용됩니다. 기기 소리는 같은 범주, 소리 및 진동을 선택한 설정 간에 공유됩니다.</string>
+    <string name="notification_preferences_cancel">취소</string>
+    <string name="notification_preferences_save">저장</string>
+</resources>

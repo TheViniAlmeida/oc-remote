@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="appearance_title">Tema e cores do app</string>
+  <string name="appearance_theme">Tema</string>
+  <string name="appearance_accent">Cor de destaque</string>
+  <string name="appearance_default_color">Padrão</string>
+  <string name="appearance_system">Seguir sistema</string>
+  <string name="appearance_light">Claro</string>
+  <string name="appearance_dark">Escuro</string>
+  <string name="appearance_inherit">Herdar</string>
+  <string name="appearance_inherit_desc">As opções não definidas herdam do projeto ou app. As alterações ficam neste dispositivo.</string>
+  <string name="appearance_palette_priority">Uma cor selecionada prevalece sobre as cores dinâmicas. AMOLED mantém superfícies pretas no modo escuro.</string>
+  <string name="appearance_dynamic">Cores dinâmicas</string>
+  <string name="appearance_amoled">Modo escuro AMOLED</string>
+  <string name="appearance_reset">Restaurar herança</string>
+  <string name="appearance_cancel">Cancelar</string>
+  <string name="appearance_save">Aplicar</string>
+  <string name="appearance_auto_scroll">Rolagem automática</string>
+  <string name="appearance_auto_scroll_desc">Acompanhar novas mensagens enquanto você está no fim da conversa.</string>
+  <string name="appearance_project_title">Tema e cores do projeto</string>
+  <string name="appearance_session_title">Tema e cores da sessão</string>
+  <string name="appearance_red">Vermelho</string>
+  <string name="appearance_orange">Laranja</string>
+  <string name="appearance_amber">Âmbar</string>
+  <string name="appearance_green">Verde</string>
+  <string name="appearance_teal">Verde azulado</string>
+  <string name="appearance_blue">Azul</string>
+  <string name="appearance_violet">Violeta</string>
+  <string name="appearance_pink">Rosa</string>
+</resources>

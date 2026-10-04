@@ -1,0 +1,23 @@
+<resources>
+  <string name="timeline_title">Zaman çizelgesi ayrıntısı</string>
+  <string name="timeline_description">Ne kadar etkinlik gösterileceğini seçin. Mesajlar ve ekler görünür kalır. Ayarlar bu cihazda kalır.</string>
+  <string name="timeline_inherit">Sunucu ayarlarını devral</string>
+  <string name="timeline_minimal">En az</string>
+  <string name="timeline_compact">Kompakt</string>
+  <string name="timeline_balanced">Dengeli</string>
+  <string name="timeline_detailed">Ayrıntılı</string>
+  <string name="timeline_custom">Özel</string>
+  <string name="timeline_advanced">Etkinlik kategorileri</string>
+  <string name="timeline_shell">Kabuk</string>
+  <string name="timeline_edits">Düzenlemeler</string>
+  <string name="timeline_reasoning">Akıl yürütme</string>
+  <string name="timeline_subagents">Alt ajanlar</string>
+  <string name="timeline_notices">Bildirimler</string>
+  <string name="timeline_other_tools">Diğer araçlar</string>
+  <string name="timeline_visible">Göster</string>
+  <string name="timeline_group">Grupla</string>
+  <string name="timeline_collapse">Daralt</string>
+  <string name="timeline_reset">Devralmayı geri yükle</string>
+  <string name="timeline_cancel">İptal</string>
+  <string name="timeline_save">Uygula</string>
+</resources>

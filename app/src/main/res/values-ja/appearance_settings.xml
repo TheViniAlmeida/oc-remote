@@ -1,0 +1,29 @@
+<resources>
+  <string name="appearance_title">アプリのテーマと色</string>
+  <string name="appearance_theme">テーマ</string>
+  <string name="appearance_accent">アクセントカラー</string>
+  <string name="appearance_default_color">デフォルト</string>
+  <string name="appearance_system">システム設定に従う</string>
+  <string name="appearance_light">ライト</string>
+  <string name="appearance_dark">ダーク</string>
+  <string name="appearance_inherit">継承</string>
+  <string name="appearance_inherit_desc">未設定の項目はプロジェクトまたはアプリの設定を継承します。変更はこの端末に保存されます。</string>
+  <string name="appearance_palette_priority">選択したアクセントカラーがダイナミックカラーより優先されます。AMOLED はダークモードで黒い背景を維持します。</string>
+  <string name="appearance_dynamic">ダイナミックカラー</string>
+  <string name="appearance_amoled">AMOLED ダークモード</string>
+  <string name="appearance_reset">継承に戻す</string>
+  <string name="appearance_cancel">キャンセル</string>
+  <string name="appearance_save">適用</string>
+  <string name="appearance_auto_scroll">自動スクロール</string>
+  <string name="appearance_auto_scroll_desc">会話の末尾にいるときに新しいメッセージを追従します。</string>
+  <string name="appearance_project_title">プロジェクトのテーマと色</string>
+  <string name="appearance_session_title">セッションのテーマと色</string>
+  <string name="appearance_red">赤</string>
+  <string name="appearance_orange">オレンジ</string>
+  <string name="appearance_amber">アンバー</string>
+  <string name="appearance_green">緑</string>
+  <string name="appearance_teal">青緑</string>
+  <string name="appearance_blue">青</string>
+  <string name="appearance_violet">紫</string>
+  <string name="appearance_pink">ピンク</string>
+</resources>

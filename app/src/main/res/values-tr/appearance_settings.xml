@@ -1,0 +1,29 @@
+<resources>
+  <string name="appearance_title">Uygulama teması ve renkleri</string>
+  <string name="appearance_theme">Tema</string>
+  <string name="appearance_accent">Vurgu rengi</string>
+  <string name="appearance_default_color">Varsayılan</string>
+  <string name="appearance_system">Sistemi izle</string>
+  <string name="appearance_light">Açık</string>
+  <string name="appearance_dark">Koyu</string>
+  <string name="appearance_inherit">Devral</string>
+  <string name="appearance_inherit_desc">Ayarlanmayan seçenekler proje veya uygulama ayarlarını devralır. Değişiklikler bu cihazda kalır.</string>
+  <string name="appearance_palette_priority">Seçilen vurgu rengi dinamik renklerden önceliklidir. AMOLED, koyu modda siyah yüzeyleri korur.</string>
+  <string name="appearance_dynamic">Dinamik renkler</string>
+  <string name="appearance_amoled">AMOLED koyu modu</string>
+  <string name="appearance_reset">Devralmayı geri yükle</string>
+  <string name="appearance_cancel">İptal</string>
+  <string name="appearance_save">Uygula</string>
+  <string name="appearance_auto_scroll">Otomatik kaydırma</string>
+  <string name="appearance_auto_scroll_desc">Konuşmanın sonundayken yeni mesajları takip et.</string>
+  <string name="appearance_project_title">Proje teması ve renkleri</string>
+  <string name="appearance_session_title">Oturum teması ve renkleri</string>
+  <string name="appearance_red">Kırmızı</string>
+  <string name="appearance_orange">Turuncu</string>
+  <string name="appearance_amber">Kehribar</string>
+  <string name="appearance_green">Yeşil</string>
+  <string name="appearance_teal">Turkuaz</string>
+  <string name="appearance_blue">Mavi</string>
+  <string name="appearance_violet">Mor</string>
+  <string name="appearance_pink">Pembe</string>
+</resources>

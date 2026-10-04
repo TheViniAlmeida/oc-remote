@@ -1,0 +1,23 @@
+<resources>
+  <string name="timeline_title">Zeitliniendetails</string>
+  <string name="timeline_description">Wähle, wie viel Aktivität angezeigt wird. Nachrichten und Anhänge bleiben sichtbar. Einstellungen bleiben auf diesem Gerät.</string>
+  <string name="timeline_inherit">Servereinstellungen übernehmen</string>
+  <string name="timeline_minimal">Minimal</string>
+  <string name="timeline_compact">Kompakt</string>
+  <string name="timeline_balanced">Ausgewogen</string>
+  <string name="timeline_detailed">Detailliert</string>
+  <string name="timeline_custom">Benutzerdefiniert</string>
+  <string name="timeline_advanced">Aktivitätskategorien</string>
+  <string name="timeline_shell">Shell</string>
+  <string name="timeline_edits">Bearbeitungen</string>
+  <string name="timeline_reasoning">Gedankengang</string>
+  <string name="timeline_subagents">Unteragenten</string>
+  <string name="timeline_notices">Hinweise</string>
+  <string name="timeline_other_tools">Andere Werkzeuge</string>
+  <string name="timeline_visible">Anzeigen</string>
+  <string name="timeline_group">Gruppieren</string>
+  <string name="timeline_collapse">Einklappen</string>
+  <string name="timeline_reset">Übernahme wiederherstellen</string>
+  <string name="timeline_cancel">Abbrechen</string>
+  <string name="timeline_save">Anwenden</string>
+</resources>

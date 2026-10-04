@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="notification_preferences_title">Notifications</string>
+    <string name="notification_preferences_description">Choose which session events notify you, their sound and when to notify. Session mute always takes priority.</string>
+    <string name="notification_preferences_inherit">Use inherited settings</string>
+    <string name="notification_preferences_agent">Agent completion</string>
+    <string name="notification_preferences_permissions">Permissions</string>
+    <string name="notification_preferences_questions">Questions requiring attention</string>
+    <string name="notification_preferences_errors">Errors</string>
+    <string name="notification_preferences_enabled">System notification</string>
+    <string name="notification_preferences_sound">Sound</string>
+    <string name="notification_preferences_default_sound">Device default</string>
+    <string name="notification_preferences_silent">Silent</string>
+    <string name="notification_preferences_vibrate">Vibration</string>
+    <string name="notification_preferences_no_vibration">No vibration</string>
+    <string name="notification_preferences_when">When to notify</string>
+    <string name="notification_preferences_always">Always</string>
+    <string name="notification_preferences_outside_session">Outside the active session</string>
+    <string name="notification_preferences_background">Only in background</string>
+    <string name="notification_preferences_device_sound">Choose sound in Android settings</string>
+    <string name="notification_preferences_system_note">Android notification permission and channel settings also apply. Device sounds are shared by configurations of the same category, sound and vibration choice.</string>
+    <string name="notification_preferences_cancel">Cancel</string>
+    <string name="notification_preferences_save">Save</string>
+</resources>

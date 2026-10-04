@@ -1,0 +1,23 @@
+<resources>
+  <string name="timeline_title">Деталізація хронології</string>
+  <string name="timeline_description">Виберіть, скільки дій показувати. Повідомлення та вкладення залишаються видимими. Налаштування залишаються на цьому пристрої.</string>
+  <string name="timeline_inherit">Успадкувати налаштування сервера</string>
+  <string name="timeline_minimal">Мінімально</string>
+  <string name="timeline_compact">Компактно</string>
+  <string name="timeline_balanced">Збалансовано</string>
+  <string name="timeline_detailed">Докладно</string>
+  <string name="timeline_custom">Власні</string>
+  <string name="timeline_advanced">Категорії дій</string>
+  <string name="timeline_shell">Оболонка</string>
+  <string name="timeline_edits">Редагування</string>
+  <string name="timeline_reasoning">Міркування</string>
+  <string name="timeline_subagents">Підагенти</string>
+  <string name="timeline_notices">Сповіщення</string>
+  <string name="timeline_other_tools">Інші інструменти</string>
+  <string name="timeline_visible">Показати</string>
+  <string name="timeline_group">Групувати</string>
+  <string name="timeline_collapse">Згорнути</string>
+  <string name="timeline_reset">Відновити успадкування</string>
+  <string name="timeline_cancel">Скасувати</string>
+  <string name="timeline_save">Застосувати</string>
+</resources>

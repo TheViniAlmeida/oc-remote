@@ -1,0 +1,23 @@
+<resources>
+  <string name="timeline_title">Szczegółowość osi czasu</string>
+  <string name="timeline_description">Wybierz ilość wyświetlanej aktywności. Wiadomości i załączniki pozostają widoczne. Ustawienia pozostają na tym urządzeniu.</string>
+  <string name="timeline_inherit">Dziedzicz ustawienia serwera</string>
+  <string name="timeline_minimal">Minimalny</string>
+  <string name="timeline_compact">Kompaktowy</string>
+  <string name="timeline_balanced">Zrównoważony</string>
+  <string name="timeline_detailed">Szczegółowy</string>
+  <string name="timeline_custom">Własny</string>
+  <string name="timeline_advanced">Kategorie aktywności</string>
+  <string name="timeline_shell">Powłoka</string>
+  <string name="timeline_edits">Edycje</string>
+  <string name="timeline_reasoning">Rozumowanie</string>
+  <string name="timeline_subagents">Podagenci</string>
+  <string name="timeline_notices">Powiadomienia</string>
+  <string name="timeline_other_tools">Inne narzędzia</string>
+  <string name="timeline_visible">Pokaż</string>
+  <string name="timeline_group">Grupuj</string>
+  <string name="timeline_collapse">Zwiń</string>
+  <string name="timeline_reset">Przywróć dziedziczenie</string>
+  <string name="timeline_cancel">Anuluj</string>
+  <string name="timeline_save">Zastosuj</string>
+</resources>

@@ -1,0 +1,29 @@
+<resources>
+  <string name="appearance_title">应用主题和颜色</string>
+  <string name="appearance_theme">主题</string>
+  <string name="appearance_accent">强调色</string>
+  <string name="appearance_default_color">默认</string>
+  <string name="appearance_system">跟随系统</string>
+  <string name="appearance_light">浅色</string>
+  <string name="appearance_dark">深色</string>
+  <string name="appearance_inherit">继承</string>
+  <string name="appearance_inherit_desc">未设置的选项继承项目或应用设置。更改仅保存在此设备上。</string>
+  <string name="appearance_palette_priority">所选强调色优先于动态颜色。AMOLED 在深色模式下保留纯黑色背景。</string>
+  <string name="appearance_dynamic">动态颜色</string>
+  <string name="appearance_amoled">AMOLED 深色模式</string>
+  <string name="appearance_reset">恢复继承</string>
+  <string name="appearance_cancel">取消</string>
+  <string name="appearance_save">应用</string>
+  <string name="appearance_auto_scroll">自动滚动</string>
+  <string name="appearance_auto_scroll_desc">位于对话底部时跟随新消息。</string>
+  <string name="appearance_project_title">项目主题和颜色</string>
+  <string name="appearance_session_title">会话主题和颜色</string>
+  <string name="appearance_red">红色</string>
+  <string name="appearance_orange">橙色</string>
+  <string name="appearance_amber">琥珀色</string>
+  <string name="appearance_green">绿色</string>
+  <string name="appearance_teal">青色</string>
+  <string name="appearance_blue">蓝色</string>
+  <string name="appearance_violet">紫色</string>
+  <string name="appearance_pink">粉色</string>
+</resources>

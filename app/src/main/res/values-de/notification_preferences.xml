@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="notification_preferences_title">Benachrichtigungen</string>
+    <string name="notification_preferences_description">Wähle die Sitzungsereignisse, ihren Ton und den Zeitpunkt der Benachrichtigung. Stummgeschaltete Sitzungen haben immer Vorrang.</string>
+    <string name="notification_preferences_inherit">Übergeordnete Einstellungen verwenden</string>
+    <string name="notification_preferences_agent">Abschluss des Agenten</string>
+    <string name="notification_preferences_permissions">Berechtigungen</string>
+    <string name="notification_preferences_questions">Fragen, die Aufmerksamkeit erfordern</string>
+    <string name="notification_preferences_errors">Fehler</string>
+    <string name="notification_preferences_enabled">Systembenachrichtigung</string>
+    <string name="notification_preferences_sound">Ton</string>
+    <string name="notification_preferences_default_sound">Gerätestandard</string>
+    <string name="notification_preferences_silent">Lautlos</string>
+    <string name="notification_preferences_vibrate">Vibration</string>
+    <string name="notification_preferences_no_vibration">Keine Vibration</string>
+    <string name="notification_preferences_when">Benachrichtigungszeitpunkt</string>
+    <string name="notification_preferences_always">Immer</string>
+    <string name="notification_preferences_outside_session">Außerhalb der aktiven Sitzung</string>
+    <string name="notification_preferences_background">Nur im Hintergrund</string>
+    <string name="notification_preferences_device_sound">Ton in den Android-Einstellungen wählen</string>
+    <string name="notification_preferences_system_note">Auch die Android-Benachrichtigungsberechtigung und Kanaleinstellungen gelten. Gerätetöne werden von Einstellungen mit derselben Kategorie, Ton- und Vibrationsauswahl gemeinsam verwendet.</string>
+    <string name="notification_preferences_cancel">Abbrechen</string>
+    <string name="notification_preferences_save">Speichern</string>
+</resources>

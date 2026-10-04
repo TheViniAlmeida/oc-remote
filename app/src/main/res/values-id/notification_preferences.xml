@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="notification_preferences_title">Notifikasi</string>
+    <string name="notification_preferences_description">Pilih peristiwa sesi yang memberi notifikasi, bunyinya, dan kapan notifikasi dikirim. Membisukan sesi selalu diutamakan.</string>
+    <string name="notification_preferences_inherit">Gunakan pengaturan turunan</string>
+    <string name="notification_preferences_agent">Penyelesaian tugas agen</string>
+    <string name="notification_preferences_permissions">Izin</string>
+    <string name="notification_preferences_questions">Pertanyaan yang perlu perhatian</string>
+    <string name="notification_preferences_errors">Kesalahan</string>
+    <string name="notification_preferences_enabled">Notifikasi sistem</string>
+    <string name="notification_preferences_sound">Bunyi</string>
+    <string name="notification_preferences_default_sound">Default perangkat</string>
+    <string name="notification_preferences_silent">Senyap</string>
+    <string name="notification_preferences_vibrate">Getaran</string>
+    <string name="notification_preferences_no_vibration">Tanpa getaran</string>
+    <string name="notification_preferences_when">Kapan memberi notifikasi</string>
+    <string name="notification_preferences_always">Selalu</string>
+    <string name="notification_preferences_outside_session">Di luar sesi aktif</string>
+    <string name="notification_preferences_background">Hanya di latar belakang</string>
+    <string name="notification_preferences_device_sound">Pilih bunyi di pengaturan Android</string>
+    <string name="notification_preferences_system_note">Izin notifikasi dan pengaturan saluran Android juga berlaku. Bunyi perangkat dibagikan oleh konfigurasi dengan kategori, bunyi, dan pilihan getaran yang sama.</string>
+    <string name="notification_preferences_cancel">Batal</string>
+    <string name="notification_preferences_save">Simpan</string>
+</resources>

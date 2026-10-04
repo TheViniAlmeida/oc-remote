@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="timeline_title">Detalhamento da linha do tempo</string>
+  <string name="timeline_description">Escolha quanta atividade mostrar. Mensagens e anexos permanecem visíveis. As configurações ficam neste dispositivo.</string>
+  <string name="timeline_inherit">Herdar configurações do servidor</string>
+  <string name="timeline_minimal">Mínimo</string>
+  <string name="timeline_compact">Compacto</string>
+  <string name="timeline_balanced">Equilibrado</string>
+  <string name="timeline_detailed">Detalhado</string>
+  <string name="timeline_custom">Personalizado</string>
+  <string name="timeline_advanced">Categorias de atividade</string>
+  <string name="timeline_shell">Shell</string>
+  <string name="timeline_edits">Edições</string>
+  <string name="timeline_reasoning">Raciocínio</string>
+  <string name="timeline_subagents">Subagentes</string>
+  <string name="timeline_notices">Avisos</string>
+  <string name="timeline_other_tools">Outras ferramentas</string>
+  <string name="timeline_visible">Mostrar</string>
+  <string name="timeline_group">Agrupar</string>
+  <string name="timeline_collapse">Recolher</string>
+  <string name="timeline_reset">Restaurar herança</string>
+  <string name="timeline_cancel">Cancelar</string>
+  <string name="timeline_save">Aplicar</string>
+</resources>

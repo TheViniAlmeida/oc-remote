@@ -1,0 +1,29 @@
+<resources>
+  <string name="appearance_title">سمة التطبيق وألوانه</string>
+  <string name="appearance_theme">السمة</string>
+  <string name="appearance_accent">لون التمييز</string>
+  <string name="appearance_default_color">الافتراضي</string>
+  <string name="appearance_system">اتباع النظام</string>
+  <string name="appearance_light">فاتح</string>
+  <string name="appearance_dark">داكن</string>
+  <string name="appearance_inherit">توريث</string>
+  <string name="appearance_inherit_desc">ترث الخيارات غير المحددة إعدادات المشروع أو التطبيق. تبقى التغييرات على هذا الجهاز.</string>
+  <string name="appearance_palette_priority">يتقدم لون التمييز المختار على الألوان الديناميكية. يحافظ AMOLED على الأسطح السوداء في الوضع الداكن.</string>
+  <string name="appearance_dynamic">ألوان ديناميكية</string>
+  <string name="appearance_amoled">الوضع الداكن AMOLED</string>
+  <string name="appearance_reset">استعادة التوريث</string>
+  <string name="appearance_cancel">إلغاء</string>
+  <string name="appearance_save">تطبيق</string>
+  <string name="appearance_auto_scroll">التمرير التلقائي</string>
+  <string name="appearance_auto_scroll_desc">متابعة الرسائل الجديدة أثناء وجودك في نهاية المحادثة.</string>
+  <string name="appearance_project_title">سمة المشروع وألوانه</string>
+  <string name="appearance_session_title">سمة الجلسة وألوانها</string>
+  <string name="appearance_red">أحمر</string>
+  <string name="appearance_orange">برتقالي</string>
+  <string name="appearance_amber">كهرماني</string>
+  <string name="appearance_green">أخضر</string>
+  <string name="appearance_teal">أزرق مخضر</string>
+  <string name="appearance_blue">أزرق</string>
+  <string name="appearance_violet">بنفسجي</string>
+  <string name="appearance_pink">وردي</string>
+</resources>

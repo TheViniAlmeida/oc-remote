@@ -1,0 +1,23 @@
+<resources>
+  <string name="timeline_title">Detalle de la cronología</string>
+  <string name="timeline_description">Elige cuánta actividad mostrar. Los mensajes y adjuntos permanecen visibles. Los ajustes se guardan en este dispositivo.</string>
+  <string name="timeline_inherit">Heredar ajustes del servidor</string>
+  <string name="timeline_minimal">Mínimo</string>
+  <string name="timeline_compact">Compacto</string>
+  <string name="timeline_balanced">Equilibrado</string>
+  <string name="timeline_detailed">Detallado</string>
+  <string name="timeline_custom">Personalizado</string>
+  <string name="timeline_advanced">Categorías de actividad</string>
+  <string name="timeline_shell">Shell</string>
+  <string name="timeline_edits">Ediciones</string>
+  <string name="timeline_reasoning">Razonamiento</string>
+  <string name="timeline_subagents">Subagentes</string>
+  <string name="timeline_notices">Avisos</string>
+  <string name="timeline_other_tools">Otras herramientas</string>
+  <string name="timeline_visible">Mostrar</string>
+  <string name="timeline_group">Agrupar</string>
+  <string name="timeline_collapse">Contraer</string>
+  <string name="timeline_reset">Restaurar herencia</string>
+  <string name="timeline_cancel">Cancelar</string>
+  <string name="timeline_save">Aplicar</string>
+</resources>

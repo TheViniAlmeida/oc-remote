@@ -42,6 +42,8 @@ class SettingsRepository @Inject constructor(
 
         private val LANGUAGE_KEY = stringPreferencesKey("app_language")
         private val THEME_KEY = stringPreferencesKey("app_theme")
+        private val APP_ACCENT_KEY = stringPreferencesKey("app_accent")
+        private val AUTO_SCROLL_KEY = booleanPreferencesKey("auto_scroll_enabled")
         private val DYNAMIC_COLOR_KEY = booleanPreferencesKey("dynamic_color")
         private val FONT_SIZE_KEY = stringPreferencesKey("chat_font_size")
         private val NOTIFICATIONS_KEY = booleanPreferencesKey("notifications_enabled")
@@ -93,6 +95,9 @@ class SettingsRepository @Inject constructor(
         private const val SERVER_PINNED_SESSIONS_PREFIX = "server_pinned_sessions_"
         private const val SERVER_FAVORITE_SESSIONS_PREFIX = "server_favorite_sessions_"
         private const val SERVER_SESSION_CATEGORY_PREFIX = "server_session_category_"
+
+        internal fun automaticScrollingEnabled(preferences: Preferences): Boolean =
+            preferences[AUTO_SCROLL_KEY] ?: true
 
         internal fun dynamicColorEnabled(preferences: Preferences): Boolean =
             preferences[DYNAMIC_COLOR_KEY] ?: DEFAULT_DYNAMIC_COLOR
@@ -291,9 +296,33 @@ class SettingsRepository @Inject constructor(
         preferences[LANGUAGE_KEY] ?: ""
     }
 
-    /**
-     * Selected theme: "system", "light", or "dark".
-     */
+    /** Accent palette selected for this device. */
+    val appAccent: Flow<String> = dataStore.data.map { preferences ->
+        preferences[APP_ACCENT_KEY]?.takeIf { it in dev.minios.ocremote.domain.model.appAccentKeys } ?: "default"
+    }
+
+    suspend fun setAppAccent(accent: String) {
+        require(accent in dev.minios.ocremote.domain.model.appAccentKeys)
+        dataStore.edit { it[APP_ACCENT_KEY] = accent }
+    }
+
+    suspend fun setAppearance(appearance: dev.minios.ocremote.domain.model.ThemeAppearance) {
+        val normalized = appearance.normalized()
+        dataStore.edit { preferences ->
+            preferences[THEME_KEY] = normalized.theme
+            preferences[APP_ACCENT_KEY] = normalized.accent
+            preferences[DYNAMIC_COLOR_KEY] = normalized.dynamicColor
+            preferences[AMOLED_DARK_KEY] = normalized.amoledDark
+        }
+    }
+
+    val autoScrollEnabled: Flow<Boolean> = dataStore.data.map { automaticScrollingEnabled(it) }
+
+    suspend fun setAutoScrollEnabled(enabled: Boolean) {
+        dataStore.edit { it[AUTO_SCROLL_KEY] = enabled }
+    }
+
+    /** Selected theme: "system", "light", or "dark". */
     val appTheme: Flow<String> = dataStore.data.map { preferences ->
         preferences[THEME_KEY] ?: "system"
     }

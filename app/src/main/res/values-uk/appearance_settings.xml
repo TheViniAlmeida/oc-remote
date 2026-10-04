@@ -1,0 +1,29 @@
+<resources>
+  <string name="appearance_title">Тема й кольори застосунку</string>
+  <string name="appearance_theme">Тема</string>
+  <string name="appearance_accent">Акцентний колір</string>
+  <string name="appearance_default_color">За замовчуванням</string>
+  <string name="appearance_system">Як у системі</string>
+  <string name="appearance_light">Світла</string>
+  <string name="appearance_dark">Темна</string>
+  <string name="appearance_inherit">Успадкувати</string>
+  <string name="appearance_inherit_desc">Незадані параметри успадковуються від проєкту або застосунку. Зміни залишаються на цьому пристрої.</string>
+  <string name="appearance_palette_priority">Вибраний акцентний колір має пріоритет над динамічними кольорами. AMOLED зберігає чорні поверхні в темному режимі.</string>
+  <string name="appearance_dynamic">Динамічні кольори</string>
+  <string name="appearance_amoled">Темний режим AMOLED</string>
+  <string name="appearance_reset">Відновити успадкування</string>
+  <string name="appearance_cancel">Скасувати</string>
+  <string name="appearance_save">Застосувати</string>
+  <string name="appearance_auto_scroll">Автоматичне прокручування</string>
+  <string name="appearance_auto_scroll_desc">Показувати нові повідомлення, поки ви перебуваєте в кінці розмови.</string>
+  <string name="appearance_project_title">Тема й кольори проєкту</string>
+  <string name="appearance_session_title">Тема й кольори сеансу</string>
+  <string name="appearance_red">Червоний</string>
+  <string name="appearance_orange">Помаранчевий</string>
+  <string name="appearance_amber">Бурштиновий</string>
+  <string name="appearance_green">Зелений</string>
+  <string name="appearance_teal">Бірюзовий</string>
+  <string name="appearance_blue">Синій</string>
+  <string name="appearance_violet">Фіолетовий</string>
+  <string name="appearance_pink">Рожевий</string>
+</resources>

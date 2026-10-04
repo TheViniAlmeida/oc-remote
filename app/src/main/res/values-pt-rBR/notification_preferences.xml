@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="notification_preferences_title">Notificações</string>
+    <string name="notification_preferences_description">Escolha quais eventos da sessão notificam você, o som e quando notificar. Silenciar a sessão sempre tem prioridade.</string>
+    <string name="notification_preferences_inherit">Usar configurações herdadas</string>
+    <string name="notification_preferences_agent">Conclusão do agente</string>
+    <string name="notification_preferences_permissions">Permissões</string>
+    <string name="notification_preferences_questions">Perguntas que precisam de atenção</string>
+    <string name="notification_preferences_errors">Erros</string>
+    <string name="notification_preferences_enabled">Notificação do sistema</string>
+    <string name="notification_preferences_sound">Som</string>
+    <string name="notification_preferences_default_sound">Padrão do dispositivo</string>
+    <string name="notification_preferences_silent">Silencioso</string>
+    <string name="notification_preferences_vibrate">Vibração</string>
+    <string name="notification_preferences_no_vibration">Sem vibração</string>
+    <string name="notification_preferences_when">Quando notificar</string>
+    <string name="notification_preferences_always">Sempre</string>
+    <string name="notification_preferences_outside_session">Fora da sessão ativa</string>
+    <string name="notification_preferences_background">Somente em segundo plano</string>
+    <string name="notification_preferences_device_sound">Escolher som nas configurações do Android</string>
+    <string name="notification_preferences_system_note">A permissão de notificações e as configurações de canais do Android também se aplicam. Sons do dispositivo são compartilhados pelas configurações da mesma categoria, som e vibração.</string>
+    <string name="notification_preferences_cancel">Cancelar</string>
+    <string name="notification_preferences_save">Salvar</string>
+</resources>

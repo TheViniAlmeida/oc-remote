@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="timeline_title">Timeline detail</string>
+  <string name="timeline_description">Choose how much activity to show. Messages and attachments remain visible. Settings stay on this device.</string>
+  <string name="timeline_inherit">Inherit server settings</string>
+  <string name="timeline_minimal">Minimal</string>
+  <string name="timeline_compact">Compact</string>
+  <string name="timeline_balanced">Balanced</string>
+  <string name="timeline_detailed">Detailed</string>
+  <string name="timeline_custom">Custom</string>
+  <string name="timeline_advanced">Activity categories</string>
+  <string name="timeline_shell">Shell</string>
+  <string name="timeline_edits">Edits</string>
+  <string name="timeline_reasoning">Reasoning</string>
+  <string name="timeline_subagents">Subagents</string>
+  <string name="timeline_notices">Notices</string>
+  <string name="timeline_other_tools">Other tools</string>
+  <string name="timeline_visible">Show</string>
+  <string name="timeline_group">Group</string>
+  <string name="timeline_collapse">Collapse</string>
+  <string name="timeline_reset">Restore inheritance</string>
+  <string name="timeline_cancel">Cancel</string>
+  <string name="timeline_save">Apply</string>
+</resources>

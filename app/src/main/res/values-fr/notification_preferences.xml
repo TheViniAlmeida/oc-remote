@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="notification_preferences_title">Notifications</string>
+    <string name="notification_preferences_description">Choisissez les événements de session à notifier, leur son et le moment des notifications. Les sessions mises en sourdine ont toujours la priorité.</string>
+    <string name="notification_preferences_inherit">Utiliser les paramètres hérités</string>
+    <string name="notification_preferences_agent">Fin du travail de l’agent</string>
+    <string name="notification_preferences_permissions">Autorisations</string>
+    <string name="notification_preferences_questions">Questions nécessitant votre attention</string>
+    <string name="notification_preferences_errors">Erreurs</string>
+    <string name="notification_preferences_enabled">Notification système</string>
+    <string name="notification_preferences_sound">Son</string>
+    <string name="notification_preferences_default_sound">Par défaut sur l’appareil</string>
+    <string name="notification_preferences_silent">Silencieux</string>
+    <string name="notification_preferences_vibrate">Vibration</string>
+    <string name="notification_preferences_no_vibration">Sans vibration</string>
+    <string name="notification_preferences_when">Quand notifier</string>
+    <string name="notification_preferences_always">Toujours</string>
+    <string name="notification_preferences_outside_session">En dehors de la session active</string>
+    <string name="notification_preferences_background">Uniquement en arrière-plan</string>
+    <string name="notification_preferences_device_sound">Choisir le son dans les paramètres Android</string>
+    <string name="notification_preferences_system_note">Les autorisations de notification et les paramètres des canaux Android s’appliquent aussi. Les sons de l’appareil sont partagés entre les configurations ayant la même catégorie, le même son et la même vibration.</string>
+    <string name="notification_preferences_cancel">Annuler</string>
+    <string name="notification_preferences_save">Enregistrer</string>
+</resources>

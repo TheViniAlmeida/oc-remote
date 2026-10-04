@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="notification_preferences_title">Notifiche</string>
+    <string name="notification_preferences_description">Scegli gli eventi della sessione da notificare, il suono e quando ricevere le notifiche. Le sessioni silenziate hanno sempre la precedenza.</string>
+    <string name="notification_preferences_inherit">Usa le impostazioni ereditate</string>
+    <string name="notification_preferences_agent">Completamento agente</string>
+    <string name="notification_preferences_permissions">Autorizzazioni</string>
+    <string name="notification_preferences_questions">Domande che richiedono attenzione</string>
+    <string name="notification_preferences_errors">Errori</string>
+    <string name="notification_preferences_enabled">Notifica di sistema</string>
+    <string name="notification_preferences_sound">Suono</string>
+    <string name="notification_preferences_default_sound">Predefinito del dispositivo</string>
+    <string name="notification_preferences_silent">Silenzioso</string>
+    <string name="notification_preferences_vibrate">Vibrazione</string>
+    <string name="notification_preferences_no_vibration">Nessuna vibrazione</string>
+    <string name="notification_preferences_when">Quando notificare</string>
+    <string name="notification_preferences_always">Sempre</string>
+    <string name="notification_preferences_outside_session">Fuori dalla sessione attiva</string>
+    <string name="notification_preferences_background">Solo in background</string>
+    <string name="notification_preferences_device_sound">Scegli il suono nelle impostazioni Android</string>
+    <string name="notification_preferences_system_note">Si applicano anche le autorizzazioni per le notifiche e le impostazioni dei canali Android. I suoni del dispositivo sono condivisi dalle configurazioni con la stessa categoria, suono e vibrazione.</string>
+    <string name="notification_preferences_cancel">Annulla</string>
+    <string name="notification_preferences_save">Salva</string>
+</resources>

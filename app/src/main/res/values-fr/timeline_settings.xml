@@ -1,0 +1,23 @@
+<resources>
+  <string name="timeline_title">Détail de la chronologie</string>
+  <string name="timeline_description">Choisissez la quantité d’activité à afficher. Les messages et pièces jointes restent visibles. Les paramètres restent sur cet appareil.</string>
+  <string name="timeline_inherit">Hériter des paramètres du serveur</string>
+  <string name="timeline_minimal">Minimal</string>
+  <string name="timeline_compact">Compact</string>
+  <string name="timeline_balanced">Équilibré</string>
+  <string name="timeline_detailed">Détaillé</string>
+  <string name="timeline_custom">Personnalisé</string>
+  <string name="timeline_advanced">Catégories d’activité</string>
+  <string name="timeline_shell">Shell</string>
+  <string name="timeline_edits">Modifications</string>
+  <string name="timeline_reasoning">Raisonnement</string>
+  <string name="timeline_subagents">Sous-agents</string>
+  <string name="timeline_notices">Avis</string>
+  <string name="timeline_other_tools">Autres outils</string>
+  <string name="timeline_visible">Afficher</string>
+  <string name="timeline_group">Grouper</string>
+  <string name="timeline_collapse">Replier</string>
+  <string name="timeline_reset">Rétablir l’héritage</string>
+  <string name="timeline_cancel">Annuler</string>
+  <string name="timeline_save">Appliquer</string>
+</resources>

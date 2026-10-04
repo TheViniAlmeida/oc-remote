@@ -97,10 +97,12 @@ fun OpenCodeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false,
     amoledDark: Boolean = false,
+    accent: String = "default",
+    manageSystemBars: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+    val baseColorScheme = when {
+        dynamicColor && accent == "default" && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             val scheme = if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
             if (darkTheme && amoledDark) {
@@ -123,8 +125,10 @@ fun OpenCodeTheme(
         else -> LightColorScheme
     }
     
+    val colorScheme = accentColorScheme(baseColorScheme, accent, darkTheme)
+
     val view = LocalView.current
-    if (!view.isInEditMode) {
+    if (manageSystemBars && !view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
             // Use surface color for status bar (less jarring than primary)
@@ -142,4 +146,36 @@ fun OpenCodeTheme(
             content = content
         )
     }
+}
+
+/** Fixed accent pairs use light/dark tones with readable foregrounds; surfaces retain AMOLED. */
+internal fun accentColorScheme(
+    base: androidx.compose.material3.ColorScheme,
+    accent: String,
+    dark: Boolean,
+): androidx.compose.material3.ColorScheme {
+    val tones = when (accent) {
+        "red" -> 0xFFB3261E to 0xFFFFB4AB
+        "orange" -> 0xFF9C4400 to 0xFFFFB77F
+        "amber" -> 0xFF735C00 to 0xFFE9C349
+        "green" -> 0xFF286B2A to 0xFF9ED695
+        "teal" -> 0xFF006B60 to 0xFF80D5C5
+        "blue" -> 0xFF185CA8 to 0xFFA5C8FF
+        "violet" -> 0xFF7050A7 to 0xFFD7B9FF
+        "pink" -> 0xFF9B3D75 to 0xFFFFADE0
+        else -> return base
+    }
+    val primary = Color(if (dark) tones.second else tones.first)
+    return base.copy(
+        primary = primary,
+        onPrimary = if (dark) Color(0xFF171717) else Color.White,
+        primaryContainer = primary.copy(alpha = 1f).let {
+            androidx.compose.ui.graphics.lerp(base.surface, it, if (dark) 0.25f else 0.12f)
+        },
+        onPrimaryContainer = base.onSurface,
+        secondary = primary,
+        onSecondary = if (dark) Color(0xFF171717) else Color.White,
+        secondaryContainer = androidx.compose.ui.graphics.lerp(base.surface, primary, if (dark) 0.18f else 0.08f),
+        onSecondaryContainer = base.onSurface,
+    )
 }

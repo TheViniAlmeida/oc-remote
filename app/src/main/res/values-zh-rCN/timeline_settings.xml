@@ -1,0 +1,23 @@
+<resources>
+  <string name="timeline_title">时间线详细程度</string>
+  <string name="timeline_description">选择要显示的活动量。消息和附件始终可见。设置仅保存在此设备上。</string>
+  <string name="timeline_inherit">继承服务器设置</string>
+  <string name="timeline_minimal">最简</string>
+  <string name="timeline_compact">紧凑</string>
+  <string name="timeline_balanced">均衡</string>
+  <string name="timeline_detailed">详细</string>
+  <string name="timeline_custom">自定义</string>
+  <string name="timeline_advanced">活动类别</string>
+  <string name="timeline_shell">Shell</string>
+  <string name="timeline_edits">编辑</string>
+  <string name="timeline_reasoning">推理</string>
+  <string name="timeline_subagents">子代理</string>
+  <string name="timeline_notices">提示</string>
+  <string name="timeline_other_tools">其他工具</string>
+  <string name="timeline_visible">显示</string>
+  <string name="timeline_group">分组</string>
+  <string name="timeline_collapse">折叠</string>
+  <string name="timeline_reset">恢复继承</string>
+  <string name="timeline_cancel">取消</string>
+  <string name="timeline_save">应用</string>
+</resources>

@@ -1,0 +1,23 @@
+<resources>
+  <string name="timeline_title">타임라인 세부 정보</string>
+  <string name="timeline_description">표시할 활동의 양을 선택하세요. 메시지와 첨부 파일은 항상 표시됩니다. 설정은 이 기기에 저장됩니다.</string>
+  <string name="timeline_inherit">서버 설정 사용</string>
+  <string name="timeline_minimal">최소</string>
+  <string name="timeline_compact">간결</string>
+  <string name="timeline_balanced">균형</string>
+  <string name="timeline_detailed">상세</string>
+  <string name="timeline_custom">사용자 지정</string>
+  <string name="timeline_advanced">활동 종류</string>
+  <string name="timeline_shell">셸</string>
+  <string name="timeline_edits">편집</string>
+  <string name="timeline_reasoning">추론</string>
+  <string name="timeline_subagents">하위 에이전트</string>
+  <string name="timeline_notices">알림</string>
+  <string name="timeline_other_tools">기타 도구</string>
+  <string name="timeline_visible">표시</string>
+  <string name="timeline_group">그룹화</string>
+  <string name="timeline_collapse">접기</string>
+  <string name="timeline_reset">상위 설정으로 복원</string>
+  <string name="timeline_cancel">취소</string>
+  <string name="timeline_save">적용</string>
+</resources>

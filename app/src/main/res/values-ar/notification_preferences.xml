@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="notification_preferences_title">الإشعارات</string>
+    <string name="notification_preferences_description">اختر أحداث الجلسة التي تريد إشعارًا بها وصوتها ووقت الإشعار. يكون لكتم الجلسة الأولوية دائمًا.</string>
+    <string name="notification_preferences_inherit">استخدام الإعدادات الموروثة</string>
+    <string name="notification_preferences_agent">اكتمال عمل الوكيل</string>
+    <string name="notification_preferences_permissions">الأذونات</string>
+    <string name="notification_preferences_questions">أسئلة تتطلب الانتباه</string>
+    <string name="notification_preferences_errors">الأخطاء</string>
+    <string name="notification_preferences_enabled">إشعار النظام</string>
+    <string name="notification_preferences_sound">الصوت</string>
+    <string name="notification_preferences_default_sound">الإعداد الافتراضي للجهاز</string>
+    <string name="notification_preferences_silent">صامت</string>
+    <string name="notification_preferences_vibrate">الاهتزاز</string>
+    <string name="notification_preferences_no_vibration">بلا اهتزاز</string>
+    <string name="notification_preferences_when">وقت الإشعار</string>
+    <string name="notification_preferences_always">دائمًا</string>
+    <string name="notification_preferences_outside_session">خارج الجلسة النشطة</string>
+    <string name="notification_preferences_background">في الخلفية فقط</string>
+    <string name="notification_preferences_device_sound">اختيار الصوت في إعدادات Android</string>
+    <string name="notification_preferences_system_note">ينطبق أيضًا إذن الإشعارات وإعدادات قنوات Android. تتشارك الإعدادات ذات الفئة وخيارات الصوت والاهتزاز نفسها أصوات الجهاز.</string>
+    <string name="notification_preferences_cancel">إلغاء</string>
+    <string name="notification_preferences_save">حفظ</string>
+</resources>

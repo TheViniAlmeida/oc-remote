@@ -1,0 +1,23 @@
+<resources>
+  <string name="timeline_title">تفاصيل الخط الزمني</string>
+  <string name="timeline_description">اختر مقدار النشاط المعروض. تبقى الرسائل والمرفقات مرئية. تبقى الإعدادات على هذا الجهاز.</string>
+  <string name="timeline_inherit">توريث إعدادات الخادم</string>
+  <string name="timeline_minimal">الحد الأدنى</string>
+  <string name="timeline_compact">مختصر</string>
+  <string name="timeline_balanced">متوازن</string>
+  <string name="timeline_detailed">مفصل</string>
+  <string name="timeline_custom">مخصص</string>
+  <string name="timeline_advanced">فئات النشاط</string>
+  <string name="timeline_shell">الصدفة</string>
+  <string name="timeline_edits">التعديلات</string>
+  <string name="timeline_reasoning">الاستدلال</string>
+  <string name="timeline_subagents">الوكلاء الفرعيون</string>
+  <string name="timeline_notices">التنبيهات</string>
+  <string name="timeline_other_tools">أدوات أخرى</string>
+  <string name="timeline_visible">عرض</string>
+  <string name="timeline_group">تجميع</string>
+  <string name="timeline_collapse">طي</string>
+  <string name="timeline_reset">استعادة التوريث</string>
+  <string name="timeline_cancel">إلغاء</string>
+  <string name="timeline_save">تطبيق</string>
+</resources>

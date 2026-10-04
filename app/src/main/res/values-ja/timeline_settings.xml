@@ -1,0 +1,23 @@
+<resources>
+  <string name="timeline_title">タイムラインの詳細度</string>
+  <string name="timeline_description">表示するアクティビティの量を選択します。メッセージと添付ファイルは常に表示されます。設定はこの端末に保存されます。</string>
+  <string name="timeline_inherit">サーバー設定を継承</string>
+  <string name="timeline_minimal">最小限</string>
+  <string name="timeline_compact">コンパクト</string>
+  <string name="timeline_balanced">バランス</string>
+  <string name="timeline_detailed">詳細</string>
+  <string name="timeline_custom">カスタム</string>
+  <string name="timeline_advanced">アクティビティの種類</string>
+  <string name="timeline_shell">シェル</string>
+  <string name="timeline_edits">編集</string>
+  <string name="timeline_reasoning">推論</string>
+  <string name="timeline_subagents">サブエージェント</string>
+  <string name="timeline_notices">通知</string>
+  <string name="timeline_other_tools">その他のツール</string>
+  <string name="timeline_visible">表示</string>
+  <string name="timeline_group">グループ化</string>
+  <string name="timeline_collapse">折りたたむ</string>
+  <string name="timeline_reset">継承に戻す</string>
+  <string name="timeline_cancel">キャンセル</string>
+  <string name="timeline_save">適用</string>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="notification_preferences_title">Powiadomienia</string>
+    <string name="notification_preferences_description">Wybierz zdarzenia sesji, dźwięk i moment powiadamiania. Wyciszenie sesji zawsze ma pierwszeństwo.</string>
+    <string name="notification_preferences_inherit">Użyj odziedziczonych ustawień</string>
+    <string name="notification_preferences_agent">Zakończenie pracy agenta</string>
+    <string name="notification_preferences_permissions">Uprawnienia</string>
+    <string name="notification_preferences_questions">Pytania wymagające uwagi</string>
+    <string name="notification_preferences_errors">Błędy</string>
+    <string name="notification_preferences_enabled">Powiadomienie systemowe</string>
+    <string name="notification_preferences_sound">Dźwięk</string>
+    <string name="notification_preferences_default_sound">Domyślny dźwięk urządzenia</string>
+    <string name="notification_preferences_silent">Bez dźwięku</string>
+    <string name="notification_preferences_vibrate">Wibracje</string>
+    <string name="notification_preferences_no_vibration">Bez wibracji</string>
+    <string name="notification_preferences_when">Kiedy powiadamiać</string>
+    <string name="notification_preferences_always">Zawsze</string>
+    <string name="notification_preferences_outside_session">Poza aktywną sesją</string>
+    <string name="notification_preferences_background">Tylko w tle</string>
+    <string name="notification_preferences_device_sound">Wybierz dźwięk w ustawieniach Androida</string>
+    <string name="notification_preferences_system_note">Obowiązują także uprawnienia do powiadomień i ustawienia kanałów Androida. Dźwięki urządzenia są wspólne dla konfiguracji o tej samej kategorii, dźwięku i wibracjach.</string>
+    <string name="notification_preferences_cancel">Anuluj</string>
+    <string name="notification_preferences_save">Zapisz</string>
+</resources>

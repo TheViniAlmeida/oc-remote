@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="notification_preferences_title">通知</string>
+    <string name="notification_preferences_description">选择需要通知的会话事件、提示音和通知时机。会话静音设置始终优先。</string>
+    <string name="notification_preferences_inherit">使用继承的设置</string>
+    <string name="notification_preferences_agent">代理完成工作</string>
+    <string name="notification_preferences_permissions">权限</string>
+    <string name="notification_preferences_questions">需要关注的问题</string>
+    <string name="notification_preferences_errors">错误</string>
+    <string name="notification_preferences_enabled">系统通知</string>
+    <string name="notification_preferences_sound">声音</string>
+    <string name="notification_preferences_default_sound">设备默认</string>
+    <string name="notification_preferences_silent">静音</string>
+    <string name="notification_preferences_vibrate">振动</string>
+    <string name="notification_preferences_no_vibration">不振动</string>
+    <string name="notification_preferences_when">通知时机</string>
+    <string name="notification_preferences_always">始终</string>
+    <string name="notification_preferences_outside_session">不在当前会话时</string>
+    <string name="notification_preferences_background">仅在后台</string>
+    <string name="notification_preferences_device_sound">在 Android 设置中选择声音</string>
+    <string name="notification_preferences_system_note">Android 通知权限和通知渠道设置同样适用。具有相同类别、声音和振动选项的配置共享设备提示音。</string>
+    <string name="notification_preferences_cancel">取消</string>
+    <string name="notification_preferences_save">保存</string>
+</resources>

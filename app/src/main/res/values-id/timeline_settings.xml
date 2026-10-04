@@ -1,0 +1,23 @@
+<resources>
+  <string name="timeline_title">Detail linimasa</string>
+  <string name="timeline_description">Pilih seberapa banyak aktivitas yang ditampilkan. Pesan dan lampiran tetap terlihat. Pengaturan tersimpan di perangkat ini.</string>
+  <string name="timeline_inherit">Warisi pengaturan server</string>
+  <string name="timeline_minimal">Minimal</string>
+  <string name="timeline_compact">Ringkas</string>
+  <string name="timeline_balanced">Seimbang</string>
+  <string name="timeline_detailed">Terperinci</string>
+  <string name="timeline_custom">Kustom</string>
+  <string name="timeline_advanced">Kategori aktivitas</string>
+  <string name="timeline_shell">Shell</string>
+  <string name="timeline_edits">Pengeditan</string>
+  <string name="timeline_reasoning">Penalaran</string>
+  <string name="timeline_subagents">Subagen</string>
+  <string name="timeline_notices">Pemberitahuan</string>
+  <string name="timeline_other_tools">Alat lain</string>
+  <string name="timeline_visible">Tampilkan</string>
+  <string name="timeline_group">Kelompokkan</string>
+  <string name="timeline_collapse">Ciutkan</string>
+  <string name="timeline_reset">Pulihkan pewarisan</string>
+  <string name="timeline_cancel">Batal</string>
+  <string name="timeline_save">Terapkan</string>
+</resources>

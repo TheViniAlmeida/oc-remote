@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="notification_preferences_title">通知</string>
+    <string name="notification_preferences_description">通知するセッションのイベント、音、通知のタイミングを選択します。セッションのミュート設定が常に優先されます。</string>
+    <string name="notification_preferences_inherit">継承した設定を使用</string>
+    <string name="notification_preferences_agent">エージェントの作業完了</string>
+    <string name="notification_preferences_permissions">権限</string>
+    <string name="notification_preferences_questions">確認が必要な質問</string>
+    <string name="notification_preferences_errors">エラー</string>
+    <string name="notification_preferences_enabled">システム通知</string>
+    <string name="notification_preferences_sound">音</string>
+    <string name="notification_preferences_default_sound">端末のデフォルト</string>
+    <string name="notification_preferences_silent">サイレント</string>
+    <string name="notification_preferences_vibrate">バイブレーション</string>
+    <string name="notification_preferences_no_vibration">振動なし</string>
+    <string name="notification_preferences_when">通知するタイミング</string>
+    <string name="notification_preferences_always">常に</string>
+    <string name="notification_preferences_outside_session">アクティブなセッション以外</string>
+    <string name="notification_preferences_background">バックグラウンドのみ</string>
+    <string name="notification_preferences_device_sound">Android の設定で音を選択</string>
+    <string name="notification_preferences_system_note">Android の通知権限とチャンネル設定も適用されます。同じカテゴリ、音、振動を選択した設定間で端末の通知音が共有されます。</string>
+    <string name="notification_preferences_cancel">キャンセル</string>
+    <string name="notification_preferences_save">保存</string>
+</resources>

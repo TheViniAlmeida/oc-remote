@@ -1,0 +1,29 @@
+<resources>
+  <string name="appearance_title">Tema dan warna aplikasi</string>
+  <string name="appearance_theme">Tema</string>
+  <string name="appearance_accent">Warna aksen</string>
+  <string name="appearance_default_color">Default</string>
+  <string name="appearance_system">Ikuti sistem</string>
+  <string name="appearance_light">Terang</string>
+  <string name="appearance_dark">Gelap</string>
+  <string name="appearance_inherit">Warisi</string>
+  <string name="appearance_inherit_desc">Opsi yang belum diatur mewarisi pengaturan proyek atau aplikasi. Perubahan tersimpan di perangkat ini.</string>
+  <string name="appearance_palette_priority">Warna aksen yang dipilih mengutamakan warna tersebut daripada warna dinamis. AMOLED mempertahankan permukaan hitam dalam mode gelap.</string>
+  <string name="appearance_dynamic">Warna dinamis</string>
+  <string name="appearance_amoled">Mode gelap AMOLED</string>
+  <string name="appearance_reset">Pulihkan pewarisan</string>
+  <string name="appearance_cancel">Batal</string>
+  <string name="appearance_save">Terapkan</string>
+  <string name="appearance_auto_scroll">Gulir otomatis</string>
+  <string name="appearance_auto_scroll_desc">Ikuti pesan baru saat berada di akhir percakapan.</string>
+  <string name="appearance_project_title">Tema dan warna proyek</string>
+  <string name="appearance_session_title">Tema dan warna sesi</string>
+  <string name="appearance_red">Merah</string>
+  <string name="appearance_orange">Oranye</string>
+  <string name="appearance_amber">Kuning amber</string>
+  <string name="appearance_green">Hijau</string>
+  <string name="appearance_teal">Hijau kebiruan</string>
+  <string name="appearance_blue">Biru</string>
+  <string name="appearance_violet">Ungu</string>
+  <string name="appearance_pink">Merah muda</string>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="notification_preferences_title">Notificaciones</string>
+    <string name="notification_preferences_description">Elige los eventos de sesión que quieres recibir, su sonido y cuándo notificar. Silenciar la sesión siempre tiene prioridad.</string>
+    <string name="notification_preferences_inherit">Usar configuración heredada</string>
+    <string name="notification_preferences_agent">Finalización del agente</string>
+    <string name="notification_preferences_permissions">Permisos</string>
+    <string name="notification_preferences_questions">Preguntas que requieren atención</string>
+    <string name="notification_preferences_errors">Errores</string>
+    <string name="notification_preferences_enabled">Notificación del sistema</string>
+    <string name="notification_preferences_sound">Sonido</string>
+    <string name="notification_preferences_default_sound">Predeterminado del dispositivo</string>
+    <string name="notification_preferences_silent">Silencioso</string>
+    <string name="notification_preferences_vibrate">Vibración</string>
+    <string name="notification_preferences_no_vibration">Sin vibración</string>
+    <string name="notification_preferences_when">Cuándo notificar</string>
+    <string name="notification_preferences_always">Siempre</string>
+    <string name="notification_preferences_outside_session">Fuera de la sesión activa</string>
+    <string name="notification_preferences_background">Solo en segundo plano</string>
+    <string name="notification_preferences_device_sound">Elegir sonido en la configuración de Android</string>
+    <string name="notification_preferences_system_note">También se aplican el permiso de notificaciones y la configuración de canales de Android. Los sonidos del dispositivo se comparten entre configuraciones con la misma categoría, sonido y vibración.</string>
+    <string name="notification_preferences_cancel">Cancelar</string>
+    <string name="notification_preferences_save">Guardar</string>
+</resources>

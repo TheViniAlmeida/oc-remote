@@ -1,0 +1,29 @@
+<resources>
+  <string name="appearance_title">Motyw i kolory aplikacji</string>
+  <string name="appearance_theme">Motyw</string>
+  <string name="appearance_accent">Kolor akcentu</string>
+  <string name="appearance_default_color">Domyślny</string>
+  <string name="appearance_system">Zgodnie z systemem</string>
+  <string name="appearance_light">Jasny</string>
+  <string name="appearance_dark">Ciemny</string>
+  <string name="appearance_inherit">Dziedzicz</string>
+  <string name="appearance_inherit_desc">Nieustawione opcje są dziedziczone z projektu lub aplikacji. Zmiany pozostają na tym urządzeniu.</string>
+  <string name="appearance_palette_priority">Wybrany kolor akcentu ma pierwszeństwo przed dynamicznymi kolorami. AMOLED zachowuje czarne powierzchnie w trybie ciemnym.</string>
+  <string name="appearance_dynamic">Dynamiczne kolory</string>
+  <string name="appearance_amoled">Tryb ciemny AMOLED</string>
+  <string name="appearance_reset">Przywróć dziedziczenie</string>
+  <string name="appearance_cancel">Anuluj</string>
+  <string name="appearance_save">Zastosuj</string>
+  <string name="appearance_auto_scroll">Automatyczne przewijanie</string>
+  <string name="appearance_auto_scroll_desc">Pokazuj nowe wiadomości, gdy jesteś na końcu rozmowy.</string>
+  <string name="appearance_project_title">Motyw i kolory projektu</string>
+  <string name="appearance_session_title">Motyw i kolory sesji</string>
+  <string name="appearance_red">Czerwony</string>
+  <string name="appearance_orange">Pomarańczowy</string>
+  <string name="appearance_amber">Bursztynowy</string>
+  <string name="appearance_green">Zielony</string>
+  <string name="appearance_teal">Turkusowy</string>
+  <string name="appearance_blue">Niebieski</string>
+  <string name="appearance_violet">Fioletowy</string>
+  <string name="appearance_pink">Różowy</string>
+</resources>

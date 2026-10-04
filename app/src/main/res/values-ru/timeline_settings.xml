@@ -1,0 +1,23 @@
+<resources>
+  <string name="timeline_title">Подробность хронологии</string>
+  <string name="timeline_description">Выберите, сколько действий показывать. Сообщения и вложения остаются видимыми. Настройки сохраняются на этом устройстве.</string>
+  <string name="timeline_inherit">Наследовать настройки сервера</string>
+  <string name="timeline_minimal">Минимально</string>
+  <string name="timeline_compact">Компактно</string>
+  <string name="timeline_balanced">Сбалансированно</string>
+  <string name="timeline_detailed">Подробно</string>
+  <string name="timeline_custom">Настроить</string>
+  <string name="timeline_advanced">Категории действий</string>
+  <string name="timeline_shell">Оболочка</string>
+  <string name="timeline_edits">Правки</string>
+  <string name="timeline_reasoning">Рассуждения</string>
+  <string name="timeline_subagents">Подагенты</string>
+  <string name="timeline_notices">Уведомления</string>
+  <string name="timeline_other_tools">Другие инструменты</string>
+  <string name="timeline_visible">Показывать</string>
+  <string name="timeline_group">Группировать</string>
+  <string name="timeline_collapse">Свернуть</string>
+  <string name="timeline_reset">Восстановить наследование</string>
+  <string name="timeline_cancel">Отмена</string>
+  <string name="timeline_save">Применить</string>
+</resources>
