@@ -6,6 +6,8 @@ import dev.minios.ocremote.R
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.minios.ocremote.data.api.AgentInfo
 import dev.minios.ocremote.data.api.CommandInfo
@@ -85,6 +87,7 @@ data class ChatUiState(
     val error: String? = null,
     val isSending: Boolean = false,
     val providers: List<ProviderInfo> = emptyList(),
+    val fullModelCatalog: List<ProviderInfo> = emptyList(),
     val hasServerModelCatalog: Boolean = false,
     val defaultModels: Map<String, String> = emptyMap(),
     val selectedProviderId: String? = null,
@@ -237,6 +240,7 @@ class ChatViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val pendingPromptRepository: PendingPromptRepository,
     private val connectionStateRepository: ServerConnectionStateRepository,
+    @ApplicationContext private val appContext: Context,
 ) : ViewModel() {
 
     @Volatile
@@ -248,6 +252,21 @@ class ChatViewModel @Inject constructor(
     val serverName: String = savedStateHandle.get<String>("serverName").orEmpty()
     val serverId: String = savedStateHandle.get<String>("serverId").orEmpty()
     val sessionId: String = savedStateHandle.get<String>("sessionId").orEmpty()
+
+    fun selectModelFromFullCatalog(providerId: String, modelId: String) {
+        viewModelScope.launch {
+            try {
+                settingsRepository.setModelVisibility(serverId, providerId, modelId, true)
+                _hiddenModels.value = _hiddenModels.value - "$providerId:$modelId"
+                applyProviderFilter()
+                selectModel(providerId, modelId)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                _error.value = appContext.getString(R.string.session_controls_model_selection_failed)
+            }
+        }
+    }
 
     private val conn = ServerConnection.from(serverUrl, username, password.ifEmpty { null })
     private fun isServerConnected(): Boolean = serverId in connectionStateRepository.connectedServerIds.value
@@ -537,6 +556,7 @@ class ChatViewModel @Inject constructor(
             error = error,
             isSending = sending,
             providers = providers,
+            fullModelCatalog = allProviders,
             hasServerModelCatalog = allProviders.any { it.models.isNotEmpty() },
             defaultModels = defaultModels,
             selectedProviderId = effectiveProviderId,

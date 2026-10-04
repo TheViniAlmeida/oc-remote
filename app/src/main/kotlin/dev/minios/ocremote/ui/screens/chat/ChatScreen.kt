@@ -1064,6 +1064,7 @@ fun ChatScreen(
     }
     val listState = rememberLazyListState()
     var showModelPicker by remember { mutableStateOf(false) }
+    var showFullModelCatalog by remember { mutableStateOf(false) }
     var showRenameDialog by remember { mutableStateOf(false) }
     var showMenu by remember { mutableStateOf(false) }
     var showAttachmentOptions by remember { mutableStateOf(false) }
@@ -1968,10 +1969,12 @@ fun ChatScreen(
             }
         },
         bottomBar = {
-            val modelLabel = if (uiState.selectedModelId != null && uiState.providers.isNotEmpty()) {
-                val provider = uiState.providers.find { it.id == uiState.selectedProviderId }
-                val model = provider?.models?.get(uiState.selectedModelId)
-                model?.name ?: uiState.selectedModelId ?: ""
+            val modelLabel = uiState.selectedModelId?.let { modelId ->
+                val provider = uiState.fullModelCatalog.find { it.id == uiState.selectedProviderId }
+                    ?: uiState.providers.find { it.id == uiState.selectedProviderId }
+                provider?.models?.get(modelId)?.name ?: modelId
+            } ?: if (uiState.fullModelCatalog.isNotEmpty()) {
+                stringResource(R.string.chat_select_model)
             } else ""
             val hasRunningTool = uiState.messages.any { message ->
                 message.parts.any { part -> part is Part.Tool && part.state is ToolState.Running }
@@ -2106,7 +2109,14 @@ fun ChatScreen(
                 },
                 modelLabel = modelLabel,
                 selectedProviderId = uiState.selectedProviderId,
-                onModelClick = { showModelPicker = true },
+                onModelClick = {
+                    showFullModelCatalog = false
+                    showModelPicker = true
+                },
+                onModelLongClick = {
+                    showFullModelCatalog = true
+                    showModelPicker = true
+                },
                 agents = uiState.agents,
                 selectedAgent = uiState.selectedAgent,
                 onAgentSelect = { viewModel.selectAgent(it) },
@@ -2981,11 +2991,16 @@ fun ChatScreen(
     // Model picker dialog
     if (showModelPicker) {
         ModelPickerDialog(
-            providers = uiState.providers,
+            providers = if (showFullModelCatalog) uiState.fullModelCatalog else uiState.providers,
+            showFullCatalog = showFullModelCatalog,
             selectedProviderId = uiState.selectedProviderId,
             selectedModelId = uiState.selectedModelId,
             onSelect = { providerId, modelId ->
-                viewModel.selectModel(providerId, modelId)
+                if (showFullModelCatalog) {
+                    viewModel.selectModelFromFullCatalog(providerId, modelId)
+                } else {
+                    viewModel.selectModel(providerId, modelId)
+                }
                 showModelPicker = false
             },
             onManageModels = {
@@ -3301,7 +3316,8 @@ private fun ModelPickerDialog(
     selectedModelId: String?,
     onSelect: (providerId: String, modelId: String) -> Unit,
     onManageModels: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    showFullCatalog: Boolean = false,
 ) {
     val isAmoled = isAmoledTheme()
     var search by rememberSaveable { mutableStateOf("") }
@@ -3352,6 +3368,13 @@ private fun ModelPickerDialog(
         onDismissRequest = onDismiss,
         modifier = Modifier.fillMaxWidth().heightIn(max = 620.dp),
     ) {
+        if (showFullCatalog) {
+            Text(
+                text = stringResource(R.string.chat_all_models),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 16.dp, bottom = 4.dp),
+            )
+        }
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -7818,6 +7841,7 @@ private fun ChatInputBar(
     modelLabel: String = "",
     selectedProviderId: String? = null,
     onModelClick: () -> Unit = {},
+    onModelLongClick: () -> Unit = {},
     agents: List<AgentInfo> = emptyList(),
     selectedAgent: String = "build",
     onAgentSelect: (String) -> Unit = {},
@@ -8152,7 +8176,12 @@ private fun ChatInputBar(
                             Row(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(6.dp))
-                                    .clickable { onModelClick() }
+                                    .combinedClickable(
+                                        onClick = onModelClick,
+                                        onLongClick = onModelLongClick,
+                                        onLongClickLabel = stringResource(R.string.chat_open_all_models),
+                                        role = Role.Button,
+                                    )
                                     .padding(horizontal = 3.dp, vertical = 3.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(3.dp)

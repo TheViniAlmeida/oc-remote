@@ -4,4 +4,5 @@
     <string name="server_duplicate_title">تكرار الخادم</string>
     <string name="chat_all_models">جميع النماذج</string>
     <string name="chat_open_all_models">فتح قائمة النماذج الكاملة</string>
+    <string name="session_controls_model_selection_failed">تعذر اختيار النموذج. يُرجى المحاولة مجددًا.</string>
 </resources>

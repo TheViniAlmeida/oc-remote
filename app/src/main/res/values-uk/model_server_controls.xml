@@ -4,4 +4,5 @@
     <string name="server_duplicate_title">Дублювати сервер</string>
     <string name="chat_all_models">Усі моделі</string>
     <string name="chat_open_all_models">Відкрити повний список моделей</string>
+    <string name="session_controls_model_selection_failed">Не вдалося вибрати модель. Спробуйте ще раз.</string>
 </resources>

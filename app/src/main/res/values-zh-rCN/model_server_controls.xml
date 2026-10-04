@@ -4,4 +4,5 @@
     <string name="server_duplicate_title">复制服务器</string>
     <string name="chat_all_models">所有模型</string>
     <string name="chat_open_all_models">打开完整模型列表</string>
+    <string name="session_controls_model_selection_failed">无法选择模型。请重试。</string>
 </resources>

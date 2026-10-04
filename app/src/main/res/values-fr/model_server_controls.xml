@@ -4,4 +4,5 @@
     <string name="server_duplicate_title">Dupliquer le serveur</string>
     <string name="chat_all_models">Tous les modèles</string>
     <string name="chat_open_all_models">Ouvrir la liste complète des modèles</string>
+    <string name="session_controls_model_selection_failed">Impossible de sélectionner le modèle. Veuillez réessayer.</string>
 </resources>
