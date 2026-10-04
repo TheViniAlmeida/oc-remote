@@ -32,6 +32,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.minios.ocremote.R
+import dev.minios.ocremote.ui.components.PresentationPreferencesHost
+import dev.minios.ocremote.ui.components.PresentationPreferenceKind
+import dev.minios.ocremote.ui.components.PresentationPreferenceRequest
 import dev.minios.ocremote.ui.components.AppCardShape
 import dev.minios.ocremote.ui.components.appAmoledBorder
 import dev.minios.ocremote.ui.components.isAmoledTheme
@@ -51,7 +54,10 @@ fun ServerSettingsScreen(
     agents: List<AgentInfo> = emptyList(),
     isLoadingAgents: Boolean = false,
     agentsError: String? = null,
+    serverId: String = "",
 ) {
+    var presentationRequest by remember { mutableStateOf<PresentationPreferenceRequest?>(null) }
+    PresentationPreferencesHost(presentationRequest, onDismiss = { presentationRequest = null })
     val isAmoled = isAmoledTheme()
     var showAgents by remember { mutableStateOf(false) }
     if (showAgents) ServerAgentsDialog(agents, isLoadingAgents, agentsError) { showAgents = false }
@@ -92,6 +98,19 @@ fun ServerSettingsScreen(
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
+            listOf(
+                PresentationPreferenceKind.SERVER_TIMELINE to R.string.timeline_title,
+            ).forEach { (kind, label) ->
+                Card(shape = AppCardShape, modifier = Modifier.fillMaxWidth().clickable(enabled = serverId.isNotBlank()) {
+                    presentationRequest = PresentationPreferenceRequest(kind, serverId)
+                }) {
+                    Row(Modifier.fillMaxWidth().padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Icon(if (kind == PresentationPreferenceKind.SERVER_TIMELINE) Lucide.List else Lucide.Bell, contentDescription = null)
+                        Text(stringResource(label), Modifier.weight(1f).padding(horizontal = 12.dp), style = MaterialTheme.typography.titleSmall)
+                        Icon(forwardChevronIcon(), contentDescription = null)
+                    }
+                }
+            }
             Card(
                 shape = AppCardShape,
                 modifier = Modifier.fillMaxWidth().clickable(enabled = isServerConnected) { showAgents = true },

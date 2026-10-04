@@ -237,6 +237,7 @@ val LocalCollapseTools = compositionLocalOf { false }
 val LocalExpandReasoning = compositionLocalOf { false }
 
 val LocalShowTurnDividers = compositionLocalOf { true }
+val LocalTimelinePreferences = compositionLocalOf<TimelinePreferences?> { null }
 
 /** Whether haptic feedback is enabled. */
 val LocalHapticFeedbackEnabled = compositionLocalOf { AppHapticConfig() }
@@ -1688,6 +1689,7 @@ fun ChatScreen(
         LocalCollapseTools provides collapseTools,
         LocalExpandReasoning provides expandReasoning,
         LocalShowTurnDividers provides showTurnDividers,
+        LocalTimelinePreferences provides timelinePreferences,
         LocalHapticFeedbackEnabled provides AppHapticConfig(
             enabled = hapticEnabled,
             durationMillis = hapticDurationMillis,
@@ -1813,6 +1815,7 @@ fun ChatScreen(
                             listOf(
                                 PresentationPreferenceKind.SESSION_APPEARANCE to R.string.appearance_session_title,
                                 PresentationPreferenceKind.PROJECT_APPEARANCE to R.string.appearance_project_title,
+                                PresentationPreferenceKind.SESSION_TIMELINE to R.string.timeline_title,
                             ).forEach { (kind, label) ->
                                 DropdownMenuItem(
                                     text = { Text(stringResource(label)) },
@@ -4788,6 +4791,7 @@ private fun ChatMessageBubble(
 
     // Separate parts into text/reasoning (shown directly) and step parts (behind toggle)
     val allParts = chatMessages.flatMap { it.parts }
+    val timeline = LocalTimelinePreferences.current
     val visibleParts = if (isUser) {
         allParts.filter { part ->
             when (part) {
@@ -4796,7 +4800,7 @@ private fun ChatMessageBubble(
             }
         }
     } else {
-        allParts
+        allParts.filter { timeline == null || isTimelinePartVisible(it, timeline) }
     }
 
     val userMessage = chatMessage.message as? Message.User
@@ -4820,6 +4824,7 @@ private fun ChatMessageBubble(
             part is Part.Text || part is Part.Reasoning || part is Part.Patch ||
                     part is Part.File || part is Part.Permission || part is Part.Question ||
                     part is Part.Abort || part is Part.Retry || part is Part.Tool
+                    || part is Part.Subtask || part is Part.Agent || part is Part.Compaction
         }
         stepParts = emptyList()
     } else {
@@ -4944,6 +4949,8 @@ private fun ChatMessageBubble(
                                 part is Part.Text || part is Part.Reasoning || part is Part.Patch ||
                                     part is Part.File || part is Part.Permission || part is Part.Question ||
                                     part is Part.Abort || part is Part.Retry || part is Part.Tool
+                                    || part is Part.Subtask || part is Part.Agent || part is Part.Compaction
+                            }.filter { part -> timeline == null || isTimelinePartVisible(part, timeline)
                             }
                         }.filter { it.isNotEmpty() }
                     }
@@ -4958,15 +4965,8 @@ private fun ChatMessageBubble(
                             ImageThumbnailRow(imageFiles = imageFiles)
                             renderedContent = true
                         }
-                        renderableParts.forEach { part ->
-                            PartContent(
-                                part = part,
-                                textColor = textColor,
-                                isUser = isUser,
-                                onNavigateToChildSession = onNavigateToChildSession,
-                            )
-                            renderedContent = true
-                        }
+                        TimelinePartsContent(renderableParts, textColor, isUser, onNavigateToChildSession)
+                        if (renderableParts.isNotEmpty()) renderedContent = true
                         if (!isUser && LocalShowTurnDividers.current && groupIndex < contentGroups.lastIndex) {
                             HorizontalDivider(
                                 modifier = Modifier.padding(vertical = 4.dp),
@@ -5168,6 +5168,9 @@ private fun isBubbleRenderablePart(part: Part): Boolean {
         is Part.Question,
         is Part.Abort,
         is Part.Retry,
+        is Part.Subtask,
+        is Part.Agent,
+        is Part.Compaction,
         is Part.Tool -> true
         else -> false
     }
@@ -5271,6 +5274,49 @@ private fun RevertBanner(onRedo: () -> Unit) {
 }
 
 @Composable
+private fun TimelinePartsContent(parts: List<Part>, textColor: Color, isUser: Boolean, onNavigateToChildSession: (String) -> Unit) {
+    val preferences = LocalTimelinePreferences.current
+    val groups = if (preferences == null || isUser) parts.map { TimelinePartGroup(null, listOf(it), false) }
+        else groupTimelineParts(parts, preferences)
+    groups.forEach { group ->
+        val category = group.category
+        val activity = if (isUser) null else category?.let { preferences?.activity(it) }
+        if (group.grouped && category != null) {
+            var expanded by rememberSaveable(group.parts.first().id, activity?.collapsed) { mutableStateOf(activity?.collapsed != true) }
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Row(Modifier.fillMaxWidth().clickable { expanded = !expanded }.padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Icon(if (expanded) Lucide.ChevronUp else Lucide.ChevronDown, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Text("${timelineCategoryLabel(category)} (${group.parts.size})", Modifier.padding(start = 6.dp), style = MaterialTheme.typography.labelMedium)
+                }
+                if (expanded) group.parts.forEach { part -> ScopedTimelinePart(part, textColor, isUser, true, onNavigateToChildSession) }
+            }
+        } else group.parts.forEach { part -> ScopedTimelinePart(part, textColor, isUser, false, onNavigateToChildSession) }
+    }
+}
+
+@Composable
+private fun ScopedTimelinePart(part: Part, textColor: Color, isUser: Boolean, inExpandedGroup: Boolean, onNavigateToChildSession: (String) -> Unit) {
+    val category = if (isUser) null else timelineCategory(part)
+    val activity = category?.let { LocalTimelinePreferences.current?.activity(it) }
+    val toolExpanded = if (inExpandedGroup) true else activity?.let { !it.collapsed } ?: LocalCollapseTools.current
+    val reasoningExpanded = if (inExpandedGroup) true else activity?.let { !it.collapsed } ?: LocalExpandReasoning.current
+    CompositionLocalProvider(LocalCollapseTools provides toolExpanded, LocalExpandReasoning provides reasoningExpanded) {
+        val disclosure = !inExpandedGroup && activity?.collapsed == true && category != null &&
+            part !is Part.Tool && part !is Part.Reasoning && part !is Part.Permission && part !is Part.Question
+        if (disclosure) {
+            var expanded by rememberSaveable(part.id, activity?.collapsed) { mutableStateOf(false) }
+            Column(Modifier.fillMaxWidth()) {
+                Row(Modifier.fillMaxWidth().clickable { expanded = !expanded }.padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Icon(if (expanded) Lucide.ChevronUp else Lucide.ChevronDown, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Text(timelineCategoryLabel(category!!), Modifier.padding(start = 6.dp), style = MaterialTheme.typography.labelMedium)
+                }
+                if (expanded) PartContent(part, textColor, isUser, onNavigateToChildSession)
+            }
+        } else PartContent(part, textColor, isUser, onNavigateToChildSession)
+    }
+}
+
+@Composable
 private fun PartContent(
     part: Part,
     textColor: Color,
@@ -5369,9 +5415,11 @@ private fun PartContent(
                 color = MaterialTheme.colorScheme.error
             )
         }
-        // Ignore less relevant parts
-        is Part.Snapshot, is Part.Subtask, is Part.Compaction,
-        is Part.Agent, is Part.SessionTurn, is Part.Unknown -> { /* skip */ }
+        is Part.Subtask -> Text(part.description ?: part.agent ?: stringResource(R.string.timeline_subagents),
+            style = MaterialTheme.typography.bodySmall, color = textColor)
+        is Part.Agent -> Text(part.name, style = MaterialTheme.typography.bodySmall, color = textColor)
+        is Part.Compaction -> Text(stringResource(R.string.chat_summarized), style = MaterialTheme.typography.bodySmall, color = textColor)
+        is Part.Snapshot, is Part.SessionTurn, is Part.Unknown -> { /* skip */ }
     }
 }
 

@@ -504,6 +504,7 @@ fun NavGraph(
             val serverSettingsViewModel: dev.minios.ocremote.ui.screens.server.ServerSettingsViewModel = hiltViewModel()
             val serverSettingsState by serverSettingsViewModel.uiState.collectAsState()
             ServerSettingsScreen(
+                serverId = serverId,
                 agents = serverSettingsState.availableAgents,
                 isLoadingAgents = serverSettingsState.isLoadingAgents,
                 agentsError = serverSettingsState.agentsError,
