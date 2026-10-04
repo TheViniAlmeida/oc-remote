@@ -15,6 +15,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
+import com.composables.icons.lucide.Eye
+import com.composables.icons.lucide.EyeOff
+import com.composables.icons.lucide.Lucide
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import dev.minios.ocremote.R
@@ -89,6 +93,7 @@ fun ServerDialog(
     var url by remember(server?.id) { mutableStateOf(server?.url ?: "http://") }
     var username by remember(server?.id) { mutableStateOf(server?.username ?: "opencode") }
     var password by remember(server?.id) { mutableStateOf(server?.password ?: "") }
+    var passwordVisible by remember(server?.id) { mutableStateOf(false) }
     var autoConnect by remember(server?.id) { mutableStateOf(server?.autoConnect ?: false) }
 
     var urlError by remember(server?.id) { mutableStateOf<String?>(null) }
@@ -178,7 +183,13 @@ fun ServerDialog(
                         value = password,
                         onValueChange = { password = it },
                         label = { Text(stringResource(R.string.server_password)) },
-                        visualTransformation = PasswordVisualTransformation(),
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        trailingIcon = {
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(if (passwordVisible) Lucide.EyeOff else Lucide.Eye,
+                                    contentDescription = stringResource(if (passwordVisible) R.string.server_password_hide else R.string.server_password_show))
+                            }
+                        },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
