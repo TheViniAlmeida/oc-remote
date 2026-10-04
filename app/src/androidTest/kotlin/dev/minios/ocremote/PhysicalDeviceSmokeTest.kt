@@ -1,17 +1,22 @@
 package dev.minios.ocremote
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import java.util.concurrent.CancellationException
 import org.junit.Rule
 import org.junit.Test
+import org.junit.Before
+import org.junit.After
 import org.junit.Assume.assumeFalse
 import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
@@ -23,6 +28,7 @@ import org.junit.runners.model.Statement
 @RunWith(AndroidJUnit4::class)
 class PhysicalDeviceSmokeTest {
     private val compose = createAndroidComposeRule<MainActivity>()
+    private var addedKeepAwake = false
     private val sanitizedFailures = object : TestRule {
         override fun apply(base: Statement, description: Description): Statement = object : Statement() {
             override fun evaluate() {
@@ -36,6 +42,71 @@ class PhysicalDeviceSmokeTest {
 
     @get:Rule
     val rules: RuleChain = RuleChain.outerRule(sanitizedFailures).around(compose)
+
+    @Before
+    fun keepTestWindowAwake() {
+        val flag = android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+        compose.activityRule.scenario.onActivity { activity ->
+            addedKeepAwake = activity.window.attributes.flags and flag == 0
+            if (addedKeepAwake) activity.window.addFlags(flag)
+        }
+    }
+
+    @After
+    fun restoreTestWindow() {
+        if (addedKeepAwake) compose.activityRule.scenario.onActivity {
+            it.window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+    }
+
+    @Test
+    fun opensScopedPreferencePanelsWithoutSaving() {
+        smokeStep("preference-panels-home") {
+            compose.mainClock.autoAdvance = true
+            settleNavigation()
+            compose.onNodeWithText(label(R.string.home_title)).assertIsDisplayed()
+        }
+        smokeStep("preference-panels-settings") {
+            compose.onAllNodesWithContentDescription(label(R.string.settings_title)).onFirst().performClick()
+            settleNavigation()
+        }
+        smokeStep("appearance-row-scroll") {
+            compose.onNodeWithText(label(R.string.appearance_title)).performScrollTo()
+        }
+        smokeStep("appearance-row-click") {
+            compose.onNodeWithText(label(R.string.appearance_title)).performClick()
+            settleNavigation()
+        }
+        smokeStep("appearance-panel-content") {
+            compose.waitUntil(10_000) {
+                compose.onAllNodesWithText(label(R.string.appearance_palette_priority)).fetchSemanticsNodes().size == 1
+            }
+            compose.onNodeWithText(label(R.string.appearance_palette_priority)).performScrollTo().assertIsDisplayed()
+        }
+        smokeStep("appearance-panel-cancel") {
+            compose.onNodeWithText(label(R.string.appearance_cancel)).performScrollTo().performClick()
+            settleNavigation()
+        }
+        smokeStep("notification-row-click") {
+            compose.onNode(hasText(label(R.string.notification_preferences_title)) and hasClickAction()).performScrollTo().performClick()
+            settleNavigation()
+        }
+        smokeStep("notification-panel-loaded") {
+            compose.waitUntil(10_000) {
+                compose.onAllNodesWithText(label(R.string.notification_preferences_agent)).fetchSemanticsNodes().size == 1
+            }
+            compose.onNodeWithText(label(R.string.notification_preferences_agent)).performScrollTo().assertIsDisplayed()
+        }
+        smokeStep("notification-panel-cancel") {
+            compose.onNodeWithText(label(R.string.notification_preferences_cancel)).performScrollTo().performClick()
+            settleNavigation()
+        }
+        smokeStep("preference-panels-back") {
+            compose.onAllNodesWithContentDescription(label(R.string.back)).onFirst().performClick()
+            settleNavigation()
+            compose.onNodeWithText(label(R.string.home_title)).assertIsDisplayed()
+        }
+    }
 
     @Test
     fun navigatesSettingsAddServerAndAboutWithoutSaving() {

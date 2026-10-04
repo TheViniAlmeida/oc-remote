@@ -27,4 +27,10 @@ there require a compatible toolchain and regression validation before migration.
 
 Validation: 341 unit tests passed with no failures or errors. Debug and instrumentation
 APKs built successfully; Android lint passed with zero errors (216 warnings); APK
-signature verified. Physical interface checks await the device endpoint from the user.
+signature verified. Physical validation on Android 16 passed 20 distinct checks: initial
+navigation, actual settings panels opened/cancelled, isolated dialog interactions,
+and authenticated V2 read-only catalogs/history/native JSON/Markdown/HTML/diff.
+The live diff contained no changes; before/after expansion used a synthetic fixture.
+Clipboard/SAF writes, live preference persistence and new model generation were not
+exercised by this physical suite. The earlier Qwen generation check remains partial
+because the server reported insufficient quota/credits.
