@@ -1,0 +1,15 @@
+<resources>
+    <string name="session_export_title">Eksportuj sesję</string>
+    <string name="session_export_download">Pobierz</string>
+    <string name="session_export_copy">Kopiuj</string>
+    <string name="session_export_full_history">Zawiera pełną historię sesji. Duże sesje należy pobierać zamiast kopiować.</string>
+    <string name="session_export_clipboard_large">Ta sesja jest za duża dla schowka. Pobierz ją.</string>
+    <string name="session_export_copied">Sesja skopiowana</string>
+    <string name="session_export_failed">Nie udało się wyeksportować sesji. Sprawdź połączenie lub wybierz JSON dla dużych sesji.</string>
+    <string name="session_diff_title">Zmiany w sesji</string>
+    <string name="session_diff_before">Przed</string>
+    <string name="session_diff_after">Po</string>
+    <string name="session_diff_retry">Spróbuj ponownie</string>
+    <string name="session_diff_empty">Brak zmian w plikach w tej sesji</string>
+    <string name="session_diff_failed">Nie udało się załadować zmian. Serwer może nie obsługiwać tej funkcji lub połączenie jest niedostępne.</string>
+</resources>

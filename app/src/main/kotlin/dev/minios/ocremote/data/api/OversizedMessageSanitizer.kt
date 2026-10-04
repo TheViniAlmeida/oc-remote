@@ -25,22 +25,7 @@ internal fun sanitizeOversizedMessageJson(input: Reader, output: Writer) {
 
 /** Remove the HTTP envelope while retaining the native, importable session format. */
 internal fun unwrapV2DataJson(input: Reader, output: Writer) {
-    val writer = JsonWriter(output)
-    writer.setSerializeNulls(true)
-    JsonReader(input).use { reader ->
-        reader.beginObject()
-        var found = false
-        while (reader.hasNext()) {
-            if (reader.nextName() == "data") {
-                check(!found) { "Duplicate OpenCode export payload" }
-                copyJsonValue(reader, writer, null, false, null, false, 0)
-                found = true
-            } else reader.skipValue()
-        }
-        reader.endObject()
-        check(found) { "Missing OpenCode export payload" }
-        writer.flush()
-    }
+    input.use { NativeExportEnvelope(it, output).unwrap() }
 }
 
 internal fun transformMessageJson(

@@ -1,0 +1,15 @@
+<resources>
+    <string name="session_export_title">Exportar sessão</string>
+    <string name="session_export_download">Baixar</string>
+    <string name="session_export_copy">Copiar</string>
+    <string name="session_export_full_history">Inclui o histórico completo da sessão. Sessões grandes devem ser baixadas em vez de copiadas.</string>
+    <string name="session_export_clipboard_large">Esta sessão é grande demais para copiar. Baixe o arquivo.</string>
+    <string name="session_export_copied">Sessão copiada</string>
+    <string name="session_export_failed">Não foi possível exportar a sessão. Verifique a conexão ou tente JSON para sessões grandes.</string>
+    <string name="session_diff_title">Diff da sessão</string>
+    <string name="session_diff_before">Antes</string>
+    <string name="session_diff_after">Depois</string>
+    <string name="session_diff_retry">Tentar novamente</string>
+    <string name="session_diff_empty">Nenhum arquivo alterado nesta sessão</string>
+    <string name="session_diff_failed">Não foi possível carregar o diff. O servidor pode não oferecer este recurso, ou a conexão está indisponível.</string>
+</resources>

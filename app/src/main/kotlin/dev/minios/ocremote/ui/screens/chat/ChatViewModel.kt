@@ -29,6 +29,7 @@ import dev.minios.ocremote.data.repository.ServerConnectionStateRepository
 import dev.minios.ocremote.data.repository.SessionControlsRepository
 import dev.minios.ocremote.service.SessionNotificationCoordinator
 import dev.minios.ocremote.domain.model.*
+import dev.minios.ocremote.domain.export.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -1551,7 +1552,7 @@ class ChatViewModel @Inject constructor(
                 .setProgress(0, 0, true)
 
             try {
-                Log.d(TAG, "exportSession: streaming to $uri")
+                Log.d(TAG, "exportSession: streaming")
                 notificationManager.notify(notificationId, builder.build())
 
                 var lastNotifyTime = 0L
@@ -1579,6 +1580,99 @@ class ChatViewModel @Inject constructor(
                     onResult(false)
                 }
             }
+        }
+    }
+
+    /** Undo the last user message in the session, restoring its text to the input field. */
+    fun undoMessage(onResult: (Boolean) -> Unit) {
+        if (!isServerConnected()) {
+            onResult(false)
+            return
+        }
+        viewModelScope.launch {
+            try {
+                // Find the last user message (before any existing revert point)
+                val messages = uiState.value.messages
+                val lastUser = messages.lastOrNull { it.isUser }
+                if (lastUser == null) {
+                    onResult(false)
+                    return@launch
+                }
+                val revertedSession = api.revertSession(conn, sessionId, lastUser.message.id)
+                eventReducer.upsertSession(serverId, revertedSession)
+                pendingPromptRepository.remove(lastUser.message.id)
+                _pendingPrompts.value = _pendingPrompts.value.filterNot { it.messageId == lastUser.message.id }
+                if (BuildConfig.DEBUG) Log.d(TAG, "Reverted session $sessionId to message ${lastUser.message.id}")
+                // Restore the user message text to the input field
+                restoreRevertedDraft(extractRevertedDraft(lastUser))
+                onResult(true)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to revert session", e)
+                onResult(false)
+            }
+        }
+    }
+
+    /** Revert to a specific user message by ID, optionally restoring its text to the input field. */
+    /** The native endpoint exports the entire history, independent of the on-screen page limit. */
+    private suspend fun createNativeExport(): java.io.File {
+        val native = java.io.File.createTempFile("session-export-", ".json", appContext.cacheDir)
+        try {
+            native.outputStream().use { api.exportSessionToStream(conn, sessionId, it, directory = sessionDirectory) }
+            native.reader(Charsets.UTF_8).use(::validateNativeSessionExport)
+            return native
+        } catch (e: Exception) {
+            native.delete()
+            throw e
+        }
+    }
+
+    fun downloadSessionExport(uri: android.net.Uri, format: SessionExportFormat, onResult: (Boolean) -> Unit) {
+        if (!isServerConnected()) { onResult(false); return }
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            var native: java.io.File? = null
+            val success = try {
+                native = createNativeExport()
+                val output = appContext.contentResolver.openOutputStream(uri) ?: error("Export destination is unavailable")
+                output.use { stream ->
+                    if (format == SessionExportFormat.JSON) native.inputStream().use { it.copyTo(stream) }
+                    else stream.writer(Charsets.UTF_8).use { writer ->
+                        native.reader(Charsets.UTF_8).use { renderSessionExport(it, writer, format, uiState.value.sessionTitle) }
+                    }
+                }
+                true
+            } catch (e: Exception) {
+                e.rethrowCancellation()
+                false
+            } finally {
+                native?.delete()
+            }
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) { onResult(success) }
+        }
+    }
+
+    /** The callback receives text only when it fits conservatively inside Android's clipboard IPC. */
+    fun copySessionExport(format: SessionExportFormat, onResult: (String?, Boolean) -> Unit) {
+        if (!isServerConnected()) { onResult(null, false); return }
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            var native: java.io.File? = null
+            var tooLarge = false
+            val content = try {
+                native = createNativeExport()
+                val writer = ClipboardExportWriter()
+                native.reader(Charsets.UTF_8).use {
+                    if (format == SessionExportFormat.JSON) it.copyTo(writer)
+                    else renderSessionExport(it, writer, format, uiState.value.sessionTitle)
+                }
+                writer.toString()
+            } catch (e: SessionExportTooLargeException) {
+                tooLarge = true
+                null
+            } catch (e: Exception) {
+                e.rethrowCancellation()
+                null
+            } finally { native?.delete() }
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) { onResult(content, tooLarge) }
         }
     }
 

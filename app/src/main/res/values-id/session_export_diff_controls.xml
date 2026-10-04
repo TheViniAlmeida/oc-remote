@@ -1,0 +1,15 @@
+<resources>
+    <string name="session_export_title">Ekspor sesi</string>
+    <string name="session_export_download">Unduh</string>
+    <string name="session_export_copy">Salin</string>
+    <string name="session_export_full_history">Mencakup seluruh riwayat sesi. Sesi besar harus diunduh, bukan disalin.</string>
+    <string name="session_export_clipboard_large">Sesi ini terlalu besar untuk papan klip. Unduh saja.</string>
+    <string name="session_export_copied">Sesi disalin</string>
+    <string name="session_export_failed">Tidak dapat mengekspor sesi. Periksa koneksi atau coba JSON untuk sesi besar.</string>
+    <string name="session_diff_title">Perubahan sesi</string>
+    <string name="session_diff_before">Sebelum</string>
+    <string name="session_diff_after">Sesudah</string>
+    <string name="session_diff_retry">Coba lagi</string>
+    <string name="session_diff_empty">Tidak ada perubahan berkas dalam sesi ini</string>
+    <string name="session_diff_failed">Tidak dapat memuat perubahan. Server mungkin tidak mendukung fitur ini atau koneksi tidak tersedia.</string>
+</resources>

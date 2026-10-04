@@ -1,0 +1,15 @@
+<resources>
+    <string name="session_export_title">Експортувати сеанс</string>
+    <string name="session_export_download">Завантажити</string>
+    <string name="session_export_copy">Копіювати</string>
+    <string name="session_export_full_history">Містить повну історію сеансу. Великі сеанси потрібно завантажувати, а не копіювати.</string>
+    <string name="session_export_clipboard_large">Цей сеанс завеликий для буфера обміну. Завантажте його.</string>
+    <string name="session_export_copied">Сеанс скопійовано</string>
+    <string name="session_export_failed">Не вдалося експортувати сеанс. Перевірте з’єднання або виберіть JSON для великих сеансів.</string>
+    <string name="session_diff_title">Зміни сеансу</string>
+    <string name="session_diff_before">До</string>
+    <string name="session_diff_after">Після</string>
+    <string name="session_diff_retry">Повторити</string>
+    <string name="session_diff_empty">У цьому сеансі немає змін файлів</string>
+    <string name="session_diff_failed">Не вдалося завантажити зміни. Сервер може не підтримувати цю функцію або з’єднання недоступне.</string>
+</resources>

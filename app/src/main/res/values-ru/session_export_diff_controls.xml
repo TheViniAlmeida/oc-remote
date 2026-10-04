@@ -1,0 +1,15 @@
+<resources>
+    <string name="session_export_title">Экспорт сеанса</string>
+    <string name="session_export_download">Скачать</string>
+    <string name="session_export_copy">Копировать</string>
+    <string name="session_export_full_history">Включает полную историю сеанса. Большие сеансы нужно скачивать, а не копировать.</string>
+    <string name="session_export_clipboard_large">Этот сеанс слишком велик для буфера обмена. Скачайте его.</string>
+    <string name="session_export_copied">Сеанс скопирован</string>
+    <string name="session_export_failed">Не удалось экспортировать сеанс. Проверьте соединение или выберите JSON для больших сеансов.</string>
+    <string name="session_diff_title">Изменения сеанса</string>
+    <string name="session_diff_before">До</string>
+    <string name="session_diff_after">После</string>
+    <string name="session_diff_retry">Повторить</string>
+    <string name="session_diff_empty">В этом сеансе нет изменений файлов</string>
+    <string name="session_diff_failed">Не удалось загрузить изменения. Сервер может не поддерживать этот запрос или соединение недоступно.</string>
+</resources>

@@ -1,0 +1,15 @@
+<resources>
+    <string name="session_export_title">セッションをエクスポート</string>
+    <string name="session_export_download">ダウンロード</string>
+    <string name="session_export_copy">コピー</string>
+    <string name="session_export_full_history">セッションの全履歴を含みます。大きいセッションはコピーせずダウンロードしてください。</string>
+    <string name="session_export_clipboard_large">このセッションはクリップボードにコピーするには大きすぎます。ダウンロードしてください。</string>
+    <string name="session_export_copied">セッションをコピーしました</string>
+    <string name="session_export_failed">セッションをエクスポートできませんでした。接続を確認するか、大きなセッションには JSON を選んでください。</string>
+    <string name="session_diff_title">セッションの差分</string>
+    <string name="session_diff_before">変更前</string>
+    <string name="session_diff_after">変更後</string>
+    <string name="session_diff_retry">再試行</string>
+    <string name="session_diff_empty">このセッションではファイルに変更がありません</string>
+    <string name="session_diff_failed">差分を読み込めません。サーバーがこの機能をサポートしていないか、接続できません。</string>
+</resources>

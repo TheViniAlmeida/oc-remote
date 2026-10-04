@@ -192,6 +192,13 @@ import android.webkit.WebViewClient
 import dev.minios.ocremote.BuildConfig
 import androidx.compose.ui.res.stringResource
 import dev.minios.ocremote.R
+import dev.minios.ocremote.domain.export.SessionExportFormat
+import dev.minios.ocremote.ui.components.PresentationPreferencesViewModel
+import dev.minios.ocremote.ui.components.PresentationPreferenceRequest
+import dev.minios.ocremote.ui.components.PresentationPreferenceKind
+import dev.minios.ocremote.ui.components.PresentationPreferencesHost
+import dev.minios.ocremote.ui.components.timelineCategoryLabel
+import dev.minios.ocremote.ui.theme.OpenCodeTheme
 import dev.minios.ocremote.ui.components.ProviderIcon
 import dev.minios.ocremote.ui.components.AppDialog
 import dev.minios.ocremote.ui.components.AppHaptics
@@ -1065,6 +1072,7 @@ fun ChatScreen(
     val listState = rememberLazyListState()
     var showModelPicker by remember { mutableStateOf(false) }
     var showAgentPicker by remember { mutableStateOf(false) }
+    var showSessionExportDialog by remember { mutableStateOf(false) }
     var showFullModelCatalog by remember { mutableStateOf(false) }
     var showRenameDialog by remember { mutableStateOf(false) }
     var showSessionControlsDialog by remember { mutableStateOf(false) }
@@ -1457,13 +1465,13 @@ fun ChatScreen(
         }
     }
 
-    // Session export via SAF (Storage Access Framework)
-    // Flow: menu click → SAF file picker → stream API responses directly to file
+    var pendingExportFormat by rememberSaveable { mutableStateOf(SessionExportFormat.MARKDOWN) }
     val exportLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.CreateDocument("application/json")
-    ) { uri: Uri? ->
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val uri = result.data?.data.takeIf { result.resultCode == android.app.Activity.RESULT_OK }
         if (uri != null) {
-            viewModel.exportSession(context, uri) { success ->
+            viewModel.downloadSessionExport(uri, pendingExportFormat) { success ->
                 coroutineScope.launch {
                     if (success) {
                         snackbarHostState.showSnackbar(context.getString(R.string.chat_session_exported))
@@ -1955,13 +1963,10 @@ fun ChatScreen(
                             }
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.menu_export_session)) },
+                                enabled = uiState.sessionLoaded && isServerConnected,
                                 onClick = {
                                     showMenu = false
-                                    val slug = uiState.sessionTitle
-                                        .take(30)
-                                        .replace(Regex("[^a-zA-Z0-9_-]"), "_")
-                                        .ifBlank { "session" }
-                                    exportLauncher.launch("$slug.json")
+                                    showSessionExportDialog = true
                                 },
                                 leadingIcon = {
                                     Icon(Lucide.FileDown, contentDescription = null)
@@ -3010,6 +3015,34 @@ fun ChatScreen(
         }
     }
 
+    if (showSessionExportDialog) {
+        SessionExportDialog(
+            onCopy = { format ->
+                showSessionExportDialog = false
+                viewModel.copySessionExport(format) { text, tooLarge ->
+                    coroutineScope.launch {
+                        if (text != null) clipboardManager.setText(androidx.compose.ui.text.AnnotatedString(text))
+                        snackbarHostState.showSnackbar(context.getString(when {
+                            tooLarge -> R.string.session_export_clipboard_large
+                            text != null -> R.string.session_export_copied
+                            else -> R.string.session_export_failed
+                        }))
+                    }
+                }
+            },
+            onDownload = { format ->
+                showSessionExportDialog = false
+                pendingExportFormat = format
+                val slug = uiState.sessionTitle.take(30).replace(Regex("[^a-zA-Z0-9_-]"), "_").ifBlank { "session" }
+                exportLauncher.launch(android.content.Intent(android.content.Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(android.content.Intent.CATEGORY_OPENABLE)
+                    type = format.mimeType
+                    putExtra(android.content.Intent.EXTRA_TITLE, "$slug.${format.extension}")
+                })
+            },
+            onDismiss = { showSessionExportDialog = false },
+        )
+    }
     if (showAgentPicker) {
         AgentPickerDialog(
             agents = uiState.agents,

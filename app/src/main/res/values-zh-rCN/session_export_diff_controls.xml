@@ -1,0 +1,15 @@
+<resources>
+    <string name="session_export_title">导出会话</string>
+    <string name="session_export_download">下载</string>
+    <string name="session_export_copy">复制</string>
+    <string name="session_export_full_history">包括完整的会话历史记录。较大的会话应下载而不是复制。</string>
+    <string name="session_export_clipboard_large">此会话太大，无法复制到剪贴板。请下载文件。</string>
+    <string name="session_export_copied">已复制会话</string>
+    <string name="session_export_failed">无法导出会话。请检查连接，或为大型会话选择 JSON。</string>
+    <string name="session_diff_title">会话差异</string>
+    <string name="session_diff_before">之前</string>
+    <string name="session_diff_after">之后</string>
+    <string name="session_diff_retry">重试</string>
+    <string name="session_diff_empty">此会话没有文件更改</string>
+    <string name="session_diff_failed">无法加载差异。服务器可能不支持此接口，或连接不可用。</string>
+</resources>

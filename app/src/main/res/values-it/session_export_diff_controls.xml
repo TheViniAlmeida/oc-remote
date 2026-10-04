@@ -1,0 +1,15 @@
+<resources>
+    <string name="session_export_title">Esporta sessione</string>
+    <string name="session_export_download">Scarica</string>
+    <string name="session_export_copy">Copia</string>
+    <string name="session_export_full_history">Include la cronologia completa della sessione. Le sessioni grandi devono essere scaricate anziché copiate.</string>
+    <string name="session_export_clipboard_large">Questa sessione è troppo grande per gli appunti. Scaricala.</string>
+    <string name="session_export_copied">Sessione copiata</string>
+    <string name="session_export_failed">Impossibile esportare la sessione. Controlla la connessione o prova JSON per sessioni grandi.</string>
+    <string name="session_diff_title">Modifiche della sessione</string>
+    <string name="session_diff_before">Prima</string>
+    <string name="session_diff_after">Dopo</string>
+    <string name="session_diff_retry">Riprova</string>
+    <string name="session_diff_empty">Nessuna modifica ai file in questa sessione</string>
+    <string name="session_diff_failed">Impossibile caricare le modifiche. Il server potrebbe non supportare questa funzione oppure la connessione non è disponibile.</string>
+</resources>

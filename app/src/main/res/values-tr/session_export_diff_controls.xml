@@ -1,0 +1,15 @@
+<resources>
+    <string name="session_export_title">Oturumu dışa aktar</string>
+    <string name="session_export_download">İndir</string>
+    <string name="session_export_copy">Kopyala</string>
+    <string name="session_export_full_history">Oturumun tüm geçmişini içerir. Büyük oturumları kopyalamak yerine indirin.</string>
+    <string name="session_export_clipboard_large">Bu oturum pano için çok büyük. Bunun yerine indirin.</string>
+    <string name="session_export_copied">Oturum kopyalandı</string>
+    <string name="session_export_failed">Oturum dışa aktarılamadı. Bağlantıyı kontrol edin veya büyük oturumlar için JSON deneyin.</string>
+    <string name="session_diff_title">Oturum değişiklikleri</string>
+    <string name="session_diff_before">Önce</string>
+    <string name="session_diff_after">Sonra</string>
+    <string name="session_diff_retry">Tekrar dene</string>
+    <string name="session_diff_empty">Bu oturumda dosya değişikliği yok</string>
+    <string name="session_diff_failed">Değişiklikler yüklenemedi. Sunucu bu özelliği desteklemiyor olabilir veya bağlantı kullanılamıyor.</string>
+</resources>

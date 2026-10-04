@@ -1,0 +1,15 @@
+<resources>
+    <string name="session_export_title">تصدير الجلسة</string>
+    <string name="session_export_download">تنزيل</string>
+    <string name="session_export_copy">نسخ</string>
+    <string name="session_export_full_history">يتضمن سجل الجلسة الكامل. يجب تنزيل الجلسات الكبيرة بدلًا من نسخها.</string>
+    <string name="session_export_clipboard_large">هذه الجلسة كبيرة جدًا للحافظة. نزّلها بدلًا من ذلك.</string>
+    <string name="session_export_copied">تم نسخ الجلسة</string>
+    <string name="session_export_failed">تعذّر تصدير الجلسة. تحقّق من الاتصال أو جرّب JSON للجلسات الكبيرة.</string>
+    <string name="session_diff_title">تغييرات الجلسة</string>
+    <string name="session_diff_before">قبل</string>
+    <string name="session_diff_after">بعد</string>
+    <string name="session_diff_retry">إعادة المحاولة</string>
+    <string name="session_diff_empty">لا توجد تغييرات في الملفات ضمن هذه الجلسة</string>
+    <string name="session_diff_failed">تعذر تحميل التغييرات. قد لا يدعم الخادم هذه الوظيفة أو أن الاتصال غير متاح.</string>
+</resources>

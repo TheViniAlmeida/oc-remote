@@ -1,0 +1,15 @@
+<resources>
+    <string name="session_export_title">Sitzung exportieren</string>
+    <string name="session_export_download">Herunterladen</string>
+    <string name="session_export_copy">Kopieren</string>
+    <string name="session_export_full_history">Enthält den vollständigen Sitzungsverlauf. Große Sitzungen müssen heruntergeladen statt kopiert werden.</string>
+    <string name="session_export_clipboard_large">Diese Sitzung ist zu groß für die Zwischenablage. Laden Sie sie stattdessen herunter.</string>
+    <string name="session_export_copied">Sitzung kopiert</string>
+    <string name="session_export_failed">Die Sitzung konnte nicht exportiert werden. Verbindung prüfen oder bei großen Sitzungen JSON verwenden.</string>
+    <string name="session_diff_title">Sitzungsänderungen</string>
+    <string name="session_diff_before">Vorher</string>
+    <string name="session_diff_after">Nachher</string>
+    <string name="session_diff_retry">Erneut versuchen</string>
+    <string name="session_diff_empty">Keine Dateiänderungen in dieser Sitzung</string>
+    <string name="session_diff_failed">Die Änderungen konnten nicht geladen werden. Der Server unterstützt diesen Endpunkt möglicherweise nicht oder die Verbindung ist nicht verfügbar.</string>
+</resources>

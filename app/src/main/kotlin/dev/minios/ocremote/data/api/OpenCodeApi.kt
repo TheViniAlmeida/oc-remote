@@ -673,7 +673,8 @@ class OpenCodeApi @Inject constructor(
         conn: ServerConnection,
         sessionId: String,
         outputStream: java.io.OutputStream,
-        onProgress: (Long) -> Unit = {}
+        directory: String? = null,
+        onProgress: (Long) -> Unit = {},
     ) {
         if (isV2(conn)) {
             v2.exportToStream(conn, sessionId, outputStream, onProgress)
@@ -681,9 +682,12 @@ class OpenCodeApi @Inject constructor(
         }
         var bytesWritten = 0L
         // Write session info (small, safe to hold in memory)
-        val sessionJson = httpClient.get("${conn.baseUrl}/session/$sessionId") {
+        val sessionResponse = httpClient.get("${conn.baseUrl}/session/$sessionId") {
             conn.authHeader?.let { header("Authorization", it) }
-        }.bodyAsText()
+            directory?.let { header("x-opencode-directory", it) }
+        }
+        require(sessionResponse.status.isSuccess()) { "Session export request failed (HTTP ${sessionResponse.status.value})" }
+        val sessionJson = sessionResponse.bodyAsText()
         val header = """{"info":$sessionJson,"messages":"""
         outputStream.write(header.toByteArray())
         bytesWritten += header.toByteArray().size
@@ -697,11 +701,15 @@ class OpenCodeApi @Inject constructor(
             .build()
         val request = okhttp3.Request.Builder()
             .url("${conn.baseUrl}/session/$sessionId/message")
-            .apply { conn.authHeader?.let { addHeader("Authorization", it) } }
+            .apply {
+                conn.authHeader?.let { addHeader("Authorization", it) }
+                directory?.let { addHeader("x-opencode-directory", it) }
+            }
             .build()
 
         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
             okClient.newCall(request).execute().use { response ->
+                require(response.isSuccessful) { "Session messages export request failed (HTTP ${response.code})" }
                 val body = response.body ?: throw java.io.IOException("Empty response body")
                 val source = body.source()
                 val buffer = ByteArray(8192)
